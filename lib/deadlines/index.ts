@@ -1,11 +1,15 @@
 // Deadline engine. Pure date maths on YYYY-MM-DD strings in UTC, so no timezone or daylight saving bugs.
-import type { Deadline, Requirement, DocumentType } from "../schemas";
+import type { Deadline, Requirement, DocumentType, CouncilSlug } from "../schemas";
 
-// Canterbury public holidays (Mondayised). TODO(lane C): verify against employment.govt.nz before demo.
+// Observed Canterbury public holidays, verified against Employment NZ's 2026/2027 table on 26 Sep 2026.
+// https://www.employment.govt.nz/leave-and-holidays/public-holidays/public-holidays-and-anniversary-dates
 export const CANTERBURY_HOLIDAYS = new Set([
+  "2026-01-01", "2026-01-02", "2026-02-06", "2026-04-03", "2026-04-06",
+  "2026-04-27", "2026-06-01", "2026-07-10",
   "2026-10-26", "2026-11-13", "2026-12-25", "2026-12-28",
   "2027-01-01", "2027-01-04", "2027-02-08", "2027-03-26", "2027-03-29",
   "2027-04-26", "2027-06-07", "2027-06-25", "2027-10-25", "2027-11-12",
+  "2027-12-27", "2027-12-28",
 ]);
 
 const toDate = (s: string) => new Date(`${s}T00:00:00Z`);
@@ -42,11 +46,12 @@ export function workingDaysBefore(eventDate: string, n: number, opts: { liquor?:
 
 const LIQUOR_SRC = "https://ccc.govt.nz/news-and-events/events/running-an-event/event-resources";
 const PERMIT_SRC = "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits";
+const WAIMAKARIRI_LIQUOR_SRC = "https://www.waimakariri.govt.nz/council/news-and-information/2025/10/secure-your-special-alcohol-licence-for-the-festive-season";
 
-export function computeDeadlines(eventDate: string, reqs: Requirement[]): Deadline[] {
+export function computeDeadlines(eventDate: string, reqs: Requirement[], council: CouncilSlug = "ccc"): Deadline[] {
   const types = new Set<DocumentType>(reqs.map((r) => r.documentType));
   const out: Deadline[] = [];
-  if (types.has("event_permit_application")) {
+  if (council === "ccc" && types.has("event_permit_application")) {
     out.push({
       documentType: "event_permit_application",
       label: "Lodge event permit application with site plan and health and safety plan",
@@ -64,18 +69,9 @@ export function computeDeadlines(eventDate: string, reqs: Requirement[]): Deadli
       legalMinimum: legal,
       recommended: workingDaysBefore(legal, 10, { liquor: true }),
       basis: "At least 20 working days before the event. 20 Dec to 15 Jan does not count. We aim two weeks earlier.",
-      sourceUrl: LIQUOR_SRC,
+      sourceUrl: council === "ccc" ? LIQUOR_SRC : WAIMAKARIRI_LIQUOR_SRC,
     });
   }
-  if (types.has("traffic_management_plan")) {
-    out.push({
-      documentType: "traffic_management_plan",
-      label: "Submit traffic management plan and road closure request",
-      legalMinimum: null,
-      recommended: addDays(eventDate, -84),
-      basis: "Lead time not yet verified. Treat as 12 weeks until lane B confirms.",
-      sourceUrl: null,
-    });
-  }
+  // Do not display traffic-management or Waimakariri permit dates until B verifies their lead times.
   return out.sort((a, b) => a.recommended.localeCompare(b.recommended));
 }

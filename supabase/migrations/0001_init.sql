@@ -93,6 +93,8 @@ create table memberships (
   user_id uuid references auth.users(id) on delete cascade,
   primary key (org_id, user_id)
 );
+-- The weekend MVP assigns each signed-in user one organisation. This also makes first-login races safe.
+create unique index memberships_user_id_key on memberships(user_id);
 create table events (
   id uuid primary key default gen_random_uuid(),
   org_id uuid not null references organisations(id) on delete cascade,

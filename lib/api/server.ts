@@ -14,6 +14,7 @@ import {
 export { fixture };
 /** MOCK=1: every route returns fixture data in the exact shape of the real response. No keys needed. */
 export const MOCK = () => process.env.MOCK === "1";
+export const MOCK_FIXED_COOKIE = "hostready_demo_fixed";
 export const ok = (data: unknown) => NextResponse.json(data);
 
 export class HttpError extends Error {
@@ -52,10 +53,16 @@ export async function requireOrg(): Promise<string> {
   if (!user) throw new HttpError(401, "Sign in first");
   const member = must(await db().from("memberships").select("org_id").eq("user_id", user.id).limit(1).maybeSingle());
   if (member) return member.org_id;
-  // ponytail: two first requests at the same moment can create two orgs; add unique(user_id) + upsert if it ever bites
   const org = must(await db().from("organisations").insert({ name: user.email ?? "Guest organisation" }).select("id").single());
-  must(await db().from("memberships").insert({ org_id: org.id, user_id: user.id }));
-  return org.id;
+  const membership = await db().from("memberships").insert({ org_id: org.id, user_id: user.id });
+  if (!membership.error) return org.id;
+  // Another first request may have won the race. Remove this request's unused organisation.
+  must(await db().from("organisations").delete().eq("id", org.id));
+  if (membership.error.code === "23505") {
+    const existing = must(await db().from("memberships").select("org_id").eq("user_id", user.id).single());
+    return existing.org_id;
+  }
+  throw new HttpError(500, membership.error.message);
 }
 
 /** An event the caller's org owns, or 404. */
@@ -108,10 +115,25 @@ export async function loadChecklist(councilId: string, documentType: string) {
     : null;
 }
 
-export const checkedStatus = (r: CheckResult) => (r.items.length > 0 && r.items.every((i) => i.pass) ? "ready" : "needs_fix");
+/** A check is complete only when it covers every item in the verified council checklist exactly once. */
+export function checklistCovered(r: CheckResult, checklist: readonly { id: string }[]): boolean {
+  if (!checklist.length) return false;
+  const expected = new Set(checklist.map((item) => item.id));
+  const returned = new Set(r.items.map((item) => item.itemId));
+  return expected.size === checklist.length && returned.size === r.items.length &&
+    returned.size === expected.size && [...expected].every((id) => returned.has(id));
+}
+
+export function checkedStatus(r: CheckResult, checklist: readonly { id: string }[]): "ready" | "needs_fix" {
+  if (!checklist.length) throw new HttpError(409, "No verified checklist is available");
+  if (!checklistCovered(r, checklist)) {
+    throw new HttpError(502, "The document check did not cover every council checklist item. Try checking it again.");
+  }
+  return r.items.every((item) => item.pass) ? "ready" : "needs_fix";
+}
 
 /** Deletes an event's rows of `table` whose document_type is no longer required. */
-export async function pruneTypes(table: "documents" | "deadlines", eventId: string, keep: string[]) {
+export async function pruneTypes(table: "requirements" | "documents" | "deadlines", eventId: string, keep: string[]) {
   const q = db().from(table).delete().eq("event_id", eventId);
   must(await (keep.length ? q.not("document_type", "in", `(${keep.join(",")})`) : q));
 }

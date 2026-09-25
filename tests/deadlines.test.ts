@@ -18,8 +18,22 @@ describe("deadline engine", () => {
     expect(isWorkingDay("2027-02-08")).toBe(false);
   });
 
+  it("excludes the observed Christmas and Boxing Day holidays in 2027", () => {
+    expect(isWorkingDay("2027-12-27")).toBe(false);
+    expect(isWorkingDay("2027-12-28")).toBe(false);
+  });
+
   it("fixture deadlines match the engine", () => {
     expect(computeDeadlines(fixture.profile.date.value, fixture.requirements.map((r) => Requirement.parse(r)))).toEqual(fixture.deadlines);
+  });
+
+  it("does not show CCC permit timing or unverified traffic timing for Waimakariri", () => {
+    const reqs = fixture.requirements.map((r) => Requirement.parse(r));
+    const traffic = Requirement.parse({ documentType: "traffic_management_plan", reason: "Road impact", ruleId: "waimakariri-traffic",
+      sourceUrl: "https://www.waimakariri.govt.nz/", lastChecked: "2026-09-26" });
+    const deadlines = computeDeadlines(fixture.profile.date.value, [...reqs, traffic], "waimakariri");
+    expect(deadlines.map((d) => d.documentType)).toEqual(["special_licence_application"]);
+    expect(deadlines[0].sourceUrl).toContain("waimakariri.govt.nz");
   });
 
   it("nzToday is the NZ date, not the UTC date", () => {

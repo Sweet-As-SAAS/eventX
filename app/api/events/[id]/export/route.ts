@@ -1,7 +1,8 @@
 import { db } from "@/lib/supabase/admin";
+import { cookies } from "next/headers";
 import { renderPack } from "@/lib/pdf/pack";
 import { DraftDocument } from "@/lib/schemas";
-import { MOCK, fixture, handler, requireOrg, loadEvent, must } from "@/lib/api/server";
+import { MOCK, MOCK_FIXED_COOKIE, fixture, handler, requireOrg, loadEvent, must } from "@/lib/api/server";
 
 export const maxDuration = 60;
 
@@ -12,7 +13,12 @@ export const GET = handler(async (_req, ctx: RouteContext<"/api/events/[id]/expo
   let eventName = fixture.profile.name.value;
   let docs = fixture.documents.flatMap((d) => (d.content ? [DraftDocument.parse(d.content)] : []));
   let sources = [...new Set(fixture.requirements.map((r) => r.sourceUrl))];
-  if (!MOCK()) {
+  if (MOCK() && (await cookies()).get(MOCK_FIXED_COOKIE)?.value === "1") {
+    docs = fixture.documents.flatMap((d) => {
+      const content = d.id === fixture.fixedDocument.id ? fixture.fixedDocument.content : d.content;
+      return content ? [DraftDocument.parse(content)] : [];
+    });
+  } else if (!MOCK()) {
     const ev = await loadEvent(id, orgId);
     eventName = ev.profile?.name.value ?? "Event";
     const rows = must(await db().from("documents").select("content").eq("event_id", id).not("content", "is", null));

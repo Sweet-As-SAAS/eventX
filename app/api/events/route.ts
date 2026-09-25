@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { db } from "@/lib/supabase/admin";
 import { CouncilSlug, type EventSummary } from "@/lib/schemas";
-import { MOCK, ok, fixture, handler, parseBody, requireOrg, must, HttpError } from "@/lib/api/server";
+import { MOCK, MOCK_FIXED_COOKIE, ok, fixture, handler, parseBody, requireOrg, must, HttpError } from "@/lib/api/server";
 
 /** Dashboard list, newest first. */
 export const GET = handler(async () => {
@@ -23,7 +23,11 @@ const Body = z.object({ council: CouncilSlug, description: z.string().trim().min
 export const POST = handler(async (req) => {
   const orgId = await requireOrg();
   const body = await parseBody(req, Body);
-  if (MOCK()) return ok({ id: "demo" });
+  if (MOCK()) {
+    const response = ok({ id: "demo" });
+    response.cookies.delete(MOCK_FIXED_COOKIE);
+    return response;
+  }
   const council = must(await db().from("councils").select("id").eq("slug", body.council).maybeSingle());
   if (!council) throw new HttpError(500, `Council ${body.council} missing, run the migration`);
   const row = must(await db().from("events").insert({ org_id: orgId, council_id: council.id, description: body.description }).select("id").single());

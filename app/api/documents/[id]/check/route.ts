@@ -20,7 +20,7 @@ export const POST = handler(async (_req, ctx: RouteContext<"/api/documents/[id]/
   const result = await withDemoFallback(() => checkDocument(DraftDocument.parse(row.content), checklist.items),
     cached ? CheckResult.parse(cached) : null);
 
-  const updated = must(await db().from("documents").update({ check_results: result, status: checkedStatus(result),
+  const updated = must(await db().from("documents").update({ check_results: result, status: checkedStatus(result, checklist.items),
     updated_at: new Date().toISOString() }).eq("id", id).select("*").single());
   return ok(toEventDocument(updated, checklist.source));
 });

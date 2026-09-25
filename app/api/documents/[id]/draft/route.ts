@@ -22,9 +22,10 @@ export const POST = handler(async (_req, ctx: RouteContext<"/api/documents/[id]/
   ]);
   const sections = must(template)?.sections as string[] | undefined;
   if (!sections?.length) throw new HttpError(409, `No council template published for ${type} yet`);
+  if (!checklist?.items.length) throw new HttpError(409, `No verified checklist published for ${type} yet`);
 
   const cached = isSeeded(event) ? fixture.documents.find((d) => d.documentType === type)?.content : null;
-  const content = await withDemoFallback(() => draftDocument(profile, type, { sections, checklist: checklist?.items ?? [] }),
+  const content = await withDemoFallback(() => draftDocument(profile, type, { sections, checklist: checklist.items }),
     cached ? DraftDocument.parse(cached) : null);
 
   const updated = must(await db().from("documents").update({ content, check_results: null, status: "drafted",
