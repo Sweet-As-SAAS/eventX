@@ -1,0 +1,193 @@
+{
+  "_about": "PLACEHOLDER demo scenario, not decided yet: do not build anything around its details. Mocked run of the seeded demo event. MOCK=1 routes return these pieces; DEMO_MODE=1 falls back to them for this event only. Every key is validated by tests/contract.test.ts. Checklist items and draft text here are mock data for building screens; the real ones come from lane B's verified knowledge base. People are fictional.",
+  "description": "Fundraiser for Riccarton Rugby Club at Hagley Park on Sunday 14 March, 12 till 7pm. Around 400 people, families and kids welcome. Beer tent for adults, three food trucks, a bouncy castle and a DJ. We will need a couple of marquees.",
+  "profile": {
+    "name": { "value": "Riccarton RFC Fundraiser", "source": "inferred" },
+    "councilSlug": "ccc",
+    "date": { "value": "2027-03-14", "source": "stated" },
+    "startTime": { "value": "12:00", "source": "stated" },
+    "endTime": { "value": "19:00", "source": "stated" },
+    "venue": {
+      "name": { "value": "Hagley Park", "source": "stated" },
+      "councilLand": { "value": true, "source": "inferred" }
+    },
+    "openToPublic": { "value": true, "source": "inferred" },
+    "peakAttendance": { "value": 400, "source": "stated" },
+    "childrenAttending": { "value": true, "source": "stated" },
+    "alcohol": {
+      "supply": { "value": "sold", "source": "stated" },
+      "area": { "value": "Beer tent, adults only", "source": "stated" }
+    },
+    "food": {
+      "stalls": { "value": 3, "source": "stated" },
+      "cookingOnSite": { "value": true, "source": "answered" }
+    },
+    "structures": {
+      "marquees": { "value": 2, "source": "stated" },
+      "largestMarqueeSqm": { "value": null, "source": null },
+      "stageOver1m": { "value": false, "source": "inferred" },
+      "inflatables": { "value": true, "source": "stated" },
+      "mechanicalRides": { "value": false, "source": "inferred" }
+    },
+    "generators": { "value": true, "source": "inferred" },
+    "amplifiedSound": { "value": true, "source": "inferred" },
+    "roadOrFootpathImpact": { "value": false, "source": "answered" },
+    "vehicleAccess": { "value": true, "source": "inferred" },
+    "missing": ["structures.largestMarqueeSqm"]
+  },
+  "questions": [
+    { "path": "structures.largestMarqueeSqm", "question": "How big is your largest marquee?", "options": ["Under 100 sqm", "Over 100 sqm", "Not sure"] }
+  ],
+  "classification": {
+    "category": "community",
+    "reasoning": "Run by an incorporated sports club, proceeds go to the club, open to the public.",
+    "howToPresent": "Say in the application that all proceeds go to Riccarton RFC.",
+    "citedChunkIds": []
+  },
+  "requirements": [
+    { "documentType": "event_permit_application", "reason": "Public event on council land", "ruleId": "ccc-permit", "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits", "lastChecked": "2026-09-26" },
+    { "documentType": "site_plan", "reason": "Required with every event permit application", "ruleId": "ccc-site-plan", "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits", "lastChecked": "2026-09-26" },
+    { "documentType": "health_safety_plan", "reason": "Required with every event permit application", "ruleId": "ccc-hs-plan", "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits", "lastChecked": "2026-09-26" },
+    { "documentType": "waste_management_confirmation", "reason": "Required with every event permit application", "ruleId": "ccc-waste", "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits", "lastChecked": "2026-09-26" },
+    { "documentType": "hazard_register", "reason": "Bouncy castles and inflatables are classed as high risk", "ruleId": "ccc-inflatable", "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits", "lastChecked": "2026-09-26" },
+    { "documentType": "food_licence_check", "reason": "Food will be sold or served", "ruleId": "ccc-food", "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits", "lastChecked": "2026-09-26" },
+    { "documentType": "special_licence_application", "reason": "Alcohol will be sold", "ruleId": "ccc-special-licence", "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits", "lastChecked": "2026-09-26" }
+  ],
+  "documents": [
+    { "id": "doc-permit", "documentType": "event_permit_application", "status": "manual", "content": null, "checkResults": null, "checklistSource": null },
+    { "id": "doc-site-plan", "documentType": "site_plan", "status": "manual", "content": null, "checkResults": null, "checklistSource": null },
+    {
+      "id": "doc-hs",
+      "documentType": "health_safety_plan",
+      "status": "needs_fix",
+      "content": {
+        "documentType": "health_safety_plan",
+        "title": "Event health and safety plan",
+        "sections": [
+          { "heading": "Event overview", "body": "Riccarton RFC Fundraiser is a family community event at Hagley Park on Sunday 14 March 2027, 12pm to 7pm, with an expected peak of 400 people including children. Beer is sold to adults from a fenced marquee under a special licence." },
+          { "heading": "Key hazards and controls", "body": "Inflatable bouncy castle, anchored to manufacturer specification and supervised at all times by [VOLUNTEER NAME]. Generator for food trucks, fenced and away from public areas. Alcohol served only inside the licensed area with a duty manager present." },
+          { "heading": "Emergency response", "body": "First aid beside the main entrance. In an evacuation, marshals direct attendees through the north and east exits to [ASSEMBLY POINT]." },
+          { "heading": "Roles and contacts", "body": "Event manager [NAME]. Duty manager [NAME]. First aid provider [PROVIDER]." }
+        ],
+        "placeholders": ["[VOLUNTEER NAME]", "[ASSEMBLY POINT]", "[NAME]", "[PROVIDER]"],
+        "citedChunkIds": []
+      },
+      "checkResults": {
+        "items": [
+          { "itemId": "hs-1", "text": "Event details and times", "pass": true, "evidence": "Sunday 14 March 2027, 12pm to 7pm", "suggestedFix": null },
+          { "itemId": "hs-2", "text": "Hazards specific to this event", "pass": true, "evidence": "Inflatable bouncy castle, anchored to manufacturer specification", "suggestedFix": null },
+          { "itemId": "hs-3", "text": "First aid location", "pass": true, "evidence": "First aid beside the main entrance", "suggestedFix": null },
+          { "itemId": "hs-4", "text": "Emergency assembly point named", "pass": false, "evidence": "", "suggestedFix": "Name the assembly point, for example the open lawn north of the main gate, and mark it on the site plan." }
+        ]
+      },
+      "checklistSource": { "url": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-resources", "lastChecked": "2026-09-26" }
+    },
+    {
+      "id": "doc-waste",
+      "documentType": "waste_management_confirmation",
+      "status": "ready",
+      "content": {
+        "documentType": "waste_management_confirmation",
+        "title": "Waste management confirmation",
+        "sections": [
+          { "heading": "Bins and recycling", "body": "Rubbish and recycling bins at the beer tent, beside each of the three food trucks and at both entrances." },
+          { "heading": "During and after the event", "body": "Volunteers empty bins during the event and walk the site for litter after close at 7pm. All waste leaves Hagley Park the same evening with [WASTE CONTRACTOR]." }
+        ],
+        "placeholders": ["[WASTE CONTRACTOR]"],
+        "citedChunkIds": []
+      },
+      "checkResults": {
+        "items": [
+          { "itemId": "wm-1", "text": "Bins provided where food and drink are sold", "pass": true, "evidence": "Rubbish and recycling bins at the beer tent, beside each of the three food trucks", "suggestedFix": null },
+          { "itemId": "wm-2", "text": "Site cleared after the event", "pass": true, "evidence": "walk the site for litter after close at 7pm", "suggestedFix": null }
+        ]
+      },
+      "checklistSource": { "url": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits", "lastChecked": "2026-09-26" }
+    },
+    {
+      "id": "doc-hazard",
+      "documentType": "hazard_register",
+      "status": "ready",
+      "content": {
+        "documentType": "hazard_register",
+        "title": "Hazard register",
+        "sections": [
+          { "heading": "Inflatable bouncy castle", "body": "Risk: falls, collisions and the castle lifting in wind. Controls: anchored to manufacturer specification, supervised at all times by [VOLUNTEER NAME], age and number limits posted, deflated if the wind picks up. Residual risk: low." },
+          { "heading": "Generator and food truck cooking", "body": "Risk: burns, fire and fuel spills. Controls: generator fenced off from the public, fire extinguisher at each food truck, gas bottles secured upright. Residual risk: low." },
+          { "heading": "Alcohol", "body": "Risk: intoxication and under-18s being served. Controls: sales only inside the fenced beer tent, duty manager [DUTY MANAGER NAME] on site, ID checked at the tent entrance. Residual risk: medium." },
+          { "heading": "Crowd and lost children", "body": "Risk: crowding at the busiest time (about 400 people) and children getting separated. Controls: marshals at both entrances, lost child point at the first aid tent. Residual risk: low." }
+        ],
+        "placeholders": ["[VOLUNTEER NAME]", "[DUTY MANAGER NAME]"],
+        "citedChunkIds": []
+      },
+      "checkResults": {
+        "items": [
+          { "itemId": "hz-1", "text": "Every hazard has controls", "pass": true, "evidence": "Controls: generator fenced off from the public", "suggestedFix": null },
+          { "itemId": "hz-2", "text": "Inflatable devices covered", "pass": true, "evidence": "Inflatable bouncy castle", "suggestedFix": null },
+          { "itemId": "hz-3", "text": "Alcohol risks covered", "pass": true, "evidence": "sales only inside the fenced beer tent", "suggestedFix": null }
+        ]
+      },
+      "checklistSource": { "url": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits", "lastChecked": "2026-09-26" }
+    },
+    { "id": "doc-food", "documentType": "food_licence_check", "status": "manual", "content": null, "checkResults": null, "checklistSource": null },
+    {
+      "id": "doc-licence",
+      "documentType": "special_licence_application",
+      "status": "ready",
+      "content": {
+        "documentType": "special_licence_application",
+        "title": "Special licence application",
+        "sections": [
+          { "heading": "Applicant", "body": "Riccarton Rugby Football Club, [INCORPORATED SOCIETY NUMBER]. Contact [NAME], [PHONE]." },
+          { "heading": "Event and licensed area", "body": "Riccarton RFC Fundraiser at Hagley Park on Sunday 14 March 2027. Alcohol is sold only inside a fenced beer tent for adults. Licensed hours [LICENSED HOURS, within 12pm to 7pm]." },
+          { "heading": "Duty manager", "body": "A certified duty manager is on site the whole time alcohol is sold: [DUTY MANAGER NAME], certificate [CERTIFICATE NUMBER]." },
+          { "heading": "Host responsibility", "body": "Food from three food trucks is available all day. Water and non-alcoholic drinks are sold at the beer tent. ID is checked at the tent entrance. [TRANSPORT OPTIONS]." }
+        ],
+        "placeholders": ["[INCORPORATED SOCIETY NUMBER]", "[NAME]", "[PHONE]", "[LICENSED HOURS, within 12pm to 7pm]", "[DUTY MANAGER NAME]", "[CERTIFICATE NUMBER]", "[TRANSPORT OPTIONS]"],
+        "citedChunkIds": []
+      },
+      "checkResults": {
+        "items": [
+          { "itemId": "sl-1", "text": "Licensed area described", "pass": true, "evidence": "Alcohol is sold only inside a fenced beer tent for adults.", "suggestedFix": null },
+          { "itemId": "sl-2", "text": "Duty manager arrangements described", "pass": true, "evidence": "A certified duty manager is on site the whole time alcohol is sold", "suggestedFix": null },
+          { "itemId": "sl-3", "text": "Food and non-alcoholic drinks available", "pass": true, "evidence": "Water and non-alcoholic drinks are sold at the beer tent.", "suggestedFix": null }
+        ]
+      },
+      "checklistSource": { "url": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-resources", "lastChecked": "2026-09-26" }
+    }
+  ],
+  "fixedDocument": {
+    "id": "doc-hs",
+    "documentType": "health_safety_plan",
+    "status": "ready",
+    "content": {
+      "documentType": "health_safety_plan",
+      "title": "Event health and safety plan",
+      "sections": [
+        { "heading": "Event overview", "body": "Riccarton RFC Fundraiser is a family community event at Hagley Park on Sunday 14 March 2027, 12pm to 7pm, with an expected peak of 400 people including children. Beer is sold to adults from a fenced marquee under a special licence." },
+        { "heading": "Key hazards and controls", "body": "Inflatable bouncy castle, anchored to manufacturer specification and supervised at all times by [VOLUNTEER NAME]. Generator for food trucks, fenced and away from public areas. Alcohol served only inside the licensed area with a duty manager present." },
+        { "heading": "Emergency response", "body": "First aid beside the main entrance. In an evacuation, marshals direct attendees through the north and east exits to the assembly point on the open lawn north of the main gate, marked on the site plan." },
+        { "heading": "Roles and contacts", "body": "Event manager [NAME]. Duty manager [NAME]. First aid provider [PROVIDER]." }
+      ],
+      "placeholders": ["[VOLUNTEER NAME]", "[NAME]", "[PROVIDER]"],
+      "citedChunkIds": []
+    },
+    "checkResults": {
+      "items": [
+        { "itemId": "hs-1", "text": "Event details and times", "pass": true, "evidence": "Sunday 14 March 2027, 12pm to 7pm", "suggestedFix": null },
+        { "itemId": "hs-2", "text": "Hazards specific to this event", "pass": true, "evidence": "Inflatable bouncy castle, anchored to manufacturer specification", "suggestedFix": null },
+        { "itemId": "hs-3", "text": "First aid location", "pass": true, "evidence": "First aid beside the main entrance", "suggestedFix": null },
+        { "itemId": "hs-4", "text": "Emergency assembly point named", "pass": true, "evidence": "the assembly point on the open lawn north of the main gate, marked on the site plan", "suggestedFix": null }
+      ]
+    },
+    "checklistSource": { "url": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-resources", "lastChecked": "2026-09-26" }
+  },
+  "deadlines": [
+    { "documentType": "event_permit_application", "label": "Lodge event permit application with site plan and health and safety plan", "legalMinimum": "2027-02-07", "recommended": "2027-01-03", "basis": "CCC processing starts at five weeks for a low impact event. We aim for ten weeks.", "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits" },
+    { "documentType": "special_licence_application", "label": "Lodge special licence application", "legalMinimum": "2027-02-15", "recommended": "2027-01-29", "basis": "At least 20 working days before the event. 20 Dec to 15 Jan does not count. We aim two weeks earlier.", "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-resources" }
+  ],
+  "licences": [
+    { "id": "lic-club", "type": "Club licence", "holderName": "Riccarton RFC", "expiresOn": "2028-03-01" },
+    { "id": "lic-dm", "type": "Duty manager certificate", "holderName": "Alex Morgan", "expiresOn": "2027-01-20" }
+  ]
+}

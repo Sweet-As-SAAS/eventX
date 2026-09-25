@@ -1,0 +1,24 @@
+# dependencies
+/node_modules
+
+# next.js
+/.next/
+/out/
+next-env.d.ts
+*.tsbuildinfo
+
+# env: only the example is committed
+.env*
+!.env.example
+
+# vercel
+.vercel
+
+# scraped council files: stored for our own use, never republished (TRD: terms and copyright)
+data/
+
+# misc
+.DS_Store
+*.pem
+npm-debug.log*
+/coverage

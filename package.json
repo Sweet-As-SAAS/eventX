@@ -1,0 +1,45 @@
+{
+  "name": "hostready",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "next typegen && tsc --noEmit",
+    "test": "vitest run",
+    "fixture": "tsx scripts/demo-fixture.ts",
+    "ingest:crawl": "tsx scripts/ingest/crawl.ts",
+    "ingest:extract": "tsx scripts/ingest/extract.ts",
+    "ingest:load": "tsx --env-file=.env.local scripts/ingest/load.ts",
+    "ingest:normalise": "tsx --env-file=.env.local scripts/ingest/normalise.ts",
+    "ingest:publish": "tsx --env-file=.env.local scripts/ingest/publish.ts"
+  },
+  "dependencies": {
+    "@react-pdf/renderer": "^4.9.0",
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.117.2",
+    "next": "16.3.6",
+    "openai": "^7.23.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "resend": "^6.29.0",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^22.20.4",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "cheerio": "^1.2.0",
+    "mammoth": "^1.12.3",
+    "pdf-parse": "^2.4.5",
+    "tailwindcss": "^4",
+    "tsx": "^4.23.15",
+    "typescript": "^5",
+    "vitest": "^5.0.2"
+  }
+}
