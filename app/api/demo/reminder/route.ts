@@ -7,9 +7,10 @@ export const POST = handler(async () => {
   await requireOrg();
   if (MOCK()) return ok({ ok: true });
   if (!process.env.REMINDER_TO) throw new HttpError(500, "Set REMINDER_TO");
+  if (!process.env.APP_URL) throw new HttpError(500, "Set APP_URL for reminder links");
   const d = fixture.deadlines[0]; // sorted by recommended date
   if (!d) throw new HttpError(500, "The demo fixture has no deadlines");
   await sendReminder(process.env.REMINDER_TO, { eventName: fixture.profile.name.value, label: d.label, due: d.recommended,
-    link: `${process.env.APP_URL ?? ""}/dashboard` });
+    link: `${process.env.APP_URL}/dashboard` });
   return ok({ ok: true });
 });
