@@ -1,5 +1,5 @@
 import { DraftDocument, type DocumentType, type EventProfile } from "../schemas";
-import { structured, MODEL_STRONG, fence } from "./client";
+import { structured, fence } from "./client";
 import { DRAFT_SYSTEM, DRAFT_REVIEW_SYSTEM } from "./prompts";
 import { retrieve, chunksToText } from "./retrieve";
 
@@ -37,7 +37,7 @@ export function unsupportedDraftFacts(draft: DraftDocument, profile: EventProfil
 export async function draftDocument(profile: EventProfile, type: DocumentType, t: TemplateAndChecklist) {
   const chunks = await retrieve(profile.councilSlug, `${type.replaceAll("_", " ")} requirements template`);
   const draft = await structured({
-    schema: DraftDocument, name: "draft_document", model: MODEL_STRONG, system: DRAFT_SYSTEM,
+    schema: DraftDocument, name: "draft_document", model: "strong", system: DRAFT_SYSTEM,
     user: [
       `Document type: ${type}`,
       `Event profile:\n${JSON.stringify(profile)}`,
@@ -51,7 +51,7 @@ export async function draftDocument(profile: EventProfile, type: DocumentType, t
   for (let attempt = 0; attempt < 2; attempt++) {
     const issues = unsupportedDraftFacts(reviewed, profile, sourceText);
     reviewed = await structured({
-      schema: DraftDocument, name: "reviewed_draft_document", model: MODEL_STRONG, system: DRAFT_REVIEW_SYSTEM,
+      schema: DraftDocument, name: "reviewed_draft_document", model: "strong", system: DRAFT_REVIEW_SYSTEM,
       user: [
         `Event profile:\n${JSON.stringify(profile)}`,
         `Allowed event-specific proper names: ${JSON.stringify([profile.name.value, profile.venue.name.value].filter(Boolean))}`,

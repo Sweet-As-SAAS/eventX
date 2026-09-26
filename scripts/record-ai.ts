@@ -50,7 +50,7 @@ async function main() {
 
   await mkdir("tests/fixtures", { recursive: true });
   await writeFile("tests/fixtures/ai-live.json", JSON.stringify({ recordedAt: new Date().toISOString(),
-    models: { fast: process.env.OPENAI_MODEL_FAST, strong: process.env.OPENAI_MODEL_STRONG },
+    models: { fast: process.env.OPENAI_MODEL_FAST, strong: process.env.OPENAI_MODEL_STRONG, embed: process.env.OPENAI_MODEL_EMBED },
     profiles, classifications, drafts, checks }, null, 2) + "\n");
   console.log("Recorded 10 live responses per AI schema to tests/fixtures/ai-live.json");
 }

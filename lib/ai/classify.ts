@@ -1,5 +1,5 @@
 import { Classification, type EventProfile } from "../schemas";
-import { structured, MODEL_STRONG, fence } from "./client";
+import { structured, fence } from "./client";
 import { CLASSIFY_SYSTEM } from "./prompts";
 import { retrieve, chunksToText } from "./retrieve";
 
@@ -7,7 +7,7 @@ import { retrieve, chunksToText } from "./retrieve";
 export async function classify(profile: EventProfile) {
   const chunks = await retrieve(profile.councilSlug, "community event commercial event definition fees charges");
   const result = await structured({
-    schema: Classification, name: "classification", model: MODEL_STRONG, system: CLASSIFY_SYSTEM,
+    schema: Classification, name: "classification", model: "strong", system: CLASSIFY_SYSTEM,
     user: `Event profile:\n${JSON.stringify(profile)}\n\n${fence("council", chunksToText(chunks))}`,
   });
   const allowedIds = new Set(chunks.map((c) => c.id));
