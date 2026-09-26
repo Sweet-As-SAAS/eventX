@@ -123,12 +123,15 @@ export function DescribeForm({ initial = "", autoFocus = false, pill = false }: 
   if (pill) {
     return (
       <form onSubmit={submit}>
-        <div className="flex items-center gap-2 rounded-full border border-neutral-200 bg-background py-2 pl-3 pr-2 shadow-[0_10px_30px_-14px_rgb(20_23_36/0.22)] transition-[border-color,box-shadow] duration-150 focus-within:border-primary focus-within:ring-4 focus-within:ring-brand-100">
+        <div className="flex items-end gap-2 rounded-[28px] border border-neutral-200 bg-background py-2 pl-3 pr-2 shadow-[0_10px_30px_-14px_rgb(20_23_36/0.22)] transition-[border-color,box-shadow] duration-150 focus-within:border-primary focus-within:ring-4 focus-within:ring-brand-100">
           <label htmlFor={`${uid}-text`} className="sr-only">Describe your event</label>
           {attach}
-          <input id={`${uid}-text`} required minLength={10} maxLength={MAX} value={text} autoComplete="off" aria-describedby={`${uid}-count`}
+          {/* Grows with the text like a chat box; Enter sends, Shift+Enter adds a line. */}
+          <textarea id={`${uid}-text`} required minLength={10} maxLength={MAX} value={text} rows={1} autoComplete="off" aria-describedby={`${uid}-count`}
+            ref={(el) => { if (el) { el.style.height = "auto"; el.style.height = `${Math.min(el.scrollHeight, 240)}px`; } }}
             onChange={(e) => setText(e.target.value)} placeholder="Tell us about it in one sentence…"
-            className="min-h-12 min-w-0 flex-1 bg-transparent text-lg text-foreground placeholder:text-neutral-500 focus:outline-none" />
+            onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); if (!tooShort && !busy) e.currentTarget.form?.requestSubmit(); } }}
+            className="max-h-60 min-h-12 min-w-0 flex-1 resize-none overflow-y-auto bg-transparent py-2.5 text-lg leading-7 text-foreground placeholder:text-neutral-500 focus:outline-none" />
           <button type="submit" disabled={busy || tooShort} aria-busy={busy || undefined} aria-label="Check my event" title={tooShort ? "Write at least 10 characters first" : "Check my event"}
             className="press grid size-12 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground hover:bg-brand-600 disabled:cursor-not-allowed disabled:bg-neutral-300">
             {busy ? <Spinner /> : <ArrowUp width={20} height={20} strokeWidth={2.25} />}
