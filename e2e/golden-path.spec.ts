@@ -80,7 +80,7 @@ test("golden path", async ({ page }, info) => {
   await step("documents: click Fix, item turns green", async () => {
     await fixButton.click({ timeout: STEP_TIMEOUT });
     // "Fix it" either fixes in one click or opens the item, where "Apply fix" / "Add to draft" finishes it.
-    const apply = page.getByRole("button", { name: /apply fix|add to draft/i }).first();
+    const apply = page.getByRole("button", { name: /apply fix|add to draft|fix it for me/i }).first();
     if (await apply.waitFor({ timeout: 2_000 }).then(() => true, () => false)) {
       const answerBox = page.getByRole("textbox").filter({ visible: true }).first(); // facts EvntX must not invent
       if (await answerBox.isVisible()) await answerBox.fill("The open lawn north of the main gate");
@@ -106,7 +106,8 @@ test("golden path", async ({ page }, info) => {
   // 6. Deadlines: engine dates, PDF, reminder, Eventbrite draft
   await ensureAt(/\/deadlines$/, `/events/${id}/deadlines`);
   await step("deadlines: special licence recommended 29 Jan 2027", async () => {
-    await expect(page.getByText(/29 Jan/).first()).toBeVisible({ timeout: STEP_TIMEOUT });
+    await page.getByRole("button", { name: /^29 Jan 2027/ }).click({ timeout: STEP_TIMEOUT });
+    await expect(page.getByText(/29 Jan 2027/).first()).toBeVisible({ timeout: STEP_TIMEOUT });
   });
   await step("deadlines: special licence legal minimum 15 Feb 2027", async () => {
     await expect(page.getByText(/15 Feb(ruary)? 2027/).first()).toBeVisible({ timeout: STEP_TIMEOUT });
@@ -121,8 +122,10 @@ test("golden path", async ({ page }, info) => {
     expect(download.suggestedFilename()).toMatch(/\.pdf$/);
   });
   await step("deadlines: send reminder", async () => {
-    await page.getByRole("button", { name: /remind/i }).first().click({ timeout: STEP_TIMEOUT });
-    await expect(page.getByText(/sent/i).first()).toBeVisible({ timeout: STEP_TIMEOUT });
+    const toggle = page.getByRole("switch", { name: /remind/i });
+    await toggle.click({ timeout: STEP_TIMEOUT }); // on by default: off, then on sends the first one
+    await toggle.click({ timeout: STEP_TIMEOUT });
+    await expect(page.getByText(/reminders on/i).first()).toBeVisible({ timeout: STEP_TIMEOUT });
   });
   await step("deadlines: Eventbrite draft link appears", async () => {
     await page.getByRole("button", { name: /eventbrite/i }).first().click({ timeout: STEP_TIMEOUT });
