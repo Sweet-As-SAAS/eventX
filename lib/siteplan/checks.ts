@@ -51,7 +51,6 @@ export function siteChecks(
   checks.push(
     hostready("exits", "At least two exits", on("exit") >= 2, `${on("exit")} on the plan`),
     hostready("firstaid", "First aid on the plan", on("firstaid") > 0),
-    hostready("toilets", "Toilets for your crowd", on("toilet") > 0, items.find((e) => e.kind === "toilet")?.label.replace("Toilets ×", "") ?? null),
     hostready("assembly", "Assembly point placed", on("assembly") > 0),
   );
   return checks;

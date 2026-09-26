@@ -35,7 +35,8 @@ describe("profile parsing (mocked model)", () => {
 
     expect(mocked).toHaveBeenCalledTimes(1);
     expect(mocked.mock.calls[0][0].user).toContain(fixture.description);
-    expect(mocked.mock.calls[0][0]).toMatchObject({ schema: EventProfile, name: "event_profile", model: "fast" });
+    // Strong model: the profile also picks out who's doing what (organiser, duty manager, security…).
+    expect(mocked.mock.calls[0][0]).toMatchObject({ name: "event_profile", model: "strong" });
     expect(profile.councilSlug).toBe("ccc");
     expect(profile.date).toEqual({ value: "2027-03-14", source: "stated" });
     expect(profile.missing).toEqual(missingPaths(profile));

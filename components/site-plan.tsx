@@ -42,13 +42,12 @@ export function SitePlan({ eventId, layout, council, requirements }: Props) {
   useEffect(() => { latest.current = els; });
   useEffect(() => {
     if (!edits) return;
-    setStatus("saving");
     const t = setTimeout(() => {
       api.saveSitePlan(eventId, { items: latest.current }).then(() => setStatus("saved"), (e) => { setStatus("idle"); fail(e); });
     }, 1000);
     return () => clearTimeout(t);
   }, [edits, eventId, fail]);
-  const edited = () => setEdits((n) => n + 1);
+  const edited = () => { setEdits((n) => n + 1); setStatus("saving"); };
 
   const move = (id: string, fn: (e: SiteItem) => Partial<SiteItem>) => setEls((all) => all.map((e) => (e.id === id ? { ...e, ...fn(e) } : e)));
   const at = (ev: PointerEvent) => {

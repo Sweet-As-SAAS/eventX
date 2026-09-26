@@ -24,20 +24,17 @@ export function crowdKit(p: EventProfile) {
 }
 
 export function defaultLayout(p: EventProfile): SiteItem[] {
-  const kit = crowdKit(p);
   const els: Omit<SiteItem, "x" | "y" | "placed">[] = [];
   const add = (kind: SiteItemKind, label: string, w: number, h: number, n = 1) =>
     Array.from({ length: n }, (_, i) => els.push({ id: `${kind}-${i}`, kind, label: n > 1 ? `${label} ${i + 1}` : label, w, h }));
-  if (p.alcohol.supply.value === "sold") add("licensed", "Licensed area", Math.round(190 * kit.licensedScale), Math.round(120 * kit.licensedScale));
+  if (p.alcohol.supply.value === "sold") add("licensed", "Licensed area", 190, 120);
   add("marquee", "Marquee", 110, 76, Math.min(p.structures.marquees.value ?? 0, 6));
   add("food", "Food", 74, 46, Math.min(p.food.stalls.value ?? 0, 8));
   if (p.structures.inflatables.value) add("inflatable", "Inflatable", 92, 92);
   if (p.structures.mechanicalRides.value) add("ride", "Ride", 96, 70);
   if (p.structures.stageOver1m.value) add("stage", "Stage", 150, 64);
   if (p.generators.value) add("generator", "Generator", 76, 36);
-  add("firstaid", "First aid", 80, 46, kit.firstAid);
-  add("toilet", `Toilets ×${kit.toilets}`, Math.min(40 + 14 * kit.toilets, 300), 40); // one block, as wide as the number of toilets
-  add("bin", "Bin", 34, 30, kit.bins);
+  add("firstaid", "First aid", 80, 46);
 
   // Shelf-pack everything inside the boundary, then exits on the boundary line.
   let x = EDGE + 28, y = EDGE + 28, row = 0;
