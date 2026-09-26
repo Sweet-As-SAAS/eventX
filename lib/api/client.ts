@@ -39,8 +39,8 @@ export const api = {
   /** Step 5 for one document. Fire one per pending document in parallel so each card flips as it lands. */
   draft: (documentId: string) => call(EventDocument, `/api/documents/${documentId}/draft`, {}),
   check: (documentId: string) => call(EventDocument, `/api/documents/${documentId}/check`, {}),
-  /** Applies the suggested fix for one checklist item and re-checks, so red turns green in one call. */
-  fix: (documentId: string, itemId: string) => call(EventDocument, `/api/documents/${documentId}/fix`, { itemId }),
+  /** Applies the suggested fix for one checklist item and re-checks. `text` is the organiser's own answer for facts we can't invent. */
+  fix: (documentId: string, itemId: string, text?: string) => call(EventDocument, `/api/documents/${documentId}/fix`, { itemId, text }),
 
   deadlines: (id: string) => call(z.array(Deadline), `/api/events/${id}/deadlines`),
   /** Use as an <a href download>, not fetch. */

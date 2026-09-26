@@ -14,6 +14,8 @@ import { Button, ButtonLink, Pill, Skeleton, SourceLine, Spinner, Title, cx } fr
 const ACT = "press inline-flex min-h-10 min-w-[88px] shrink-0 items-center justify-center gap-2 rounded-lg px-4 text-[15px] font-semibold disabled:cursor-wait";
 const ACT_PRIMARY = cx(ACT, "bg-primary text-primary-foreground hover:bg-brand-600");
 const ACT_SECONDARY = cx(ACT, "border border-neutral-200 bg-background text-foreground hover:border-neutral-300 hover:bg-neutral-50");
+/** A fix that still has a [PLACEHOLDER] (or no fix at all) needs facts only the organiser has. */
+const needsYou = (fix: string | null) => !fix || /\[[^\]]+\]/.test(fix);
 
 export default function DocumentsPage({ params }: PageProps<"/events/[id]/documents">) {
   const { id } = use(params);
@@ -55,14 +57,16 @@ export default function DocumentsPage({ params }: PageProps<"/events/[id]/docume
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  async function fix(doc: EventDocument, itemId: string) {
+  async function fix(doc: EventDocument, itemId: string, text?: string) {
     setFixing(itemId);
     try {
-      const d = replace(await api.fix(doc.id, itemId));
+      const d = replace(await api.fix(doc.id, itemId, text));
       setJustFixed(itemId);
       setFlashDoc(d.id);
       dispatchEvent(new Event(CHANGED));
-      toast(d.status === "ready" ? `Fixed. ${DOC_LABEL[d.documentType]} is ready.` : "Fixed.");
+      const passed = d.checkResults?.items.find((i) => i.itemId === itemId)?.pass;
+      if (!passed) toast("Added to the draft, but the council checklist still wants more for this item.", "error");
+      else toast(d.status === "ready" ? `Fixed. ${DOC_LABEL[d.documentType]} is ready.` : "Fixed.");
     } catch (e) {
       fail(e);
     } finally {
@@ -110,7 +114,7 @@ export default function DocumentsPage({ params }: PageProps<"/events/[id]/docume
                         <button className={ACT_SECONDARY} onClick={() => work(d)}><Refresh width={16} height={16} /> Try again</button>
                       ) : d.status === "needs_fix" ? (
                         <button className={ACT_PRIMARY} disabled={!!fixing} aria-expanded={isOpen}
-                          onClick={() => (gap?.suggestedFix && !isOpen ? fix(d, gap.itemId) : toggle(d.id))}>
+                          onClick={() => (gap && !needsYou(gap.suggestedFix) && !isOpen ? fix(d, gap.itemId) : toggle(d.id))}>
                           {fixing && fixing === gap?.itemId ? <><Spinner /> Fixing</> : "Fix it"}
                         </button>
                       ) : (
@@ -123,7 +127,7 @@ export default function DocumentsPage({ params }: PageProps<"/events/[id]/docume
                   {isOpen && (
                     <div className="arrive border-t border-border bg-background px-5 py-7 sm:pl-[76px] sm:pr-10">
                       <DocumentDetail doc={d} profile={profile} req={req} failed={isFailed} retry={() => work(d)}
-                        fixing={fixing} justFixed={justFixed} onFix={(itemId) => fix(d, itemId)} />
+                        fixing={fixing} justFixed={justFixed} onFix={(itemId, text) => fix(d, itemId, text)} />
                     </div>
                   )}
                 </li>
@@ -150,7 +154,7 @@ export default function DocumentsPage({ params }: PageProps<"/events/[id]/docume
 
 function DocumentDetail({ doc, profile, req, failed, retry, fixing, justFixed, onFix }: {
   doc: EventDocument; profile: EventProfile | null; req?: Requirement; failed: boolean; retry: () => void;
-  fixing: string | null; justFixed: string | null; onFix: (itemId: string) => void;
+  fixing: string | null; justFixed: string | null; onFix: (itemId: string, text?: string) => void;
 }) {
   if (doc.status === "manual") {
     return (
@@ -211,19 +215,7 @@ function DocumentDetail({ doc, profile, req, failed, retry, fixing, justFixed, o
               <div className="min-w-0 flex-1 space-y-2">
                 <p className="text-base font-semibold text-foreground">{it.text}</p>
                 {it.pass && justFixed === it.itemId && it.evidence && <p className="text-sm text-muted-foreground">Now says: &ldquo;{it.evidence}&rdquo;</p>}
-                {!it.pass && (
-                  <>
-                    <p className="text-base text-destructive">Missing from the draft.</p>
-                    {it.suggestedFix && (
-                      <div className="space-y-3">
-                        <p className="text-base text-neutral-800"><span className="font-semibold">Suggested fix: </span>{it.suggestedFix}</p>
-                        <Button busy={fixing === it.itemId} disabled={!!fixing} onClick={() => onFix(it.itemId)}>
-                          {fixing !== it.itemId && <Wand />} {fixing === it.itemId ? "Applying fix" : "Apply fix"}
-                        </Button>
-                      </div>
-                    )}
-                  </>
-                )}
+                {!it.pass && <FixItem fix={it.suggestedFix} busy={fixing === it.itemId} disabled={!!fixing} onFix={(text) => onFix(it.itemId, text)} />}
               </div>
             </li>
           ))}
@@ -245,6 +237,30 @@ function DocumentDetail({ doc, profile, req, failed, retry, fixing, justFixed, o
         </div>
       </details>
     </article>
+  );
+}
+
+/** One red checklist item: the suggested fix, plus a box for facts only the organiser has (names, providers, menus). */
+function FixItem({ fix, busy, disabled, onFix }: { fix: string | null; busy: boolean; disabled: boolean; onFix: (text?: string) => void }) {
+  const [text, setText] = useState("");
+  const ask = needsYou(fix);
+  const typed = text.trim();
+  return (
+    <form className="space-y-3" onSubmit={(e) => { e.preventDefault(); onFix(typed || undefined); }}>
+      <p className="text-base text-destructive">Missing from the draft.</p>
+      {fix && <p className="text-base text-neutral-800"><span className="font-semibold">Suggested fix: </span><Gaps text={fix} /></p>}
+      <label className="block max-w-prose">
+        <span className="mb-1 block text-sm font-medium text-neutral-700">
+          {ask ? "Only you know this. Add the details and we'll write them into the draft." : "Or say it in your own words (optional)"}
+        </span>
+        <textarea value={text} onChange={(e) => setText(e.target.value)} rows={2} maxLength={1500} disabled={disabled}
+          placeholder="Names, providers or arrangements, in your words"
+          className="block w-full rounded-lg border border-neutral-300 bg-background px-3 py-2 text-base text-foreground placeholder:text-neutral-400 focus:border-primary focus:outline-none focus:ring-4 focus:ring-brand-100" />
+      </label>
+      <Button type="submit" busy={busy} disabled={disabled || (ask && !typed)}>
+        {!busy && <Wand />} {busy ? "Updating the draft" : typed ? "Add to draft" : "Apply fix"}
+      </Button>
+    </form>
   );
 }
 

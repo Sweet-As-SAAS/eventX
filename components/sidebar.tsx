@@ -44,8 +44,10 @@ export function Sidebar({ name }: { name: string | null }) {
   useEffect(() => {
     if (!eventId) return setCurrent(null);
     let live = true;
-    Promise.all([api.getEvent(eventId), api.listDocuments(eventId), api.deadlines(eventId).catch(() => [])])
-      .then(([ev, docs, deadlines]) => live && setCurrent({ ev, docs, deadlines }))
+    // Deadlines need a dated profile (409 before that), so ask only once the event has one.
+    Promise.all([api.getEvent(eventId), api.listDocuments(eventId)])
+      .then(async ([ev, docs]) => ({ ev, docs, deadlines: ev.profile?.date.value ? await api.deadlines(eventId).catch(() => []) : [] }))
+      .then((c) => live && setCurrent(c))
       .catch(() => {});
     return () => { live = false; };
   }, [eventId, path, tick]);
