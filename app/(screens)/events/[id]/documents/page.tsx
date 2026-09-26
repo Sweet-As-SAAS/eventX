@@ -11,7 +11,7 @@ import { Button, ButtonLink, Pill, Skeleton, SourceLine, Spinner, Title, cx } fr
 
 // Screen 3, Documents. Every pending document drafts and checks in parallel; each row flips as it lands.
 // Open expands the document in place; Fix it applies the suggested fix straight away.
-const ACT = "press inline-flex min-h-10 min-w-[88px] shrink-0 items-center justify-center gap-2 rounded-lg px-4 text-[15px] font-semibold disabled:cursor-wait";
+const ACT = "press inline-flex min-h-11 min-w-[88px] shrink-0 items-center justify-center gap-2 rounded-lg px-4 text-[15px] font-semibold disabled:cursor-wait";
 const ACT_PRIMARY = cx(ACT, "bg-primary text-primary-foreground hover:bg-brand-600");
 const ACT_SECONDARY = cx(ACT, "border border-neutral-200 bg-background text-foreground hover:border-neutral-300 hover:bg-neutral-50");
 /** A fix that still has a [PLACEHOLDER] (or no fix at all) needs facts only the organiser has. */
@@ -103,13 +103,17 @@ export default function DocumentsPage({ params }: PageProps<"/events/[id]/docume
                 <li key={d.id} className={cx("border-b border-border last:border-b-0", d.status === "needs_fix" && "bg-warning-soft/40", flashDoc === d.id && d.status === "ready" && "flash-pass")}>
                   <div className="flex flex-wrap items-center gap-x-4 gap-y-3 px-5 py-4 sm:flex-nowrap">
                     <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-brand-50 text-primary"><Doc /></span>
-                    <div className="min-w-0 flex-1">
+                    <div className="min-w-0 flex-1 basis-[calc(100%-3.5rem)] sm:basis-0">
                       <p className="text-[17px] font-semibold text-foreground">{d.content?.title ?? DOC_LABEL[d.documentType]}</p>
                       <p className="line-clamp-2 text-[15px] text-neutral-600 sm:line-clamp-1">{sub}</p>
+                      {req && <SourceLine url={req.sourceUrl} checked={req.lastChecked} className="mt-0.5" />}
                     </div>
                     <div className="ml-14 flex items-center gap-3 sm:ml-0">
                       {isFailed ? <Pill tone="warn">Didn&apos;t finish</Pill>
-                        : <Pill tone={d.status === "ready" ? "ok" : d.status === "needs_fix" ? "warn" : "quiet"}>{d.status === "drafted" ? "Checking" : STATUS_LABEL[d.status]}</Pill>}
+                        : <Pill tone={d.status === "ready" ? "ok" : d.status === "needs_fix" ? "warn" : "quiet"}>
+                            {(d.status === "pending" || d.status === "drafted") && <span className="mr-1.5 inline-flex"><Spinner /></span>}
+                            {d.status === "drafted" ? "Checking" : STATUS_LABEL[d.status]}
+                          </Pill>}
                       {isFailed ? (
                         <button className={ACT_SECONDARY} onClick={() => work(d)}><Refresh width={16} height={16} /> Try again</button>
                       ) : d.status === "needs_fix" ? (
@@ -119,7 +123,7 @@ export default function DocumentsPage({ params }: PageProps<"/events/[id]/docume
                         </button>
                       ) : (
                         <button className={ACT_SECONDARY} aria-expanded={isOpen} onClick={() => toggle(d.id)}>
-                          {isOpen ? "Close" : d.status === "pending" || d.status === "drafted" ? "Continue" : "Open"}
+                          {isOpen ? "Close" : "Open"}
                         </button>
                       )}
                     </div>
@@ -144,8 +148,13 @@ export default function DocumentsPage({ params }: PageProps<"/events/[id]/docume
 
       {docs && (
         <div className="flex flex-wrap items-center gap-6 pt-2">
-          <ButtonLink href={`/events/${id}/site-plan`} className="min-h-12 px-7 text-[17px]">Continue to site plan</ButtonLink>
+          <ButtonLink href={`/events/${id}/site-plan`} variant={toFix ? "secondary" : "primary"} className="min-h-12 px-7 text-[17px]">Continue to site plan</ButtonLink>
           <ButtonLink href={`/events/${id}/profile`} variant="ghost" className="!text-neutral-700 hover:!bg-neutral-50">Back</ButtonLink>
+          <p className="basis-full text-base text-neutral-600" aria-live="polite">
+            {working ? `Drafting ${working} ${working === 1 ? "document" : "documents"} to the council templates. Each one appears here when it's done.`
+              : toFix ? "Fix the red items so your pack is complete and Eventbrite unlocks."
+              : "Every draft passes the council checklist. You still read each one before you lodge it."}
+          </p>
         </div>
       )}
     </div>
@@ -203,7 +212,7 @@ function DocumentDetail({ doc, profile, req, failed, retry, fixing, justFixed, o
           <h3 id="checklist" className="text-lg font-semibold text-foreground">Council checklist</h3>
           <p className="text-base font-medium tabular-nums text-neutral-700">{pass} of {items.length} pass</p>
         </div>
-        {doc.checklistSource && <SourceLine url={doc.checklistSource.url} checked={doc.checklistSource.lastChecked} className="mt-1" />}
+        <SourceLine url={doc.checklistSource?.url ?? ""} checked={doc.checklistSource?.lastChecked ?? null} className="mt-1" />
         <ul className="mt-4 border-t border-border">
           {items.map((it) => (
             <li key={it.itemId} className={cx("flex gap-3 border-b border-border px-1", it.pass ? "py-3" : "py-4", !it.pass && "bg-destructive-soft/60", it.pass && justFixed === it.itemId && "flash-pass")}>
@@ -257,7 +266,7 @@ function FixItem({ fix, busy, disabled, onFix }: { fix: string | null; busy: boo
         </span>
         <textarea value={text} onChange={(e) => setText(e.target.value)} rows={2} maxLength={1500} disabled={disabled}
           placeholder={wantsName ? "A person's or company's name" : "Names, providers or arrangements, in your words"}
-          className="block w-full rounded-lg border border-neutral-300 bg-background px-3 py-2 text-base text-foreground placeholder:text-neutral-400 focus:border-primary focus:outline-none focus:ring-4 focus:ring-brand-100" />
+          className="block w-full rounded-lg border border-neutral-300 bg-background px-3 py-2 text-base text-foreground placeholder:text-neutral-500 focus:border-primary focus:outline-none focus:ring-4 focus:ring-brand-100" />
       </label>
       <Button type="submit" busy={busy} disabled={disabled || (ask && !typed)}>
         {!busy && <Wand />} {busy ? "Updating the draft" : typed ? "Add to draft" : "Apply fix"}

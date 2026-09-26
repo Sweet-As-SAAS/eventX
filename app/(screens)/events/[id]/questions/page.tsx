@@ -52,7 +52,7 @@ export default function QuestionsPage({ params }: PageProps<"/events/[id]/questi
 
   return (
     <div className="step-in max-w-[1056px] pb-4">
-      <p className="text-sm font-semibold uppercase tracking-[0.04em] text-primary">Almost done</p>
+      <p className="text-[15px] font-semibold text-primary">Almost done</p>
       <h1 className="mt-2 text-4xl font-semibold leading-[1.1] tracking-[-0.01em] text-foreground">{questions ? title.charAt(0).toUpperCase() + title.slice(1) : "A few quick questions"}</h1>
       <p className="mt-3 text-lg text-neutral-600">Your answers decide which documents you need. It takes about a minute.</p>
 
@@ -89,7 +89,7 @@ export default function QuestionsPage({ params }: PageProps<"/events/[id]/questi
       <div className="mt-8 flex flex-wrap items-center gap-6">
         <Button onClick={next} busy={leaving} disabled={!questions} className="min-h-12 px-7 text-[17px]">Continue to documents</Button>
         <ButtonLink href={`/events/${id}/profile`} variant="ghost" className="!text-neutral-700 hover:!bg-neutral-50">Back</ButtonLink>
-        {n > 0 && <p className="ml-auto text-[15px] text-neutral-600" aria-live="polite">{done} of {n} answered</p>}
+        <p className="ml-auto text-[15px] text-neutral-600" aria-live="polite">{leaving ? "Working out which documents the council needs…" : n > 0 ? `${done} of ${n} answered. Each answer saves as you tap.` : ""}</p>
       </div>
     </div>
   );
