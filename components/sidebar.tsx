@@ -9,7 +9,7 @@ import { Mark } from "./brand";
 import { STEPS, eventIdFrom } from "./event-steps";
 import { initials, packNote, useEvents, type EventWithNote } from "./event-status";
 import { daysBetween, fmtDay } from "./format";
-import { ArrowLeft, Card, Check, Home, IdCard, Menu, PanelLeft, Plus } from "./icons";
+import { Badge, Calendar, Card, Clipboard, DocLines, Dollar, Home, IdCard, MapIcon, Menu, PanelLeft, Plus } from "./icons";
 import { cx } from "./ui";
 
 // Workspace sidebar. On home it lists destinations and your events; inside an event it becomes that event's steps.
@@ -70,10 +70,11 @@ export function Sidebar({ name }: { name: string | null }) {
 type Ctx = { path: string; name: string | null; events: EventWithNote[] | null; eventId: string | null; current: Current | null; toggle: () => void; mobile?: boolean };
 
 const soonDeadline = (c: Current | null) => !!c?.deadlines.some((d) => daysBetween(nzToday(), d.recommended) <= 14);
-const stepDone = (slug: string, c: Current | null) =>
-  slug === "profile" ? !!c?.ev.profile : slug === "documents" ? !!c && packNote(c.docs).done : false;
+// The site plan isn't saved yet, so it flags whenever the event needs one.
 const stepFlag = (slug: string, c: Current | null) =>
-  slug === "documents" ? !!c && packNote(c.docs).warn : slug === "deadlines" ? soonDeadline(c) : false;
+  slug === "documents" ? !!c && packNote(c.docs).warn
+  : slug === "site-plan" ? !!c?.docs.some((d) => d.documentType === "site_plan")
+  : slug === "deadlines" ? soonDeadline(c) : false;
 
 const row = (active: boolean) => cx("flex min-h-10 items-center gap-3 rounded-xl px-3 text-base",
   active ? "bg-background font-medium text-foreground shadow-sm" : "text-neutral-700 hover:bg-neutral-100 hover:text-foreground");
@@ -162,25 +163,23 @@ function Rail({ path, name, events, eventId, current, toggle }: Ctx) {
 
       {eventId ? (
         <>
-          <Tile label="Back to your events" href="/dashboard" className="mt-3"><ArrowLeft /></Tile>
+          <Labelled label="Home" href="/dashboard" className="mt-2"><Home /></Labelled>
           <Link href={`/events/${eventId}/profile`} title={ev?.ev.profile?.name.value ?? "Your event"} aria-label={ev?.ev.profile?.name.value ?? "Your event"}
-            className="grid w-10 overflow-hidden rounded-lg bg-background text-center shadow-sm">
+            className="my-1 grid w-10 overflow-hidden rounded-lg bg-background text-center shadow-sm">
             <span className="bg-primary text-[10px] font-semibold leading-4 text-primary-foreground">{d?.toLocaleDateString("en-NZ", { timeZone: "UTC", month: "short" }) ?? "Date"}</span>
             <span className="text-base font-semibold leading-6 text-foreground">{d?.getUTCDate() ?? "?"}</span>
           </Link>
-          {STEPS.map((s, i) => {
-            const active = path.endsWith(`/${s.slug}`);
-            const done = stepDone(s.slug, ev);
+          {STEPS.map((s) => {
+            const Icon = STEP_ICON[s.slug];
             return (
-              <Tile key={s.slug} label={s.label} href={`/events/${eventId}/${s.slug}`} active={active}>
-                {done
-                  ? <span className="grid size-6 place-items-center rounded-full bg-primary text-primary-foreground"><Check width={14} height={14} strokeWidth={3} /></span>
-                  : <span className="grid size-6 place-items-center rounded-full border-[1.5px] border-neutral-400 text-xs font-semibold text-neutral-600">{i + 1}</span>}
-              </Tile>
+              <Labelled key={s.slug} label={s.label} href={`/events/${eventId}/${s.slug}`} active={path.endsWith(`/${s.slug}`)} flag={stepFlag(s.slug, ev)}>
+                <Icon />
+              </Labelled>
             );
           })}
-          <span className="my-2 h-px w-9 bg-border" />
-          {NAV.slice(1).map(({ href, label, icon: Icon }) => <Tile key={href} label={label} href={href}><Icon /></Tile>)}
+          <span className="my-1.5 h-px w-9 bg-border" />
+          <Labelled label="Budget" href="/budget"><Dollar /></Labelled>
+          <Labelled label="Licences" href="/licences"><Badge /></Labelled>
         </>
       ) : (
         <>
@@ -197,6 +196,23 @@ function Rail({ path, name, events, eventId, current, toggle }: Ctx) {
 
       <span className="mt-auto"><Avatar name={name} /></span>
     </nav>
+  );
+}
+
+const STEP_ICON: Record<string, typeof Home> = { profile: Clipboard, documents: DocLines, "site-plan": MapIcon, deadlines: Calendar };
+
+/** Rail item inside an event: icon over a small label, amber dot when the step needs you. */
+function Labelled({ label, href, active, flag, className, children }: { label: string; href: string; active?: boolean; flag?: boolean; className?: string; children: ReactNode }) {
+  return (
+    <Link href={href} aria-current={active ? "page" : undefined} aria-label={flag ? `${label}, needs attention` : label}
+      className={cx("press flex w-[60px] flex-col items-center gap-0.5 rounded-xl pb-1.5 pt-2 text-[10.5px] leading-tight",
+        active ? "bg-background font-semibold text-foreground shadow-sm" : "text-neutral-600 hover:bg-neutral-100 hover:text-foreground", className)}>
+      <span className="relative">
+        {children}
+        {flag && <span className="absolute -right-1 -top-0.5 size-2 rounded-full bg-warning ring-2 ring-neutral-50" aria-hidden />}
+      </span>
+      {label}
+    </Link>
   );
 }
 

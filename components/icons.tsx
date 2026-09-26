@@ -38,3 +38,7 @@ export const ArrowLeft = (p: P) => <svg {...base(p)}><path d="M19 12H5M12 19l-7-
 export const Share = (p: P) => <svg {...base(p)}><path d="M12 15V3M7 8l5-5 5 5M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5" /></svg>;
 export const Card = (p: P) => <svg {...base(p)}><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M3 10h18M15 15h2" /></svg>;
 export const IdCard = (p: P) => <svg {...base(p)}><rect x="3" y="5" width="18" height="14" rx="2" /><circle cx="9" cy="11" r="2" /><path d="M6 16a3 3 0 0 1 6 0M14 10h4M14 14h4" /></svg>;
+export const Clipboard = (p: P) => <svg {...base(p)}><rect x="5" y="4" width="14" height="17" rx="2" /><path d="M9 4V3h6v1M9 11h6M9 15h4" /></svg>;
+export const DocLines = (p: P) => <svg {...base(p)}><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z" /><path d="M14 3v6h6M8 13h8M8 17h5" /></svg>;
+export const MapIcon = (p: P) => <svg {...base(p)}><path d="m9 4-6 2v14l6-2 6 2 6-2V4l-6 2-6-2ZM9 4v14M15 6v14" /></svg>;
+export const Dollar = (p: P) => <svg {...base(p)}><circle cx="12" cy="12" r="9" /><path d="M15 9.5c-.4-1-1.6-1.5-3-1.5-1.7 0-3 .8-3 2s1.3 1.7 3 2 3 .8 3 2-1.3 2-3 2c-1.4 0-2.6-.5-3-1.5M12 6.5v11" /></svg>;
