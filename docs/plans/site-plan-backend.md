@@ -140,9 +140,9 @@ His files, his edits. Nothing here changes what the page looks like.
 | Step | Work | Gate | State |
 | --- | --- | --- | --- |
 | 0 | Review Ashu's page, revise this plan | User approval | **done** |
-| 1 | Schema in `lib/schemas.ts`, schema tests in `tests/siteplan.test.ts` | Tests and typecheck green. User posts the schema in the team channel | next |
-| 2 | `lib/siteplan` (layout, plan, checks, index) with tests | Suite green. `lib/siteplan` imports only `../schemas`. `defaultLayout` matches Ashu's `build()` for varied profiles. With the fixture: exactly one red check (assembly), and placing it turns everything green. Then push with `-u` and open a **draft** PR | |
-| 3 | Route (GET, POST, MOCK) and the `client.ts` methods | In MOCK, `curl` shows GET returns the layout, POST normalises it, and a bad plan gets a 400 with a message. Build passes | |
+| 1 | Schema in `lib/schemas.ts`, schema tests in `tests/siteplan.test.ts` | Tests and typecheck green. User posts the schema in the team channel | **done** |
+| 2 | `lib/siteplan` (layout, plan, checks, index) with tests | Suite green. `lib/siteplan` imports only `../schemas`. `defaultLayout` matches Ashu's `build()` for varied profiles. With the fixture: exactly one red check (assembly), and placing it turns everything green. Then push with `-u` and open a **draft** PR | **done** (27 Sep: 135 tests green, `defaultLayout` identical to `build()` on 5,000 random profiles) |
+| 3 | Route (GET, POST, MOCK) and the `client.ts` methods | In MOCK, `curl` shows GET returns the layout, POST normalises it, and a bad plan gets a 400 with a message. Build passes | next |
 | 4 | Migration `0003` and the real save and load | Manual: save, reload, same plan. A second guest gets 404. A bad body gets a 400 and the stored plan is unchanged. The existing flow (profile, documents, Eventbrite lock, export) behaves as before | |
 | 5 | PDF page: the resolved layout drawn with react-pdf SVG, plus a legend and the checks with the council one cited. The export route passes it in | The MOCK download contains the site plan page, and a `renderPack` smoke test passes | |
 
