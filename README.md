@@ -4,7 +4,7 @@
 
 New Zealand event organisers, mostly volunteers, face long, inconsistent, deadline-driven council paperwork. HostReady reads a plain-English event description, works out exactly which documents the council needs and why (deterministic rules with a source for every one), drafts them to the council's own templates, checks each draft against the council checklist, counts every deadline in working days, emails reminders, exports one PDF pack, and hands the approved event to Eventbrite as a draft.
 
-Built at Saasthon 2026 (University of Canterbury) for Christchurch City Council, with Waimakariri District Council as the second council.
+Built at Saasthon 2026 (University of Canterbury) for Christchurch City Council. The code is multi-council (Waimakariri is wired in but has no verified data yet).
 
 ## Quick start
 

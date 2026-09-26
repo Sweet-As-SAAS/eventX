@@ -9,7 +9,7 @@ HostReady runs on a pre-built council knowledge base. Council rules, checklists,
 | Council | Slug | Site | Demo role |
 | --- | --- | --- | --- |
 | Christchurch City Council | `ccc` | ccc.govt.nz | Primary demo, the demo event |
-| Waimakariri District Council | `waimakariri` | waimakariri.govt.nz | Same event switched to Rangiora proves "councils are data, not code". Never "WDC": that is Whangārei (wdc.govt.nz) |
+| Waimakariri District Council | `waimakariri` | waimakariri.govt.nz | Not built this weekend (no verified data); schema and ingest support it. Never "WDC": that is Whangārei (wdc.govt.nz) |
 
 **In scope:** ingestion pipeline, knowledge base, event profiling, rules engine, drafting, checklist checking, deadline engine, PDF export, reminders, Eventbrite draft, auth.
 **Out of scope:** live scraping at runtime, real lodgement, payments, other councils.
@@ -199,7 +199,7 @@ Dates use `Intl` with `Pacific/Auckland`, never hardcoded offsets. Daylight savi
 | `tests/contract.test.ts` | Every fixture piece parses against its schema; questions match the follow-up logic; one red item and its fix | A | Passing |
 | Schema tests | Every live AI response parses, 10 runs of the seeded event | A | To do |
 | Golden path end to end | Describe to export to Eventbrite draft on the deployed URL | D | To do |
-| Council switch | Same event against Waimakariri returns a different, sensible list | A / B | To do |
+| Council switch | Cut from the weekend: Waimakariri has no verified data | A / B | Cut |
 | Device check | Live URL on a phone and a second laptop, logged out and in | Lead | To do |
 
 Demo safety net: `DEMO_MODE=1` serves cached AI answers for the seeded event if a call takes over 20 s or fails. Deploy freeze 8am Sunday.
@@ -240,7 +240,6 @@ Ten minutes at 8pm, midnight, 4am and 8am: done, blocked, need from whom. Anythi
 
 - [ ] The demo event runs from description to Eventbrite draft on the live URL with real AI calls
 - [ ] Every rule, fee and deadline on screen has a verified source and last-checked date
-- [ ] Switching the event to Waimakariri changes the requirements
 - [ ] DEMO_MODE fallback tested with the network throttled
 - [ ] Repo public or `justus-lumin` invited, no secrets in history
 - [ ] Live URL works on a phone and a second laptop, logged out and in

@@ -2,16 +2,27 @@
 import OpenAI from "openai";
 import { zodResponseFormat } from "openai/helpers/zod";
 import type { z } from "zod";
+import type { ReasoningEffort } from "openai/resources/shared";
 
 let client: OpenAI | undefined;
-/** Created on first use so MOCK mode, builds and tests run without an API key. */
-export const openai = () => (client ??= new OpenAI());
+/**
+ * Created on first use so MOCK mode, builds and tests run without an API key.
+ * AI routes have maxDuration 60, so each attempt gets 28 s and one retry: a hung call fails cleanly inside the
+ * budget instead of the SDK default (10 minutes, two retries) being killed by the platform mid-call.
+ */
+export const openai = () => (client ??= new OpenAI({ timeout: 28_000, maxRetries: 1 }));
 
-export const MODEL_FAST = process.env.OPENAI_MODEL_FAST ?? "gpt-4o-mini";
-export const MODEL_STRONG = process.env.OPENAI_MODEL_STRONG ?? "gpt-4o";
+// Chosen by benchmark on 26 Sep 2026 (scripts/try-scenarios.ts --judge): best draft quality and first-pass rate
+// at demo speed. gpt-5.4-mini checks poorly; gpt-5.5 drafts too slowly for the 60 s budget.
+export const MODEL_FAST = process.env.OPENAI_MODEL_FAST ?? "gpt-4.1-mini";
+export const MODEL_STRONG = process.env.OPENAI_MODEL_STRONG ?? "gpt-4.1";
 
-// Reasoning models (o-series, gpt-5*) reject temperature 0, so only pin it for the others.
-const pinnedTemperature = (model: string) => (/^(o\d|gpt-5)/.test(model) ? {} : { temperature: 0 });
+// Reasoning models (o-series, gpt-5*, gpt-6*) reject temperature 0 and instead take a reasoning effort.
+// Default "low": these are extraction and drafting tasks, and the routes have a 60 s budget.
+export const isReasoningModel = (model: string) => /^(o\d|gpt-[5-9])/.test(model);
+const REASONING_EFFORT = (process.env.OPENAI_REASONING_EFFORT ?? "low") as ReasoningEffort;
+const pinnedTemperature = (model: string) =>
+  isReasoningModel(model) ? { reasoning_effort: REASONING_EFFORT } : { temperature: 0 };
 
 /** One structured call. Always returns data that matches the schema, or throws. */
 export async function structured<T extends z.ZodType>(opts: {
