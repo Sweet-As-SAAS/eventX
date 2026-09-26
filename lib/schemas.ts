@@ -207,3 +207,14 @@ export type SiteItem = z.infer<typeof SiteItem>;
 /** The organiser's layout. Checks are derived by lib/siteplan, never stored. */
 export const SitePlan = z.object({ items: z.array(SiteItem).max(100) });
 export type SitePlan = z.infer<typeof SitePlan>;
+
+/** A map picture of the venue, drawn under the whole canvas. A static file: the app never fetches map tiles at runtime. */
+export const SiteBasemap = z.object({
+  url: z.string().min(1),          // a file under public/, e.g. "/site-plan/<name>.png"
+  attribution: z.string().min(1),  // the map's licence requires showing this next to the picture
+});
+export type SiteBasemap = z.infer<typeof SiteBasemap>;
+
+/** What the site plan route returns: the layout, plus the venue's map picture when there is one (otherwise the plain canvas). */
+export const SiteLayout = SitePlan.extend({ basemap: SiteBasemap.nullable() });
+export type SiteLayout = z.infer<typeof SiteLayout>;

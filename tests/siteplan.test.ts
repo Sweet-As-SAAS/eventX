@@ -3,7 +3,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import fixture from "../fixtures/demo-event.json";
 import cccSpecialLicence from "../scripts/ingest/verified/ccc/special-licence.json";
-import { EventProfile, SiteItem, SitePlan, type CouncilSlug } from "../lib/schemas";
+import { EventProfile, SiteBasemap, SiteItem, SiteLayout, SitePlan, type CouncilSlug } from "../lib/schemas";
 import { requiredDocuments, staticRules } from "../lib/rules";
 import {
   SITE_CANVAS, SITE_COUNCIL_FACTS, defaultLayout, normaliseSitePlan, resolveLayout, siteChecks, validateSitePlan,
@@ -275,4 +275,23 @@ it("lib/siteplan imports only ../schemas and its own files, so client components
     const specs = [...readFileSync(new URL(file, dir), "utf8").matchAll(/(?:from|import)\s*\(?\s*"([^"]+)"/g)].map((m) => m[1]);
     for (const spec of specs) expect(["../schemas", "./layout", "./plan", "./checks"], `${file} imports ${spec}`).toContain(spec);
   }
+});
+
+describe("site plan basemap", () => {
+  it("SiteLayout is the plan plus a basemap or null, and a saved plan never carries one", () => {
+    const basemap = { url: "/site-plan/x.png", attribution: "© OpenStreetMap contributors" };
+    expect(SiteLayout.parse({ items: [item()], basemap })).toEqual({ items: [item()], basemap });
+    expect(SiteLayout.parse({ items: [], basemap: null }).basemap).toBeNull();
+    expect(SiteLayout.safeParse({ items: [] }).success).toBe(false);
+    expect(SitePlan.parse({ items: [item()], basemap })).toEqual({ items: [item()] }); // the client can't set the picture
+  });
+
+  it("the fixture's map picture is a PNG under public/ in the canvas's shape", () => {
+    const { url, attribution } = SiteBasemap.parse(fixture.siteBasemap);
+    expect(attribution).not.toBe("");
+    const png = readFileSync(new URL(`../public${url}`, import.meta.url));
+    expect(png.subarray(1, 4).toString()).toBe("PNG");
+    const [w, h] = [png.readUInt32BE(16), png.readUInt32BE(20)]; // IHDR width and height
+    expect(w / h).toBeCloseTo(SITE_CANVAS.w / SITE_CANVAS.h, 3);
+  });
 });

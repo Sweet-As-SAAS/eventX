@@ -165,3 +165,17 @@ Deadline: Sunday 10:00 NZDT, deploy freeze 08:00.
 | `fixtures/demo-event.json` | None | Not touched |
 | `lib/pdf/pack.tsx`, `export/route.ts` | Low | Step 5 only, optional prop |
 | `app/(screens)/*`, `components/*` | None | Never touched by lane C |
+
+## 12. Map backdrop (added 27 Sep, user's request)
+
+The site plan draws on a real map picture of the venue instead of the dotted grid. Interaction, checks and the MOCK result are unchanged.
+
+- **Source:** OpenStreetMap (© OpenStreetMap contributors, ODbL). It looks like Google Maps, is free to use with the credit, and is committed as a static file, so the demo works offline with no key. We don't use Google screenshots because Google's terms don't allow captured map imagery in an app.
+- **Data, not code:**
+  - Schema: `SiteBasemap { url, attribution }` and `SiteLayout = SitePlan + basemap` (nullable).
+  - Fixture: `siteBasemap`.
+  - Route: GET and POST return `basemap`. In MOCK it is the fixture's. In real mode it is the fixture's only for the seeded demo event (`isSeeded`), otherwise `null`, which gives the plain canvas. A basemap sent by the client is ignored.
+- **File:** `public/site-plan/demo-venue.png`, 1600×1000 (2× the 800×500 canvas), 340 m across, open lawn with context at the edges. Regenerate it (for example, if the demo venue changes) with:
+  `python3 scripts/site-basemap.py --lat -43.52542 --lng 172.6257 --metres 340 --zoom 19 --out public/site-plan/demo-venue.png`
+  (Python 3 + Pillow. About 35 tiles, once, with a descriptive User-Agent, as the OSM tile usage policy asks.)
+- **Frontend (Ashu):** draw `<image href={basemap.url} width={W} height={H} preserveAspectRatio="xMidYMid slice" pointerEvents="none" />` first in the SVG, before the items. Show `basemap.attribution` in a corner. Keep the dotted grid only when `basemap` is null.
