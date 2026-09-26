@@ -4,7 +4,7 @@ import Link from "next/link";
 import { api } from "@/lib/api/client";
 import { nzToday } from "@/lib/deadlines";
 import type { Deadline, EventbriteDraft, EventDetail, EventDocument } from "@/lib/schemas";
-import { daysBetween, fmtDate, fmtDay } from "@/components/format";
+import { DOC_LABEL, daysBetween, fmtDate, fmtDay } from "@/components/format";
 import { Check, Download, External, Lock, Mail, Ticket } from "@/components/icons";
 import { useFail, useToast } from "@/components/toast";
 import { Button, ButtonA, ButtonLink, Skeleton, SourceLine, Title, cx } from "@/components/ui";
@@ -102,8 +102,19 @@ export default function DeadlinesPage({ params }: PageProps<"/events/[id]/deadli
       <section aria-labelledby="publish">
         <h2 id="publish" className="text-lg font-semibold text-foreground">Lodge, remind, sell tickets</h2>
         <ul className="mt-4 border-t border-border">
-          <Row icon={<Download />} title="Your pack as one PDF" body="Every drafted document, ready to review and lodge with the council.">
-            <ButtonA href={api.exportUrl(id)} download>Download PDF pack</ButtonA>
+          <Row icon={<Download />} title="Your documents as PDFs" body={<>
+            Each one laid out to the council&apos;s template, ready to review and lodge.
+            {docs?.some((d) => d.content) && (
+              <span className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
+                {docs.filter((d) => d.content).map((d) => (
+                  <a key={d.id} href={api.documentPdfUrl(d.id)} download className="font-semibold text-primary underline decoration-brand-200 underline-offset-2">
+                    {DOC_LABEL[d.documentType]}
+                  </a>
+                ))}
+              </span>
+            )}
+          </>}>
+            <ButtonA href={api.exportUrl(id)} download>Download all as one PDF</ButtonA>
           </Row>
           <Row icon={<Mail />} title="Reminders" body="We email you 14 days and 3 days before each deadline, so nothing slips.">
             <Button variant="secondary" busy={sending} onClick={remind}>

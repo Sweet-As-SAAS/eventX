@@ -45,6 +45,8 @@ export const api = {
   deadlines: (id: string) => call(z.array(Deadline), `/api/events/${id}/deadlines`),
   /** Use as an <a href download>, not fetch. */
   exportUrl: (id: string) => `/api/events/${id}/export`,
+  /** One drafted document as its own council-format PDF. Also an <a href download>. */
+  documentPdfUrl: (documentId: string) => `/api/documents/${documentId}/export`,
   /** 409 until every document is ready or manual. */
   eventbrite: (id: string, tickets?: Ticket[]) => call(EventbriteDraft, `/api/events/${id}/eventbrite`, { tickets }),
 

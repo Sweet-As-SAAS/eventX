@@ -4,18 +4,21 @@ import { api } from "@/lib/api/client";
 import type { EventDocument, EventProfile, Requirement } from "@/lib/schemas";
 import { keyFacts } from "@/components/profile-fields";
 import { DOC_LABEL, STATUS_LABEL } from "@/components/format";
-import { Alert, Check, Doc, Refresh, Wand } from "@/components/icons";
+import { Alert, Check, Doc, Download, Refresh, Wand } from "@/components/icons";
 import { CHANGED } from "@/components/sidebar";
 import { useFail, useToast } from "@/components/toast";
-import { Button, ButtonLink, Pill, Skeleton, SourceLine, Spinner, Title, cx } from "@/components/ui";
+import { Button, ButtonA, ButtonLink, Pill, Skeleton, SourceLine, Spinner, Title, cx } from "@/components/ui";
 
 // Screen 3, Documents. Every pending document drafts and checks in parallel; each row flips as it lands.
 // Open expands the document in place; Fix it applies the suggested fix straight away.
 const ACT = "press inline-flex min-h-10 min-w-[88px] shrink-0 items-center justify-center gap-2 rounded-lg px-4 text-[15px] font-semibold disabled:cursor-wait";
 const ACT_PRIMARY = cx(ACT, "bg-primary text-primary-foreground hover:bg-brand-600");
 const ACT_SECONDARY = cx(ACT, "border border-neutral-200 bg-background text-foreground hover:border-neutral-300 hover:bg-neutral-50");
-/** A fix that still has a [PLACEHOLDER] (or no fix at all) needs facts only the organiser has. */
-const needsYou = (fix: string | null) => !fix || /\[[^\]]+\]/.test(fix);
+/** A suggested fix with a [PLACEHOLDER] needs a fact only the organiser has. Anything else the AI can write itself. */
+const needsYou = (fix: string | null) => !!fix && /\[[^\]]+\]/.test(fix);
+/** The sentence to fill in. Checkers sometimes wrap it: "Specify who, e.g., '[NAME] will run it.'" -> "[NAME] will run it." */
+const template = (fix: string) => fix.match(/['"\u2018\u201c]([^'"\u2019\u201d]*\[[^\]]+\][^'"\u2019\u201d]*)['"\u2019\u201d]/)?.[1] ?? fix;
+const autoFixable = (d: EventDocument) => d.checkResults?.items.filter((i) => !i.pass && !needsYou(i.suggestedFix)) ?? [];
 
 export default function DocumentsPage({ params }: PageProps<"/events/[id]/documents">) {
   const { id } = use(params);
@@ -26,17 +29,25 @@ export default function DocumentsPage({ params }: PageProps<"/events/[id]/docume
   const [profile, setProfile] = useState<EventProfile | null>(null);
   const [open, setOpen] = useState<string | null>(null);
   const [failed, setFailed] = useState<Set<string>>(new Set());
-  const [fixing, setFixing] = useState<string | null>(null);
+  const [busy, setBusy] = useState<Record<string, string>>({}); // document id -> checklist item being fixed
+  const [sweeping, setSweeping] = useState<Set<string>>(new Set()); // documents where we're fixing everything we can
   const [justFixed, setJustFixed] = useState<string | null>(null);
   const [flashDoc, setFlashDoc] = useState<string | null>(null);
   const started = useRef(false);
 
   const replace = (d: EventDocument) => { setDocs((ds) => ds?.map((x) => (x.id === d.id ? d : x)) ?? null); return d; };
+  const busyOn = (docId: string, itemId: string | null) => setBusy((b) => {
+    const n = { ...b };
+    if (itemId) n[docId] = itemId; else delete n[docId];
+    return n;
+  });
+  const sweep = (docId: string, on: boolean) => setSweeping((s) => { const n = new Set(s); if (on) n.add(docId); else n.delete(docId); return n; });
 
   function work(d: EventDocument) {
     setFailed((f) => { const n = new Set(f); n.delete(d.id); return n; });
     const run = d.status === "drafted" ? api.check(d.id) : api.draft(d.id).then(replace).then((x) => api.check(x.id));
-    run.then(replace).catch((e) => {
+    // Once checked, quietly fix whatever the AI can write itself, so the organiser only sees what needs them.
+    run.then(replace).then((x) => { if (autoFixable(x).length) fixAll(x, false); }).catch((e) => {
       setFailed((f) => new Set(f).add(d.id));
       fail(e);
     });
@@ -58,7 +69,7 @@ export default function DocumentsPage({ params }: PageProps<"/events/[id]/docume
   }, [id]);
 
   async function fix(doc: EventDocument, itemId: string, text?: string) {
-    setFixing(itemId);
+    busyOn(doc.id, itemId);
     try {
       const d = replace(await api.fix(doc.id, itemId, text));
       setJustFixed(itemId);
@@ -70,12 +81,39 @@ export default function DocumentsPage({ params }: PageProps<"/events/[id]/docume
     } catch (e) {
       fail(e);
     } finally {
-      setFixing(null);
+      busyOn(doc.id, null);
+    }
+  }
+
+  /** Works through every red item the AI can write itself, one at a time (each fix rewrites the same draft). */
+  async function fixAll(doc: EventDocument, announce = true) {
+    sweep(doc.id, true);
+    let d = doc;
+    const tried = new Set<string>();
+    try {
+      for (;;) {
+        const next = autoFixable(d).find((i) => !tried.has(i.itemId));
+        if (!next) break;
+        tried.add(next.itemId);
+        busyOn(d.id, next.itemId);
+        d = replace(await api.fix(d.id, next.itemId));
+      }
+      setFlashDoc(d.id);
+      dispatchEvent(new Event(CHANGED));
+      const left = d.checkResults?.items.filter((i) => !i.pass).length ?? 0;
+      if (announce) toast(d.status === "ready" ? `Fixed. ${DOC_LABEL[d.documentType]} is ready.`
+        : left ? `Done what we can. ${left} left ${left === 1 ? "needs" : "need"} a detail from you.` : "Fixed.");
+    } catch (e) {
+      fail(e);
+    } finally {
+      busyOn(doc.id, null);
+      sweep(doc.id, false);
     }
   }
 
   const count = (s: EventDocument["status"]) => docs?.filter((d) => d.status === s).length ?? 0;
-  const ready = count("ready"), toFix = count("needs_fix"), working = count("pending") + count("drafted");
+  const ready = count("ready"), working = count("pending") + count("drafted") + sweeping.size;
+  const toFix = count("needs_fix") - sweeping.size;
   const toggle = (docId: string) => setOpen((o) => (o === docId ? null : docId));
 
   return (
@@ -84,7 +122,7 @@ export default function DocumentsPage({ params }: PageProps<"/events/[id]/docume
         aside={docs && <>
           {ready > 0 && <Pill tone="ok">{ready} ready</Pill>}
           {toFix > 0 && <Pill tone="warn">{toFix} to fix</Pill>}
-          {working > 0 && <Pill tone="quiet">{working} drafting</Pill>}
+          {working > 0 && <Pill tone="quiet">{working} in progress</Pill>}
         </>}>
         Documents
       </Title>
@@ -96,8 +134,11 @@ export default function DocumentsPage({ params }: PageProps<"/events/[id]/docume
               const gap = d.checkResults?.items.find((i) => !i.pass);
               const isFailed = failed.has(d.id);
               const isOpen = open === d.id;
+              const isSweeping = sweeping.has(d.id);
+              const toYou = d.checkResults?.items.filter((i) => !i.pass).length ?? 0;
               const sub = isFailed ? "Didn't finish drafting."
-                : d.status === "needs_fix" && gap ? gap.suggestedFix ?? gap.text
+                : isSweeping ? "Fixing what we can, so you only fill in what's left…"
+                : d.status === "needs_fix" && gap ? `${toYou} ${toYou === 1 ? "detail" : "details"} for you: ${gap.text}`
                 : req?.reason ?? (d.status === "manual" ? "You lodge this one yourself." : "");
               return (
                 <li key={d.id} className={cx("border-b border-border last:border-b-0", d.status === "needs_fix" && "bg-warning-soft/40", flashDoc === d.id && d.status === "ready" && "flash-pass")}>
@@ -109,13 +150,13 @@ export default function DocumentsPage({ params }: PageProps<"/events/[id]/docume
                     </div>
                     <div className="ml-14 flex items-center gap-3 sm:ml-0">
                       {isFailed ? <Pill tone="warn">Didn&apos;t finish</Pill>
+                        : isSweeping ? <Pill tone="quiet">Fixing</Pill>
                         : <Pill tone={d.status === "ready" ? "ok" : d.status === "needs_fix" ? "warn" : "quiet"}>{d.status === "drafted" ? "Checking" : STATUS_LABEL[d.status]}</Pill>}
                       {isFailed ? (
                         <button className={ACT_SECONDARY} onClick={() => work(d)}><Refresh width={16} height={16} /> Try again</button>
                       ) : d.status === "needs_fix" ? (
-                        <button className={ACT_PRIMARY} disabled={!!fixing} aria-expanded={isOpen}
-                          onClick={() => (gap && !needsYou(gap.suggestedFix) && !isOpen ? fix(d, gap.itemId) : toggle(d.id))}>
-                          {fixing && fixing === gap?.itemId ? <><Spinner /> Fixing</> : "Fix it"}
+                        <button className={ACT_PRIMARY} disabled={isSweeping} aria-expanded={isOpen} onClick={() => toggle(d.id)}>
+                          {isSweeping ? <><Spinner /> Fixing</> : isOpen ? "Close" : "Fix it"}
                         </button>
                       ) : (
                         <button className={ACT_SECONDARY} aria-expanded={isOpen} onClick={() => toggle(d.id)}>
@@ -127,7 +168,7 @@ export default function DocumentsPage({ params }: PageProps<"/events/[id]/docume
                   {isOpen && (
                     <div className="arrive border-t border-border bg-background px-5 py-7 sm:pl-[76px] sm:pr-10">
                       <DocumentDetail doc={d} profile={profile} req={req} failed={isFailed} retry={() => work(d)}
-                        fixing={fixing} justFixed={justFixed} onFix={(itemId, text) => fix(d, itemId, text)} />
+                        busyItem={busy[d.id] ?? null} sweeping={isSweeping} justFixed={justFixed} onFix={(itemId, text) => fix(d, itemId, text)} onFixAll={() => fixAll(d)} />
                     </div>
                   )}
                 </li>
@@ -152,9 +193,9 @@ export default function DocumentsPage({ params }: PageProps<"/events/[id]/docume
   );
 }
 
-function DocumentDetail({ doc, profile, req, failed, retry, fixing, justFixed, onFix }: {
+function DocumentDetail({ doc, profile, req, failed, retry, busyItem, sweeping, justFixed, onFix, onFixAll }: {
   doc: EventDocument; profile: EventProfile | null; req?: Requirement; failed: boolean; retry: () => void;
-  fixing: string | null; justFixed: string | null; onFix: (itemId: string, text?: string) => void;
+  busyItem: string | null; sweeping: boolean; justFixed: string | null; onFix: (itemId: string, text?: string) => void; onFixAll: () => void;
 }) {
   if (doc.status === "manual") {
     return (
@@ -192,7 +233,7 @@ function DocumentDetail({ doc, profile, req, failed, retry, fixing, justFixed, o
     );
   }
 
-  const items = doc.checkResults.items;
+  const items = [...doc.checkResults.items].sort((a, b) => Number(a.pass) - Number(b.pass)); // what needs you first
   const pass = items.filter((i) => i.pass).length;
   const gaps = doc.content.placeholders.length;
 
@@ -201,9 +242,17 @@ function DocumentDetail({ doc, profile, req, failed, retry, fixing, justFixed, o
       <section aria-labelledby="checklist">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           <h3 id="checklist" className="text-lg font-semibold text-foreground">Council checklist</h3>
-          <p className="text-base font-medium tabular-nums text-neutral-700">{pass} of {items.length} pass</p>
+          <div className="flex flex-wrap items-center gap-4">
+            <p className="text-base font-medium tabular-nums text-neutral-700">{pass} of {items.length} pass</p>
+            {autoFixable(doc).length > 1 && (
+              <Button variant="secondary" busy={sweeping} disabled={!!busyItem} onClick={onFixAll}>
+                {!sweeping && <Wand />} {sweeping ? "Fixing" : `Fix the ${autoFixable(doc).length} we can`}
+              </Button>
+            )}
+          </div>
         </div>
         {doc.checklistSource && <SourceLine url={doc.checklistSource.url} checked={doc.checklistSource.lastChecked} className="mt-1" />}
+        {sweeping && <p role="status" className="mt-3 flex items-center gap-2 text-base font-medium text-primary"><Spinner /> Fixing what we can. You&apos;ll only need to fill in what&apos;s left.</p>}
         <ul className="mt-4 border-t border-border">
           {items.map((it) => (
             <li key={it.itemId} className={cx("flex gap-3 border-b border-border px-1", it.pass ? "py-3" : "py-4", !it.pass && "bg-destructive-soft/60", it.pass && justFixed === it.itemId && "flash-pass")}>
@@ -215,12 +264,18 @@ function DocumentDetail({ doc, profile, req, failed, retry, fixing, justFixed, o
               <div className="min-w-0 flex-1 space-y-2">
                 <p className="text-base font-semibold text-foreground">{it.text}</p>
                 {it.pass && justFixed === it.itemId && it.evidence && <p className="text-sm text-muted-foreground">Now says: &ldquo;{it.evidence}&rdquo;</p>}
-                {!it.pass && <FixItem fix={it.suggestedFix} busy={fixing === it.itemId} disabled={!!fixing} onFix={(text) => onFix(it.itemId, text)} />}
+                {!it.pass && <CouncilQuote quote={doc.checklistSource?.quotes.find((q) => q.itemId === it.itemId)?.quote} />}
+                {!it.pass && <FixItem key={it.suggestedFix ?? ""} fix={it.suggestedFix} busy={busyItem === it.itemId} disabled={!!busyItem || sweeping} onFix={(text) => onFix(it.itemId, text)} />}
               </div>
             </li>
           ))}
         </ul>
       </section>
+
+      <div className="flex flex-wrap items-center gap-3">
+        <ButtonA href={api.documentPdfUrl(doc.id)} download variant="secondary"><Download /> Download this as a PDF</ButtonA>
+        <span className="text-[15px] text-muted-foreground">Laid out to the council&apos;s template{gaps > 0 ? ", with the gaps highlighted" : ""}.</span>
+      </div>
 
       <details className="group">
         <summary className="press flex min-h-11 cursor-pointer list-none flex-wrap items-center justify-between gap-2 rounded-lg">
@@ -240,27 +295,50 @@ function DocumentDetail({ doc, profile, req, failed, retry, fixing, justFixed, o
   );
 }
 
-/** One red checklist item: the suggested fix, plus a box for facts only the organiser has (names, providers, menus). */
+/** Why the item is asked, in the council's own words from its form or guide. */
+const CouncilQuote = ({ quote }: { quote?: string }) => quote ? (
+  <p className="max-w-prose border-l-2 border-neutral-300 pl-3 text-[15px] text-neutral-700">
+    <span className="font-medium text-foreground">The council asks: </span>&ldquo;{quote}&rdquo;
+  </p>
+) : null;
+
+/** One red checklist item. If the AI can write it, one click. If it needs a name or detail, the suggested
+ *  sentence is the template: swap the [bracketed] bits and the rest is already written. */
 function FixItem({ fix, busy, disabled, onFix }: { fix: string | null; busy: boolean; disabled: boolean; onFix: (text?: string) => void }) {
-  const [text, setText] = useState("");
-  const ask = needsYou(fix);
-  const wantsName = !!fix && /\[[^\]]*NAME[^\]]*\]/i.test(fix); // "volunteers" or "the club" won't pass; the council wants it named
-  const typed = text.trim();
+  const [text, setText] = useState(fix ? template(fix) : "");
+  const box = useRef<HTMLTextAreaElement>(null);
+  if (!needsYou(fix)) {
+    return (
+      <div className="space-y-3">
+        <p className="text-base text-destructive">Missing from the draft.</p>
+        {fix && <p className="text-base text-neutral-800"><span className="font-semibold">Suggested fix: </span>{fix}</p>}
+        <Button busy={busy} disabled={disabled} onClick={() => onFix()}>{!busy && <Wand />} {busy ? "Fixing" : "Fix it for me"}</Button>
+      </div>
+    );
+  }
+  const left = text.match(/\[[^\]]+\]/g) ?? [];
+  const wantsName = left.some((b) => /name/i.test(b));
+  // Select the next [bracket] so typing replaces it. After the click has placed the caret, hence the timeout.
+  const jump = () => setTimeout(() => {
+    const el = box.current, m = el && /\[[^\]]+\]/.exec(el.value);
+    if (el && m) el.setSelectionRange(m.index, m.index + m[0].length);
+  });
   return (
-    <form className="space-y-3" onSubmit={(e) => { e.preventDefault(); onFix(typed || undefined); }}>
-      <p className="text-base text-destructive">Missing from the draft.</p>
-      {fix && <p className="text-base text-neutral-800"><span className="font-semibold">Suggested fix: </span><Gaps text={fix} /></p>}
+    <form className="space-y-3" onSubmit={(e) => { e.preventDefault(); onFix(text.trim()); }}>
+      <p className="text-base text-destructive">Needs a detail only you know.</p>
       <label className="block max-w-prose">
         <span className="mb-1 block text-sm font-medium text-neutral-700">
-          {wantsName ? "The council wants this named. Type the actual person or company, not a group like \"volunteers\"."
-            : ask ? "Only you know this. Add the details and we'll write them into the draft." : "Or say it in your own words (optional)"}
+          {wantsName ? "We've written it. Swap the highlighted bit for the real person or company, not a group like \"volunteers\"."
+            : "We've written it. Swap the bracketed bits for your details."}
         </span>
-        <textarea value={text} onChange={(e) => setText(e.target.value)} rows={2} maxLength={1500} disabled={disabled}
-          placeholder={wantsName ? "A person's or company's name" : "Names, providers or arrangements, in your words"}
-          className="block w-full rounded-lg border border-neutral-300 bg-background px-3 py-2 text-base text-foreground placeholder:text-neutral-400 focus:border-primary focus:outline-none focus:ring-4 focus:ring-brand-100" />
+        <textarea ref={box} value={text} onChange={(e) => setText(e.target.value)} onFocus={jump} rows={Math.min(6, Math.ceil(text.length / 70) + 1)} maxLength={1500} disabled={disabled}
+          className="block w-full rounded-lg border border-neutral-300 bg-background px-3 py-2 text-base text-foreground focus:border-primary focus:outline-none focus:ring-4 focus:ring-brand-100" />
       </label>
-      <Button type="submit" busy={busy} disabled={disabled || (ask && !typed)}>
-        {!busy && <Wand />} {busy ? "Updating the draft" : typed ? "Add to draft" : "Apply fix"}
+      <p className="text-sm text-neutral-700" aria-live="polite">
+        {left.length ? <>Still to fill: <Gaps text={[...new Set(left)].join(" ")} /></> : "All filled in."}
+      </p>
+      <Button type="submit" busy={busy} disabled={disabled || left.length > 0 || !text.trim()}>
+        {!busy && <Wand />} {busy ? "Updating the draft" : "Add to draft"}
       </Button>
     </form>
   );

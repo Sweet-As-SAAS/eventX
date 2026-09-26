@@ -60,8 +60,8 @@ export default function ProfilePage({ params, searchParams }: PageProps<"/events
         const detail = await api.getEvent(id);
         setEv(detail);
         setCls(detail.classification);
-        if (!detail.classification) api.classify(id).then(setCls).catch(() => {});
         const r = detail.profile && !fresh ? await api.getProfile(id) : await api.buildProfile(id);
+        if (!detail.classification || fresh) api.classify(id).then(setCls).catch(() => {});
         setProfile(r.profile);
         setQuestions(r.questions);
         if (fresh) router.replace(pathname, { scroll: false });

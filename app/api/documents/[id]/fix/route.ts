@@ -18,7 +18,7 @@ export const POST = handler(async (req, ctx: RouteContext<"/api/documents/[id]/f
   const { itemId, text } = await parseBody(req, Body);
   if (MOCK()) {
     const doc = mockDocument(id);
-    const failed = doc.checkResults?.items.find((item) => item.itemId === itemId && !item.pass && (item.suggestedFix || text));
+    const failed = doc.checkResults?.items.find((item) => item.itemId === itemId && !item.pass);
     if (!failed || id !== fixture.fixedDocument.id) throw new HttpError(409, `No suggested fix for item ${itemId}`);
     const response = NextResponse.json(fixture.fixedDocument);
     response.cookies.set(MOCK_FIXED_COOKIE, "1", { httpOnly: true, sameSite: "lax", path: "/", maxAge: 3600 });
@@ -26,14 +26,17 @@ export const POST = handler(async (req, ctx: RouteContext<"/api/documents/[id]/f
   }
   const { row, event } = await loadDocument(id, orgId);
   const item = (row.check_results ? CheckResult.parse(row.check_results) : null)?.items.find((i) => i.itemId === itemId);
-  if (!item || item.pass || (!item.suggestedFix && !text)) throw new HttpError(409, `No suggested fix for item ${itemId}`);
+  if (!item || item.pass) throw new HttpError(409, `Item ${itemId} has nothing to fix`);
   const checklist = await loadChecklist(event.councilId, row.document_type);
   if (!checklist?.items.length) throw new HttpError(409, `No verified checklist for ${row.document_type} yet`);
 
+  // No suggestion (the checker sometimes returns none): ask for text that satisfies the item from the draft's own facts.
   const instruction = text
     ? `Satisfy this council checklist item: ${item.text}\n${item.suggestedFix ? `Suggested text: ${item.suggestedFix}\n` : ""}` +
       `The organiser supplied these facts. Use them verbatim, replacing any matching [PLACEHOLDER]:\n${text}`
-    : item.suggestedFix!;
+    : item.suggestedFix ??
+      `Add ready-to-lodge text so the document clearly satisfies this council checklist item: ${item.text}\n` +
+      "Use only facts already in the document. Where a fact is unknown, keep a descriptive [PLACEHOLDER].";
   // The cached demo fix ignores the organiser's words, so it only stands in for the one-click fix.
   const fixed = !text && isSeeded(event) && row.document_type === fixture.fixedDocument.documentType ? fixture.fixedDocument : null;
   const { content, result } = await withDemoFallback(async () => {

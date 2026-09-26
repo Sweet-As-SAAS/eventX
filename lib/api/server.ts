@@ -106,13 +106,20 @@ export async function loadRules(council: CouncilSlug): Promise<Rule[]> {
   return [...staticRules.filter((r) => r.council === council && !ids.has(r.id)), ...fromDb];
 }
 
+type ChecklistItem = { id: string; text: string; sourceQuote?: string };
+
+/** A checklist row's source: link, checked date and the council's wording per item. */
+export const checklistSource = (row: { items: unknown; source_url: string | null; last_checked: string | null }) => ({
+  url: row.source_url ?? "",
+  lastChecked: row.last_checked,
+  quotes: (row.items as ChecklistItem[]).flatMap((i) => (i.sourceQuote ? [{ itemId: i.id, quote: i.sourceQuote }] : [])),
+});
+
 /** The verified checklist for a document type, with its source for the "checked on" label. */
 export async function loadChecklist(councilId: string, documentType: string) {
   const row = must(await db().from("checklists").select("items, source_url, last_checked")
     .eq("council_id", councilId).eq("document_type", documentType).eq("verified", true).maybeSingle());
-  return row
-    ? { items: row.items as { id: string; text: string }[], source: { url: row.source_url ?? "", lastChecked: row.last_checked } }
-    : null;
+  return row ? { items: row.items as ChecklistItem[], source: checklistSource(row) } : null;
 }
 
 /** A check is complete only when it covers every item in the verified council checklist exactly once. */
@@ -173,4 +180,20 @@ export function mockDocument(id: string) {
   const doc = fixture.documents.find((d) => d.id === id);
   if (!doc) throw new HttpError(404, `Document ${id} not found in the fixture`);
   return doc;
+}
+
+/** What a council-format PDF needs per document: the council's name, its template source and checklist source. */
+export async function loadPackInfo(councilId: string, rows: readonly { document_type: string; content: unknown }[]) {
+  const [council, templates, lists] = await Promise.all([
+    db().from("councils").select("name").eq("id", councilId).single(),
+    db().from("templates").select("document_type, source_url").eq("council_id", councilId),
+    db().from("checklists").select("document_type, source_url, last_checked").eq("council_id", councilId).eq("verified", true),
+  ]);
+  const templateUrl = new Map(must(templates).map((t: any) => [t.document_type, t.source_url as string | null]));
+  const checklist = new Map(must(lists).map((c: any) => [c.document_type, { url: c.source_url ?? "", lastChecked: c.last_checked }]));
+  return {
+    council: must(council).name as string,
+    docs: rows.flatMap((d) => d.content ? [{ doc: DraftDocument.parse(d.content), templateUrl: templateUrl.get(d.document_type) ?? null,
+      checklist: checklist.get(d.document_type) ?? null }] : []),
+  };
 }

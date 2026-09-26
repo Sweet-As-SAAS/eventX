@@ -46,7 +46,8 @@ Task: check a draft document against the council checklist, item by item.
 - pass is true only if the draft clearly satisfies the item. Quote the exact sentence as evidence.
 - If it fails, evidence is "" and suggestedFix is specific, ready-to-insert draft text that would satisfy the item using only known facts or a clearly proposed organiser action. Do not suggest a vague instruction such as "provide a plan" or claim that unknown evidence already exists.
 - Never invent a person's name, provider or organisation in suggestedFix. Use a descriptive [NAME TO CONFIRM] placeholder for an unknown person, even if that means the item stays red until the organiser supplies it.
-- Placeholders like [NAME] count as failing for items that need that information.`;
+- Placeholders like [NAME] count as failing for items that need that information.
+- suggestedFix is the finished sentence itself, as it would appear in the document, never an instruction about it (not "Specify...", "Include a section...", "e.g. ...").`;
 
 export const FIX_SYSTEM = `${BASE}
 Task: apply one suggested fix to a draft document. Change only what the fix needs. When the fix is ready-to-insert text, put that sentence verbatim in the relevant section in place of the placeholder or incomplete passage. Do not replace it with a promise to create a plan later. If a fact is unknown, retain a named [PLACEHOLDER] rather than invent it. Never replace [NAME TO CONFIRM] with a made-up name. Return the whole document.`;

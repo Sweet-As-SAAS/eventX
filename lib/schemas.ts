@@ -147,7 +147,12 @@ export const EventDocument = z.object({
   status: DocumentStatus,
   content: DraftDocument.nullable(),
   checkResults: CheckResult.nullable(),
-  checklistSource: z.object({ url: z.string(), lastChecked: z.string().nullable() }).nullable(),
+  checklistSource: z.object({
+    url: z.string(),
+    lastChecked: z.string().nullable(),
+    /** The council's own wording behind each checklist item, so the screen can say why it's asked. */
+    quotes: z.array(z.object({ itemId: z.string(), quote: z.string() })).default([]),
+  }).nullable(),
 });
 export type EventDocument = z.infer<typeof EventDocument>;
 
