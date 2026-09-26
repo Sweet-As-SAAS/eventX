@@ -1,15 +1,62 @@
 import { EventProfile, type FollowUpQuestion, type CouncilSlug } from "../schemas";
-import { structured, MODEL_FAST } from "./client";
+import { structured, MODEL_STRONG } from "./client";
 import { PROFILE_SYSTEM } from "./prompts";
 import { conditionPaths, type Rule } from "../rules/engine";
 
 /** Step 1. `today` is the NZ date (nzToday) so "this Sunday" resolves correctly. */
 export async function buildProfile(description: string, council: CouncilSlug, today: string) {
   const profile = await structured({
-    schema: EventProfile, name: "event_profile", model: MODEL_FAST, system: PROFILE_SYSTEM,
+    schema: EventProfile, name: "event_profile", model: MODEL_STRONG, system: PROFILE_SYSTEM,
     user: `Reference date: ${today}\nCouncil: ${council}\nDescription:\n${description}`,
   });
-  return { ...profile, councilSlug: council };
+  const date = resolveStatedDate(description, today, profile.date);
+  const corrected = { ...profile, councilSlug: council, date };
+  return EventProfile.parse({ ...corrected, missing: missingPaths(corrected) });
+}
+
+const MONTHS = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
+const WEEKDAYS = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+
+/** Correct a model's year only when its month/day matches an explicit date in the description. */
+export function resolveStatedDate(description: string, today: string, modelDate: EventProfile["date"]): EventProfile["date"] {
+  if (!modelDate.value) return modelDate;
+  const pattern = /\b(?:(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\s+)?(\d{1,2})(?:st|nd|rd|th)?\s+(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)(?:\s+(20\d{2}))?\b/gi;
+  for (const match of description.matchAll(pattern)) {
+    const day = Number(match[2]);
+    const month = MONTHS.findIndex((name) => name.startsWith(match[3].toLowerCase().slice(0, 3))) + 1;
+    const monthDay = `${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+    if (modelDate.value.slice(5) !== monthDay) continue;
+    const weekday = match[1]?.toLowerCase();
+    const explicitYear = match[4] ? Number(match[4]) : null;
+    const firstYear = explicitYear ?? Number(today.slice(0, 4));
+    const lastYear = explicitYear ?? firstYear + 7;
+    for (let year = firstYear; year <= lastYear; year++) {
+      const utc = new Date(Date.UTC(year, month - 1, day));
+      if (utc.getUTCFullYear() !== year || utc.getUTCMonth() !== month - 1 || utc.getUTCDate() !== day) continue;
+      if (weekday && WEEKDAYS[utc.getUTCDay()] !== weekday) continue;
+      const iso = `${year}-${monthDay}`;
+      if (iso >= today) return { value: iso, source: "stated" };
+    }
+    return { value: null, source: null };
+  }
+  return modelDate;
+}
+
+/** Keep question paths tied to actual unknown fields, independent of how the model spelled them. */
+export function missingPaths(profile: EventProfile): string[] {
+  const paths: string[] = [];
+  const visit = (value: unknown, path: string) => {
+    if (!value || typeof value !== "object" || Array.isArray(value)) return;
+    if ("value" in value && "source" in value) {
+      if (value.value === null) paths.push(path);
+      return;
+    }
+    for (const [key, child] of Object.entries(value)) {
+      if (key !== "missing") visit(child, path ? `${path}.${key}` : key);
+    }
+  };
+  visit(profile, "");
+  return paths;
 }
 
 // Deterministic question bank. A question is only asked if its path is missing AND a verified rule reads it.
