@@ -132,6 +132,23 @@ export function checkedStatus(r: CheckResult, checklist: readonly { id: string }
   return r.items.every((item) => item.pass) ? "ready" : "needs_fix";
 }
 
+/** Ticketing needs exactly the required documents, with a complete passing check for every drafted type. */
+export function documentsReadyForTicketing(
+  requiredTypes: ReadonlySet<string>,
+  docs: readonly { document_type: string; status: string; content: unknown; check_results: unknown }[],
+  checklists: ReadonlyMap<string, readonly { id: string }[]>,
+): boolean {
+  if (!requiredTypes.size || docs.length !== requiredTypes.size) return false;
+  return docs.every((doc) => {
+    if (!requiredTypes.has(doc.document_type)) return false;
+    if (doc.status === "manual") return true;
+    if (doc.status !== "ready" || !doc.content) return false;
+    const result = CheckResult.safeParse(doc.check_results);
+    return result.success && checklistCovered(result.data, checklists.get(doc.document_type) ?? []) &&
+      result.data.items.every((item) => item.pass);
+  });
+}
+
 /** Deletes an event's rows of `table` whose document_type is no longer required. */
 export async function pruneTypes(table: "requirements" | "documents" | "deadlines", eventId: string, keep: string[]) {
   const q = db().from(table).delete().eq("event_id", eventId);

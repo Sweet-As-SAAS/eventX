@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { checkedStatus, checklistCovered, HttpError } from "../lib/api/server";
+import { checkedStatus, checklistCovered, documentsReadyForTicketing, HttpError } from "../lib/api/server";
 import type { CheckResult } from "../lib/schemas";
 
 const checklist = [{ id: "first" }, { id: "second" }];
@@ -25,5 +25,32 @@ describe("document checks", () => {
   it("rejects an empty checklist", () => {
     expect(checklistCovered(result([]), [])).toBe(false);
     expect(() => checkedStatus(result([]), [])).toThrow(HttpError);
+  });
+});
+
+describe("Eventbrite document gate", () => {
+  const required = new Set(["site_plan", "safety_plan"]);
+  const lists = new Map([["safety_plan", checklist]]);
+  const manual = { document_type: "site_plan", status: "manual", content: null, check_results: null };
+  const ready = { document_type: "safety_plan", status: "ready", content: { sections: [] },
+    check_results: result(["first", "second"]) };
+
+  it("accepts a manual document alongside a complete verified passing draft", () => {
+    expect(documentsReadyForTicketing(required, [manual, ready], lists)).toBe(true);
+  });
+
+  it.each([
+    ["no requirements", new Set<string>(), [manual, ready], lists],
+    ["missing document", required, [ready], lists],
+    ["unexpected document type", required, [{ ...manual, document_type: "other" }, ready], lists],
+    ["pending draft", required, [manual, { ...ready, status: "pending" }], lists],
+    ["unfixed draft", required, [manual, { ...ready, status: "needs_fix" }], lists],
+    ["no content", required, [manual, { ...ready, content: null }], lists],
+    ["no check result", required, [manual, { ...ready, check_results: null }], lists],
+    ["failed check", required, [manual, { ...ready, check_results: result(["first", "second"], ["second"]) }], lists],
+    ["incomplete check", required, [manual, { ...ready, check_results: result(["first"]) }], lists],
+    ["no verified checklist", required, [manual, ready], new Map()],
+  ] as const)("locks ticketing for %s", (_reason, types, docs, verified) => {
+    expect(documentsReadyForTicketing(types, docs, verified)).toBe(false);
   });
 });

@@ -1,8 +1,9 @@
 import { db } from "@/lib/supabase/admin";
+import { cookies } from "next/headers";
 import { checkDocument } from "@/lib/ai/check";
 import { withDemoFallback, isSeeded } from "@/lib/ai/demo";
 import { CheckResult, DraftDocument } from "@/lib/schemas";
-import { MOCK, ok, fixture, handler, requireOrg, loadDocument, loadChecklist, must, toEventDocument, mockDocument, checkedStatus, HttpError } from "@/lib/api/server";
+import { MOCK, MOCK_FIXED_COOKIE, ok, fixture, handler, requireOrg, loadDocument, loadChecklist, must, toEventDocument, mockDocument, checkedStatus, HttpError } from "@/lib/api/server";
 
 export const maxDuration = 60;
 
@@ -10,7 +11,11 @@ export const maxDuration = 60;
 export const POST = handler(async (_req, ctx: RouteContext<"/api/documents/[id]/check">) => {
   const orgId = await requireOrg();
   const { id } = await ctx.params;
-  if (MOCK()) return ok(mockDocument(id));
+  if (MOCK()) {
+    const doc = mockDocument(id);
+    return ok(id === fixture.fixedDocument.id && (await cookies()).get(MOCK_FIXED_COOKIE)?.value === "1"
+      ? fixture.fixedDocument : doc);
+  }
   const { row, event } = await loadDocument(id, orgId);
   if (!row.content) throw new HttpError(409, "Draft the document first");
   const checklist = await loadChecklist(event.councilId, row.document_type);

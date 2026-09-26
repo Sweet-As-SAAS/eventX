@@ -25,7 +25,7 @@ export const POST = handler(async (req, ctx: RouteContext<"/api/documents/[id]/f
   }
   const { row, event } = await loadDocument(id, orgId);
   const item = (row.check_results ? CheckResult.parse(row.check_results) : null)?.items.find((i) => i.itemId === itemId);
-  if (!item?.suggestedFix) throw new HttpError(409, `No suggested fix for item ${itemId}`);
+  if (!item || item.pass || !item.suggestedFix) throw new HttpError(409, `No suggested fix for item ${itemId}`);
   const checklist = await loadChecklist(event.councilId, row.document_type);
   if (!checklist?.items.length) throw new HttpError(409, `No verified checklist for ${row.document_type} yet`);
 

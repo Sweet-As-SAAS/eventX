@@ -3,8 +3,8 @@ import { cookies } from "next/headers";
 import { db } from "@/lib/supabase/admin";
 import { createEventbriteDraft, eventbriteDraftUrl } from "@/lib/integrations/eventbrite";
 import { withDemoFallback, isSeeded } from "@/lib/ai/demo";
-import { CheckResult, Ticket, type EventbriteDraft } from "@/lib/schemas";
-import { MOCK, MOCK_FIXED_COOKIE, ok, handler, parseBody, requireOrg, loadEvent, requireProfile, must, HttpError, checklistCovered } from "@/lib/api/server";
+import { Ticket, type EventbriteDraft } from "@/lib/schemas";
+import { MOCK, MOCK_FIXED_COOKIE, ok, handler, parseBody, requireOrg, loadEvent, requireProfile, must, HttpError, documentsReadyForTicketing } from "@/lib/api/server";
 
 export const maxDuration = 60;
 
@@ -35,14 +35,7 @@ export const POST = handler(async (req, ctx: RouteContext<"/api/events/[id]/even
   const docs = must(documents);
   const requiredTypes = new Set(must(requirements).map((r) => r.document_type));
   const checklists = new Map(must(lists).map((list) => [list.document_type, list.items as { id: string }[]]));
-  if (!requiredTypes.size || docs.length !== requiredTypes.size || docs.some((doc) => {
-    if (!requiredTypes.has(doc.document_type)) return true;
-    if (doc.status === "manual") return false;
-    if (doc.status !== "ready" || !doc.content) return true;
-    const result = CheckResult.safeParse(doc.check_results);
-    return !result.success || !checklistCovered(result.data, checklists.get(doc.document_type) ?? []) ||
-      result.data.items.some((item) => !item.pass);
-  })) {
+  if (!documentsReadyForTicketing(requiredTypes, docs, checklists)) {
     throw new HttpError(409, "Every checklist must be green before tickets go on sale");
   }
   const profile = requireProfile(ev);
