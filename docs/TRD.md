@@ -147,7 +147,7 @@ All routes are Next.js route handlers, authenticated by session (`requireOrg`), 
 | Method and route | Body | Returns | Errors | Client |
 | --- | --- | --- | --- | --- |
 | GET /api/events | | EventSummary[] | | `api.listEvents()` |
-| POST /api/events | `{ council, description }` (10 to 2000 chars) | `{ id }` | 400 | `api.createEvent()` |
+| POST /api/events | `{ description, council? }` (10 to 2000 chars; council defaults to and must be `ccc`) | `{ id }` | 400 | `api.createEvent()` |
 | GET /api/events/:id | | EventDetail | 404 | `api.getEvent()` |
 | POST /api/events/:id/profile | | ProfileResponse `{ profile, questions }` | 404 | `api.buildProfile()` |
 | POST /api/events/:id/answers | `{ answers: [{ path, answer }] }` | ProfileResponse | 400 unknown path or option, 409 no profile | `api.answer()` |
