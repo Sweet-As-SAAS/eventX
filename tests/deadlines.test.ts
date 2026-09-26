@@ -1,17 +1,10 @@
 import { describe, it, expect } from "vitest";
 import fixture from "../fixtures/demo-event.json";
 import {
-  addDays, computeDeadlines, workingDaysBefore, isWorkingDay, inLiquorHolidayPeriod, nzToday, type TrafficImpact,
+  addDays, computeDeadlines, workingDaysBefore, isWorkingDay, inLiquorHolidayPeriod, nzToday,
 } from "../lib/deadlines";
-import { Requirement, type Deadline } from "../lib/schemas";
+import { Requirement } from "../lib/schemas";
 
-// TODO(audit): backend may drop computeDeadlines' council param, moving trafficImpact to 3rd. This works with either
-// signature (an impact in the council slot yields no traffic deadline); simplify to one call after the merge.
-const withImpact = (date: string, reqs: Requirement[], impact: TrafficImpact): Deadline[] => {
-  const call = computeDeadlines as (...args: unknown[]) => Deadline[];
-  const first = call(date, reqs, impact);
-  return first.length ? first : call(date, reqs, "ccc", impact);
-};
 const fixtureDeadlines = () => computeDeadlines(fixture.profile.date.value, fixture.requirements.map((r) => Requirement.parse(r)));
 
 describe("deadline engine", () => {
@@ -52,7 +45,7 @@ describe("deadline engine", () => {
     const traffic = Requirement.parse({ documentType: "traffic_management_plan", reason: "Road impact", ruleId: "ccc-traffic",
       sourceUrl: "https://ccc.govt.nz/", lastChecked: "2026-09-26" });
     for (const [impact, days] of [["small", 30], ["medium", 60], ["large", 120]] as const) {
-      const [deadline] = withImpact("2027-07-01", [traffic], impact);
+      const [deadline] = computeDeadlines("2027-07-01", [traffic], "ccc", impact);
       expect(deadline.legalMinimum).toBe(addDays("2027-07-01", -days));
       expect(deadline.recommended).toBe(addDays("2027-07-01", -Math.max(days, 84)));
       expect(deadline.sourceUrl).toContain("Road-closure-for-events-3-tier.pdf");

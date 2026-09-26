@@ -56,6 +56,8 @@ describe("MOCK routes return the contract", () => {
     expect(await json(await r.GET(get(), undefined as never), z.array(EventSummary))).toHaveLength(1);
     expect(await json(await r.POST(post({ council: "ccc", description: fixture.description }), undefined as never), Id))
       .toEqual({ id: "demo" });
+    expect(await json(await r.POST(post({ description: fixture.description }), undefined as never), Id)).toEqual({ id: "demo" }); // council defaults to ccc
+    expect((await r.POST(post({ council: "other", description: fixture.description }), undefined as never)).status).toBe(400);
     expect((await r.POST(post({ council: "ccc", description: "short" }), undefined as never)).status).toBe(400);
   });
 

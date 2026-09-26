@@ -29,7 +29,7 @@ test("golden path", async ({ page }, info) => {
   // 1. Describe
   await page.goto("/new");
   await step("describe: type the description", async () => {
-    const box = page.getByRole("textbox", { name: /what.?s happening|describe|event/i }).last();
+    const box = page.getByRole("textbox", { name: /your event, in your words|what.?s happening|describe/i }).first();
     await box.fill(fixture.description, { timeout: STEP_TIMEOUT });
   });
   await shot("describe");
@@ -73,10 +73,12 @@ test("golden path", async ({ page }, info) => {
   await shot("documents-red");
   await step("documents: click Fix, item turns green", async () => {
     await fixButton.click({ timeout: STEP_TIMEOUT });
-    const answerBox = page.getByRole("textbox").first(); // some fixes ask the organiser for a fact first
-    if (await answerBox.isVisible().catch(() => false)) {
-      await answerBox.fill("The open lawn north of the main gate");
-      await page.getByRole("button", { name: /add|fix|save/i }).last().click({ timeout: STEP_TIMEOUT });
+    // "Fix it" either fixes in one click or opens the item, where "Apply fix" / "Add to draft" finishes it.
+    const apply = page.getByRole("button", { name: /apply fix|add to draft/i }).first();
+    if (await apply.waitFor({ timeout: 2_000 }).then(() => true, () => false)) {
+      const answerBox = page.getByRole("textbox").filter({ visible: true }).first(); // facts HostReady must not invent
+      if (await answerBox.isVisible()) await answerBox.fill("The open lawn north of the main gate");
+      await apply.click({ timeout: STEP_TIMEOUT });
     }
     await expect(page.getByRole("button", { name: /^fix/i })).toHaveCount(0, { timeout: STEP_TIMEOUT });
     await expect(page.getByText(/to fix/i)).toHaveCount(0, { timeout: STEP_TIMEOUT });
