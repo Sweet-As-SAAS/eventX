@@ -51,7 +51,8 @@
     { "documentType": "waste_management_confirmation", "reason": "Required with every event permit application", "ruleId": "ccc-waste", "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits", "lastChecked": "2026-09-26" },
     { "documentType": "hazard_register", "reason": "Bouncy castles and inflatables are classed as high risk", "ruleId": "ccc-inflatable", "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits", "lastChecked": "2026-09-26" },
     { "documentType": "food_licence_check", "reason": "Food will be sold or served", "ruleId": "ccc-food", "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits", "lastChecked": "2026-09-26" },
-    { "documentType": "special_licence_application", "reason": "Alcohol will be sold", "ruleId": "ccc-special-licence", "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits", "lastChecked": "2026-09-26" }
+    { "documentType": "special_licence_application", "reason": "Alcohol will be sold", "ruleId": "ccc-special-licence", "sourceUrl": "https://ccc.tfaforms.net/177", "lastChecked": "2026-09-26" },
+    { "documentType": "alcohol_management_plan", "reason": "Special licence event expecting more than 150 guests", "ruleId": "ccc-amp", "sourceUrl": "https://ccc.govt.nz/assets/Documents/Consents-and-Licences/business-licences-and-consents/Alcohol/SpecialLicence.pdf", "lastChecked": "2026-09-26" }
   ],
   "documents": [
     { "id": "doc-permit", "documentType": "event_permit_application", "status": "manual", "content": null, "checkResults": null, "checklistSource": null },
@@ -154,6 +155,41 @@
         ]
       },
       "checklistSource": { "url": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-resources", "lastChecked": "2026-09-26" }
+    },
+    {
+      "id": "doc-amp",
+      "documentType": "alcohol_management_plan",
+      "status": "ready",
+      "content": {
+        "documentType": "alcohol_management_plan",
+        "title": "Alcohol management plan",
+        "sections": [
+          { "heading": "Type of event", "body": "Family community fundraiser, about 400 people at peak including children. Beer is sold to adults from a fenced beer tent. Event manager [NAME] is in charge overall; duty manager [DUTY MANAGER NAME] is in charge of the licensed area." },
+          { "heading": "Promoting your event", "body": "Promotion states the event is family-focused, that intoxicated people will be refused service and removed, that no alcohol may be brought in, and that ID is checked at the beer tent." },
+          { "heading": "Intoxication", "body": "Bar staff and the duty manager monitor patrons throughout and intervene early. Intoxicated people are refused entry to the tent. Safe place for an intoxicated patron: [SAFE PLACE]." },
+          { "heading": "Food", "body": "Three food trucks trade the whole time alcohol is sold. [NAME] checks food stays available; if it runs out, alcohol sales stop." },
+          { "heading": "Low and non-alcohol beverages", "body": "Low-alcohol beer, soft drinks and free water are available and promoted at the beer tent at all times." },
+          { "heading": "Minors", "body": "Photo ID (NZ driver licence, passport or 18+ card) is checked for anyone who appears under 25." },
+          { "heading": "Signage", "body": "The special licence is displayed at the beer tent, with prohibited-person signage at each point of sale. [NAME] puts up the signs." },
+          { "heading": "Safe transport", "body": "[TRANSPORT OPTIONS], promoted at the tent exit. Staff offer alternatives to anyone who has been drinking and intends to drive." },
+          { "heading": "Alcohol promotions on the day", "body": "No discounts, drinking games or alcohol prizes." },
+          { "heading": "Staff training", "body": "All bar staff and volunteers are briefed on the licence conditions and this plan before the event." },
+          { "heading": "Incident and noting book", "body": "The duty manager records refusals, removals and incidents in an incident book kept at the tent." },
+          { "heading": "Security", "body": "Certificated security from [SECURITY FIRM], [NUMBER] staff, [START AND FINISH TIMES]. Liaison: [NAME]." },
+          { "heading": "Environment", "body": "Seating and shade around the tent, a family focus, and toilets available throughout." },
+          { "heading": "Debriefing", "body": "Staff and contractors debrief after the event to note improvements." }
+        ],
+        "placeholders": ["[NAME]", "[DUTY MANAGER NAME]", "[SAFE PLACE]", "[TRANSPORT OPTIONS]", "[SECURITY FIRM]", "[NUMBER]", "[START AND FINISH TIMES]"],
+        "citedChunkIds": []
+      },
+      "checkResults": {
+        "items": [
+          { "itemId": "chain-of-command", "text": "Documents who is in charge of the event and each area of responsibility", "pass": true, "evidence": "Event manager [NAME] is in charge overall; duty manager [DUTY MANAGER NAME] is in charge of the licensed area.", "suggestedFix": null },
+          { "itemId": "food", "text": "Names who keeps food available while alcohol is sold", "pass": true, "evidence": "Three food trucks trade the whole time alcohol is sold.", "suggestedFix": null },
+          { "itemId": "minors", "text": "Sets ID checks for anyone appearing under 25", "pass": true, "evidence": "Photo ID (NZ driver licence, passport or 18+ card) is checked for anyone who appears under 25.", "suggestedFix": null }
+        ]
+      },
+      "checklistSource": { "url": "https://ccc.govt.nz/assets/Documents/Consents-and-Licences/business-licences-and-consents/Alcohol/Info-AlcoholManagementPlan.pdf", "lastChecked": "2026-09-26" }
     }
   ],
   "fixedDocument": {

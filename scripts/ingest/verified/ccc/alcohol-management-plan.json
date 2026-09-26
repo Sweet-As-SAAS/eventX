@@ -1,0 +1,52 @@
+{
+  "url": "https://ccc.govt.nz/assets/Documents/Consents-and-Licences/business-licences-and-consents/Alcohol/Info-AlcoholManagementPlan.pdf",
+  "verified": true,
+  "reviewedBy": "lane B, 26 Sep 2026: CCC 'A guide to preparing an Alcohol Management Plan (AMP) for special events' (March 2018)",
+  "rules": [],
+  "checklists": [
+    {
+      "documentType": "alcohol_management_plan",
+      "items": [
+        { "id": "chain-of-command", "text": "Documents who is in charge of the event and each area of responsibility", "sourceQuote": "Event organisers need to establish and provide a chain of command, documenting who is in charge of the overall event and specific areas of responsibility." },
+        { "id": "event-risks", "text": "Defines the type of event and its risks", "sourceQuote": "it is beneficial to define the type of event you’re running and note the risks that can be associated with the event" },
+        { "id": "pre-event-comms", "text": "Pre-event communication covers intoxication, alcohol restrictions, age limits and behaviour", "sourceQuote": "Explicit information regarding the legal requirements to exclude or remove intoxicated patrons." },
+        { "id": "intoxication", "text": "Sets procedures to monitor patrons and prevent intoxication", "sourceQuote": "Ensure organisers and staff proactively monitor patrons for intoxication throughout the event" },
+        { "id": "safe-place", "text": "Identifies a safe place for intoxicated patrons", "sourceQuote": "Identify a “safe place” that can be used for the care and protection of an intoxicated patron" },
+        { "id": "food", "text": "Names who keeps food available while alcohol is sold", "sourceQuote": "food must be conveniently available for consumption on the premises at all times alcohol is available for purchase." },
+        { "id": "low-non-alcohol", "text": "Keeps a reasonable range of low and non-alcohol drinks available at all times", "sourceQuote": "It is a condition of all special licences that a reasonable range of non alcohol and low alcohol beverages be available at all times" },
+        { "id": "water", "text": "Free water is readily available and promoted", "sourceQuote": "free water will be readily available at all times throughout the duration of the event" },
+        { "id": "minors", "text": "Sets ID checks for anyone appearing under 25", "sourceQuote": "Set procedures to verify the age of any person appearing to be under 25 years of age" },
+        { "id": "signage", "text": "Licence displayed and prohibited-person signage at each point of sale", "sourceQuote": "“Prohibited person signage” to be displayed adjacent to points of sale." },
+        { "id": "transport", "text": "Lists safe transport options and how they are promoted", "sourceQuote": "List the safe transport options available from your premises." },
+        { "id": "promotions", "text": "Promotions do not encourage excessive drinking", "sourceQuote": "Detail the management systems for promotions that will ensure that they do not lead to excessive consumption." },
+        { "id": "training", "text": "All staff are trained and briefed before the event", "sourceQuote": "It is an expectation that all staff receive appropriate training and briefing prior to the event." },
+        { "id": "incident-book", "text": "Keeps an incident and noting book", "sourceQuote": "It is recognised good practice to operate an incident and noting book." },
+        { "id": "security", "text": "Details certified security (guideline: over 100 patrons)", "sourceQuote": "if the event numbers exceed 100 patrons (subject to the nature of the event), security staff should be employed." },
+        { "id": "toilets", "text": "Adequate toilets throughout the event", "sourceQuote": "Ensure adequate toilet facilities are available throughout the event." }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "documentType": "alcohol_management_plan",
+      "sections": [
+        "Type of event",
+        "Promoting your event",
+        "Intoxication",
+        "Food",
+        "Low and non-alcohol beverages",
+        "Minors",
+        "Signage",
+        "Safe transport",
+        "Alcohol promotions on the day",
+        "Staff training",
+        "Incident and noting book",
+        "Security",
+        "Environment",
+        "Debriefing"
+      ]
+    }
+  ],
+  "leadTimes": [],
+  "fees": []
+}
