@@ -77,7 +77,7 @@ export function Sidebar({ name }: { name: string | null }) {
 type Ctx = { path: string; name: string | null; events: EventWithNote[] | null; eventId: string | null; current: Current | null; toggle: () => void; mobile?: boolean };
 
 const soonDeadline = (c: Current | null) => !!c?.deadlines.some((d) => daysBetween(nzToday(), d.recommended) <= 14);
-// The site plan isn't saved yet, so it flags whenever the event needs one.
+// The site plan step flags whenever the event needs one (the sidebar doesn't load the saved plan or its checks).
 const stepFlag = (slug: string, c: Current | null) =>
   slug === "documents" ? !!c && packNote(c.docs).warn
   : slug === "site-plan" ? !!c?.docs.some((d) => d.documentType === "site_plan")
