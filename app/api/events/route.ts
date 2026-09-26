@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { db } from "@/lib/supabase/admin";
 import { CouncilSlug, type EventSummary } from "@/lib/schemas";
-import { MOCK, MOCK_FIXED_COOKIE, mockReviewCookie, MOCK_PAST, resetMock, ok, fixture, handler, parseBody, requireOrg, must, HttpError } from "@/lib/api/server";
+import { MOCK, MOCK_FIXED_COOKIE, mockReviewCookie, mockEditCookie, MOCK_PAST, resetMock, ok, fixture, handler, parseBody, requireOrg, must, HttpError } from "@/lib/api/server";
 
 /** Dashboard list, newest first. */
 export const GET = handler(async () => {
@@ -29,7 +29,7 @@ export const POST = handler(async (req) => {
     resetMock();
     const response = ok({ id: "demo" });
     response.cookies.delete(MOCK_FIXED_COOKIE);
-    for (const document of fixture.documents) response.cookies.delete(mockReviewCookie(document.id));
+    for (const document of fixture.documents) { response.cookies.delete(mockReviewCookie(document.id)); response.cookies.delete(mockEditCookie(document.id)); }
     return response;
   }
   const council = must(await db().from("councils").select("id").eq("slug", body.council).maybeSingle());

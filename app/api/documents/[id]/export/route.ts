@@ -4,7 +4,7 @@ import { renderDoc, pdfName } from "@/lib/pdf/pack";
 import { OFFICIAL_FORM, officialForm } from "@/lib/pdf/official";
 import { nzToday } from "@/lib/deadlines";
 import { DraftDocument, EventProfile, type DocumentType, type Licence } from "@/lib/schemas";
-import { MOCK, MOCK_FIXED_COOKIE, fixture, handler, requireOrg, loadDocument, loadPackInfo, mockDocument, withMockChanges, must, HttpError } from "@/lib/api/server";
+import { MOCK, MOCK_FIXED_COOKIE, fixture, handler, requireOrg, loadDocument, loadPackInfo, mockDocument, mockEdits, withMockEdit, must, HttpError } from "@/lib/api/server";
 
 export const maxDuration = 60;
 
@@ -15,7 +15,7 @@ export const GET = handler(async (req, ctx: RouteContext<"/api/documents/[id]/ex
   const view = new URL(req.url).searchParams.get("view") === "1";
   if (MOCK()) {
     const fixed = id === fixture.fixedDocument.id && (await cookies()).get(MOCK_FIXED_COOKIE)?.value === "1";
-    const d = withMockChanges(fixed ? fixture.fixedDocument : mockDocument(id));
+    const d = withMockEdit(fixed ? fixture.fixedDocument : mockDocument(id), await mockEdits());
     if (!d.content) throw new HttpError(409, "Draft the document first");
     const doc = DraftDocument.parse(d.content);
     const profile = EventProfile.parse(fixture.profile);

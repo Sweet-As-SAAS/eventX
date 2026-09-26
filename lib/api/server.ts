@@ -1,5 +1,7 @@
 // Route-handler helpers. Server only: imports the service-role client.
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import { deflateRawSync, inflateRawSync } from "node:zlib";
 import { z } from "zod";
 import type { PostgrestSingleResponse } from "@supabase/supabase-js";
 import fixture from "../../fixtures/demo-event.json";
@@ -197,18 +199,32 @@ export const toEventDocument = (d: any, checklistSource: EventDocument["checklis
   checklistSource,
 });
 
-// ponytail: MOCK keeps draft edits and review ticks in server memory, so they reset on restart. Fine for the demo.
-const mockChanges = new Map<string, Partial<EventDocument>>();
-/** A fixture document with whatever the organiser changed in this MOCK session. */
-export const withMockChanges = <T extends { id: string }>(d: T): T & Partial<EventDocument> => ({ ...d, ...mockChanges.get(d.id) });
-export const setMockChanges = (id: string, change: Partial<EventDocument> | null) =>
-  change ? mockChanges.set(id, { ...mockChanges.get(id), ...change }) : mockChanges.delete(id);
-/** The saved MOCK site plan (null: the default layout). */
+// MOCK draft edits live in the visitor's own browser (a compressed cookie per document), like the review ticks:
+// any Vercel function can read them, and one visitor's demo never shows up for another.
+export const mockEditCookie = (id: string) => `hostready_demo_edit_${id}`;
+const EDIT_LIMIT = 3800; // bytes; browsers keep about 4 KB per cookie
+/** Cookie value for an edited draft, or null when it's too long to keep. */
+export const packEdit = (content: DraftDocument) => {
+  const v = deflateRawSync(JSON.stringify(content)).toString("base64url");
+  return v.length <= EDIT_LIMIT ? v : null;
+};
+/** This browser's MOCK draft edits, by document id. */
+export async function mockEdits(): Promise<Record<string, DraftDocument>> {
+  const jar = await cookies();
+  const out: Record<string, DraftDocument> = {};
+  for (const d of fixture.documents) {
+    const v = jar.get(mockEditCookie(d.id))?.value;
+    if (!v) continue;
+    try { out[d.id] = DraftDocument.parse(JSON.parse(inflateRawSync(Buffer.from(v, "base64url")).toString())); } catch { /* stale or bad cookie: ignore */ }
+  }
+  return out;
+}
+/** A fixture document with this browser's edit, if any. */
+export const withMockEdit = <T extends { id: string; content: unknown }>(d: T, edits: Record<string, DraftDocument>) =>
+  edits[d.id] ? { ...d, content: edits[d.id] } : d;
+/** The saved MOCK site plan (null: the default layout). The canvas isn't on screen any more. */
 export const mockSitePlan: { plan: SitePlan | null } = { plan: null };
-/** A new MOCK event starts clean: no edits, ticks or saved plan from the last run. */
-/** MOCK uploads per event (photos and PDFs added with the description). */
-export const mockUploads = new Map<string, { name: string; type: string; data: Buffer }[]>();
-export const resetMock = () => { mockChanges.clear(); mockSitePlan.plan = null; mockUploads.clear(); };
+export const resetMock = () => { mockSitePlan.plan = null; };
 
 /** MOCK lookup for the document routes. */
 export function mockDocument(id: string) {

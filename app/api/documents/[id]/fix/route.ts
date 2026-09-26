@@ -5,7 +5,7 @@ import { applyFix, checkDocument } from "@/lib/ai/check";
 import { withDemoFallback, isSeeded } from "@/lib/ai/demo";
 import { CheckResult, DraftDocument } from "@/lib/schemas";
 import { fillPeople } from "@/lib/people";
-import { MOCK, MOCK_FIXED_COOKIE, mockReviewCookie, ok, fixture, handler, parseBody, requireOrg, loadDocument, loadChecklist, must, toEventDocument, mockDocument, checkedStatus, HttpError, demoPause, setMockChanges } from "@/lib/api/server";
+import { MOCK, MOCK_FIXED_COOKIE, mockReviewCookie, ok, fixture, handler, parseBody, requireOrg, loadDocument, loadChecklist, must, toEventDocument, mockDocument, checkedStatus, HttpError, demoPause, mockEditCookie } from "@/lib/api/server";
 
 export const maxDuration = 60;
 
@@ -22,10 +22,10 @@ export const POST = handler(async (req, ctx: RouteContext<"/api/documents/[id]/f
     const failed = doc.checkResults?.items.find((item) => item.itemId === itemId && !item.pass);
     if (!failed || id !== fixture.fixedDocument.id) throw new HttpError(409, `No suggested fix for item ${itemId}`);
     await demoPause();
-    setMockChanges(id, null); // the fix rewrote the draft: earlier edits and the tick no longer apply
     const response = NextResponse.json(fixture.fixedDocument);
     response.cookies.set(MOCK_FIXED_COOKIE, "1", { httpOnly: true, sameSite: "lax", path: "/", maxAge: 3600 });
-    response.cookies.delete(mockReviewCookie(id));
+    response.cookies.delete(mockReviewCookie(id)); // the fix rewrote the draft: earlier edits and the tick no longer apply
+    response.cookies.delete(mockEditCookie(id));
     return response;
   }
   const { row, event } = await loadDocument(id, orgId);
