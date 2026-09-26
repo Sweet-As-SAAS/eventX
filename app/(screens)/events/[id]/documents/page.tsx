@@ -291,7 +291,10 @@ function DocumentDetail({ doc, profile, req, failed, retry, busy, justFixed, onF
           {!editing && (
             <div className="flex flex-wrap items-center gap-2">
               <Button variant="secondary" disabled={!!busy} onClick={() => setEditing(true)}><Pencil width={16} height={16} /> Edit the wording</Button>
-              <ButtonA href={api.documentPdfUrl(doc.id)} download variant="secondary"><Download /> PDF</ButtonA>
+              <ButtonA href={`${api.documentPdfUrl(doc.id)}?view=1`} target="_blank" rel="noreferrer" variant="secondary">
+                {doc.documentType === "special_licence_application" ? "View the council form" : "View PDF"}
+              </ButtonA>
+              <ButtonA href={api.documentPdfUrl(doc.id)} download variant="secondary"><Download /> Download</ButtonA>
             </div>
           )}
         </div>
