@@ -655,5 +655,6 @@
       "holderName": "Jordan Example",
       "expiresOn": "2028-03-01"
     }
-  ]
+  ],
+  "siteBasemap": { "url": "/site-plan/demo-venue.png", "attribution": "© OpenStreetMap contributors" }
 }

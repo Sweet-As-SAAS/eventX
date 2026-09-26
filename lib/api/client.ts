@@ -3,7 +3,7 @@
 import { z } from "zod";
 import {
   Classification, Deadline, EventbriteDraft, EventDetail, EventDocument, EventSummary, Licence,
-  ProfileResponse, Requirement, type CouncilSlug, type Ticket,
+  ProfileResponse, Requirement, SiteLayout, type CouncilSlug, type SitePlan, type Ticket,
 } from "../schemas";
 
 export class ApiError extends Error {
@@ -42,6 +42,11 @@ export const api = {
   check: (documentId: string) => call(EventDocument, `/api/documents/${documentId}/check`, {}),
   /** Applies the suggested fix for one checklist item and re-checks. `text` is the organiser's own answer for facts we can't invent. */
   fix: (documentId: string, itemId: string, text?: string) => call(EventDocument, `/api/documents/${documentId}/fix`, { itemId, text }),
+
+  /** Site plan layout: the saved plan merged with what the profile implies, plus the venue's map picture (or null). Check it with siteChecks from lib/siteplan. */
+  sitePlan: (id: string) => call(SiteLayout, `/api/events/${id}/site-plan`),
+  /** Replaces the whole plan. Returns the saved layout. 400 names anything that can't be saved. */
+  saveSitePlan: (id: string, plan: SitePlan) => call(SiteLayout, `/api/events/${id}/site-plan`, plan),
 
   deadlines: (id: string) => call(z.array(Deadline), `/api/events/${id}/deadlines`),
   /** Use as an <a href download>, not fetch. */

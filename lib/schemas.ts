@@ -189,3 +189,33 @@ export type Ticket = z.infer<typeof Ticket>;
 
 export const EventbriteDraft = z.object({ id: z.string(), url: z.string() });
 export type EventbriteDraft = z.infer<typeof EventbriteDraft>;
+
+// ---------- Site plan (drawn by the organiser on an 800×500 canvas; laid out and checked by lib/siteplan) ----------
+
+export const SiteItemKind = z.enum(["licensed", "marquee", "food", "inflatable", "ride", "stage", "generator", "firstaid", "exit", "assembly"]);
+export type SiteItemKind = z.infer<typeof SiteItemKind>;
+
+export const SiteItem = z.object({
+  id: z.string().min(1).max(64), // "food-0" from the layout, "exit-<timestamp>" when the organiser adds one
+  kind: SiteItemKind,
+  label: z.string().trim().min(1).max(80),
+  x: z.number(), y: z.number(), // top-left corner, canvas units
+  w: z.number().positive(), h: z.number().positive(),
+  placed: z.boolean(), // false: in the "Not on the plan yet" tray
+});
+export type SiteItem = z.infer<typeof SiteItem>;
+
+/** The organiser's layout. Checks are derived by lib/siteplan, never stored. */
+export const SitePlan = z.object({ items: z.array(SiteItem).max(100) });
+export type SitePlan = z.infer<typeof SitePlan>;
+
+/** A map picture of the venue, drawn under the whole canvas. A static file: the app never fetches map tiles at runtime. */
+export const SiteBasemap = z.object({
+  url: z.string().min(1),          // a file under public/, e.g. "/site-plan/<name>.png"
+  attribution: z.string().min(1),  // the map's licence requires showing this next to the picture
+});
+export type SiteBasemap = z.infer<typeof SiteBasemap>;
+
+/** What the site plan route returns: the layout, plus the venue's map picture when there is one (otherwise the plain canvas). */
+export const SiteLayout = SitePlan.extend({ basemap: SiteBasemap.nullable() });
+export type SiteLayout = z.infer<typeof SiteLayout>;

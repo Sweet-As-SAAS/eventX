@@ -3,7 +3,7 @@ import { describe, it, expect } from "vitest";
 import { z } from "zod";
 import fixture from "../fixtures/demo-event.json";
 import {
-  Classification, Deadline, DRAFTED_TYPES, EventDocument, EventProfile, FollowUpQuestion, Licence, Requirement,
+  Classification, Deadline, DRAFTED_TYPES, EventDocument, EventProfile, FollowUpQuestion, Licence, Requirement, SiteBasemap,
 } from "../lib/schemas";
 import { followUps } from "../lib/ai/profile";
 import { staticRules } from "../lib/rules";
@@ -18,6 +18,7 @@ describe("fixture matches lib/schemas.ts", () => {
     ["fixedDocument", EventDocument, fixture.fixedDocument],
     ["deadlines", z.array(Deadline), fixture.deadlines],
     ["licences", z.array(Licence), fixture.licences],
+    ["siteBasemap", SiteBasemap, fixture.siteBasemap],
   ])("%s", (_, schema, value) => {
     expect(() => schema.parse(value)).not.toThrow();
   });
