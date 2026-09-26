@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { api } from "@/lib/api/client";
 import { nzToday } from "@/lib/deadlines";
 import type { Deadline, EventDetail, EventDocument } from "@/lib/schemas";
-import { Mark } from "./brand";
+import { Logotype, Mark } from "./brand";
 import { STEPS, eventIdFrom, stepOf } from "./event-steps";
 import { initials, packNote, useEvents, type EventWithNote } from "./event-status";
 import { daysBetween, fmtDay } from "./format";
@@ -61,7 +61,7 @@ export function Sidebar({ name }: { name: string | null }) {
         {slim ? <Rail {...ctx} /> : <Wide {...ctx} />}
       </aside>
       <div className="flex items-center justify-between border-b border-border bg-neutral-50 px-4 py-2 lg:hidden">
-        <Link href="/dashboard" className="flex min-h-11 items-center gap-2.5" aria-label="EvntX home"><Mark size={26} /><span className="text-lg font-semibold text-foreground">EvntX</span></Link>
+        <Link href="/dashboard" className="flex min-h-11 items-center gap-2.5" aria-label="EvntX home"><Mark size={26} /><Logotype className="text-xl" /></Link>
         <button onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-label="Menu" className="press grid size-11 place-items-center rounded-lg hover:bg-neutral-100"><Menu /></button>
       </div>
       {open && <div className="border-b border-border bg-neutral-50 lg:hidden"><Wide {...ctx} mobile /></div>}
@@ -89,7 +89,7 @@ function Wide({ path, name, events, eventId, current, toggle, mobile }: Ctx) {
       {!mobile && (
         <div className="flex items-center justify-between pl-2">
           <Link href="/dashboard" className="press flex min-h-11 items-center gap-2.5 rounded-lg" aria-label="EvntX home">
-            <Mark size={26} /><span className="text-lg font-semibold tracking-[-0.01em] text-foreground">EvntX</span>
+            <Mark size={26} /><Logotype className="text-xl" />
           </Link>
           <button onClick={toggle} aria-label="Collapse sidebar" title="Collapse sidebar" className="press grid size-10 place-items-center rounded-lg text-neutral-600 hover:bg-neutral-100 hover:text-foreground"><PanelLeft /></button>
         </div>

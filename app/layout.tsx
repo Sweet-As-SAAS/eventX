@@ -1,11 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Inter_Tight } from "next/font/google";
+import { Inter, Inter_Tight, Poppins } from "next/font/google";
 import { Toaster } from "@/components/toast";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 // Display face: Gridset-style neo-grotesque, medium weight, tight tracking (brand.md)
 const display = Inter_Tight({ subsets: ["latin"], variable: "--font-display-face", display: "swap" });
+// Logotype face only (components/brand.tsx Logotype)
+const logo = Poppins({ subsets: ["latin"], weight: "600", variable: "--font-logo-face", display: "swap" });
 
 export const metadata: Metadata = {
   title: { default: "EvntX", template: "%s · EvntX" },
@@ -16,7 +18,7 @@ export const viewport: Viewport = { themeColor: "#2447D9" };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en-NZ" className={`${inter.variable} ${display.variable} h-full antialiased`}>
+    <html lang="en-NZ" className={`${inter.variable} ${display.variable} ${logo.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
         <Toaster>
           <main className="flex-1">{children}</main>
