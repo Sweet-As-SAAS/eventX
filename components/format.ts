@@ -63,3 +63,7 @@ export function sourceName(url: string) {
     return "council source";
   }
 }
+
+const NUM = ["no", "one", "two", "three", "four", "five", "six"];
+/** "three quick questions" */
+export const questionsLabel = (n: number) => `${NUM[n] ?? n} quick ${n === 1 ? "question" : "questions"}`;

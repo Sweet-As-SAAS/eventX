@@ -16,16 +16,20 @@ export const STEPS = [
 
 export const eventIdFrom = (path: string) => path.match(/^\/events\/([^/]+)/)?.[1] ?? null;
 
+/** Which step a page belongs to. Questions are the second half of Details. */
+export const stepOf = (path: string) => { const last = path.split("/").pop() ?? ""; return last === "questions" ? "profile" : last; };
+
 /** Breadcrumb, which step you are on, and Share. Navigation never animates (Emil). */
 export function EventTopBar({ id }: { id: string }) {
   const path = usePathname();
   const toast = useToast();
   const [name, setName] = useState<string | null>(null);
   useEffect(() => { api.getEvent(id).then((ev) => setName(ev.profile?.name.value ?? null)).catch(() => {}); }, [id]);
+  // Next scrolls to the page under this bar on navigation; show the bar too.
+  useEffect(() => { window.scrollTo({ top: 0 }); }, [path]);
 
-  const slug = path.split("/").pop() ?? "";
-  const at = STEPS.findIndex((s) => s.slug === slug);
-  const label = STEPS[at]?.label ?? "";
+  const at = STEPS.findIndex((s) => s.slug === stepOf(path));
+  const label = path.endsWith("/questions") ? "Questions" : STEPS[at]?.label ?? "";
 
   async function share() {
     const url = location.href;

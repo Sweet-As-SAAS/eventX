@@ -28,6 +28,8 @@ export const api = {
 
   /** Steps 1 and 2: AI profile plus follow-up questions. Takes a few seconds. */
   buildProfile: (id: string) => call(ProfileResponse, `/api/events/${id}/profile`, {}),
+  getProfile: (id: string) => call(ProfileResponse, `/api/events/${id}/profile`),
+  editProfile: (id: string, edits: { path: string; value: string | number | boolean | null }[]) => call(ProfileResponse, `/api/events/${id}/edit`, { edits }),
   answer: (id: string, answers: { path: string; answer: string }[]) => call(ProfileResponse, `/api/events/${id}/answers`, { answers }),
   classify: (id: string) => call(Classification, `/api/events/${id}/classify`, {}),
   /** Step 4: rules engine. Also creates one document row per requirement. */

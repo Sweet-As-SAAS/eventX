@@ -6,7 +6,7 @@ import { api } from "@/lib/api/client";
 import { nzToday } from "@/lib/deadlines";
 import type { Deadline, EventDetail, EventDocument } from "@/lib/schemas";
 import { Mark } from "./brand";
-import { STEPS, eventIdFrom } from "./event-steps";
+import { STEPS, eventIdFrom, stepOf } from "./event-steps";
 import { initials, packNote, useEvents, type EventWithNote } from "./event-status";
 import { daysBetween, fmtDay } from "./format";
 import { Badge, Calendar, Card, Clipboard, DocLines, Dollar, Home, IdCard, MapIcon, Menu, PanelLeft, Plus } from "./icons";
@@ -98,13 +98,15 @@ function Wide({ path, name, events, eventId, current, toggle, mobile }: Ctx) {
           <li><Link href="/dashboard" className={row(false)}>Home</Link></li>
           <li><Link href={`/events/${eventId}/profile`} className={cx(row(true), "font-semibold")}><span className="truncate">{ev?.ev.profile?.name.value ?? "Your event"}</span></Link></li>
           {STEPS.map((s) => {
-            const active = path.endsWith(`/${s.slug}`);
+            const active = stepOf(path) === s.slug;
+            const Icon = STEP_ICON[s.slug];
             return (
               <li key={s.slug}>
                 <Link href={`/events/${eventId}/${s.slug}`} aria-current={active ? "step" : undefined}
-                  className={cx("flex min-h-10 items-center gap-2 rounded-xl pl-6 pr-3 text-base hover:text-foreground", active ? "font-semibold text-foreground" : "text-neutral-700")}>
+                  className={cx("flex min-h-11 items-center gap-3 rounded-xl px-5 text-base", active ? "bg-background font-semibold text-foreground shadow-sm" : "text-neutral-700 hover:bg-neutral-100 hover:text-foreground")}>
+                  <Icon className={active ? "text-primary" : "text-neutral-500"} />
                   {s.label}
-                  {stepFlag(s.slug, ev) && <span className="size-1.5 rounded-full bg-warning" aria-label="Needs attention" />}
+                  {stepFlag(s.slug, ev) && <span className="ml-auto size-2 rounded-full bg-warning" aria-label="Needs attention" />}
                 </Link>
               </li>
             );
@@ -165,14 +167,17 @@ function Rail({ path, name, events, eventId, current, toggle }: Ctx) {
         <>
           <Labelled label="Home" href="/dashboard" className="mt-2"><Home /></Labelled>
           <Link href={`/events/${eventId}/profile`} title={ev?.ev.profile?.name.value ?? "Your event"} aria-label={ev?.ev.profile?.name.value ?? "Your event"}
-            className="my-1 grid w-10 overflow-hidden rounded-lg bg-background text-center shadow-sm">
-            <span className="bg-primary text-[10px] font-semibold leading-4 text-primary-foreground">{d?.toLocaleDateString("en-NZ", { timeZone: "UTC", month: "short" }) ?? "Date"}</span>
-            <span className="text-base font-semibold leading-6 text-foreground">{d?.getUTCDate() ?? "?"}</span>
+            className="press my-1 flex w-[60px] flex-col items-center gap-1 rounded-xl bg-background py-2 shadow-sm">
+            <span className="grid w-9 overflow-hidden rounded-md border border-neutral-200 text-center">
+              <span className="bg-primary text-[9px] font-semibold leading-[14px] text-primary-foreground">{d?.toLocaleDateString("en-NZ", { timeZone: "UTC", month: "short" }) ?? "Date"}</span>
+              <span className="text-sm font-semibold leading-5 text-foreground">{d?.getUTCDate() ?? "?"}</span>
+            </span>
+            <span className="text-[11px] font-semibold text-foreground">{initials(ev?.ev.profile?.name.value)}</span>
           </Link>
           {STEPS.map((s) => {
             const Icon = STEP_ICON[s.slug];
             return (
-              <Labelled key={s.slug} label={s.label} href={`/events/${eventId}/${s.slug}`} active={path.endsWith(`/${s.slug}`)} flag={stepFlag(s.slug, ev)}>
+              <Labelled key={s.slug} label={s.label} href={`/events/${eventId}/${s.slug}`} active={stepOf(path) === s.slug} flag={stepFlag(s.slug, ev)}>
                 <Icon />
               </Labelled>
             );
@@ -207,7 +212,7 @@ function Labelled({ label, href, active, flag, className, children }: { label: s
     <Link href={href} aria-current={active ? "page" : undefined} aria-label={flag ? `${label}, needs attention` : label}
       className={cx("press flex w-[60px] flex-col items-center gap-0.5 rounded-xl pb-1.5 pt-2 text-[10.5px] leading-tight",
         active ? "bg-background font-semibold text-foreground shadow-sm" : "text-neutral-600 hover:bg-neutral-100 hover:text-foreground", className)}>
-      <span className="relative">
+      <span className={cx("relative", active && "text-primary")}>
         {children}
         {flag && <span className="absolute -right-1 -top-0.5 size-2 rounded-full bg-warning ring-2 ring-neutral-50" aria-hidden />}
       </span>
