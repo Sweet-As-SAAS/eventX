@@ -34,9 +34,9 @@ describe("NZ time to UTC", () => {
     expect(nzLocalToUtc("2027-04-03", "12:00")).toBe("2027-04-02T23:00:00Z");
     expect(nzLocalToUtc("2027-04-04", "12:00")).toBe("2027-04-04T00:00:00Z");
   });
-  it("gives Sarah's fixture event its NZDT start and end", () => {
+  it("gives the fixture event its NZDT start and end", () => {
     expect(nzLocalToUtc(fixture.profile.date.value, fixture.profile.startTime.value!)).toBe("2027-03-13T23:00:00Z");
-    expect(nzLocalToUtc(fixture.profile.date.value, fixture.profile.endTime.value!)).toBe("2027-03-14T06:00:00Z");
+    expect(nzLocalToUtc(fixture.profile.date.value, fixture.profile.endTime.value!)).toBe("2027-03-14T08:00:00Z");
   });
 });
 

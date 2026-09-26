@@ -1,62 +1,203 @@
 {
   "_about": "Working stage scenario, still subject to site-plan and product changes; do not build logic or default copy around its details. This seeded MOCK/DEMO_MODE run uses fictional organiser names, contact details, suppliers and arrangements for demonstration only. It is not an actual application or evidence that a special licence has been granted. Every key is validated by tests/contract.test.ts. Council rules and checklists for live events come from verified knowledge, not this fixture.",
-  "description": "Fundraiser for Riccarton Rugby Club at Hagley Park on Sunday 14 March, 12 till 7pm. Around 400 people, families and kids welcome. Beer will be sold from a beer tent for adults, three food trucks, a bouncy castle and a DJ. We will need a couple of marquees.",
+  "description": "Hagley Summer Sounds is a music festival at Hagley Park on Sunday 14 March, 12 till 9pm. Around 500 people, all ages welcome, with a kids zone and a bouncy castle. Live music from local bands on a main stage, a bar selling beer and wine to over 18s, four food trucks, and a couple of marquees for shade.",
   "profile": {
-    "name": { "value": "Riccarton RFC Fundraiser", "source": "inferred" },
-    "councilSlug": "ccc",
-    "date": { "value": "2027-03-14", "source": "stated" },
-    "startTime": { "value": "12:00", "source": "stated" },
-    "endTime": { "value": "19:00", "source": "stated" },
-    "venue": {
-      "name": { "value": "Hagley Park", "source": "stated" },
-      "councilLand": { "value": true, "source": "inferred" }
+    "name": {
+      "value": "Hagley Summer Sounds",
+      "source": "stated"
     },
-    "openToPublic": { "value": true, "source": "inferred" },
-    "peakAttendance": { "value": 400, "source": "stated" },
-    "childrenAttending": { "value": true, "source": "stated" },
+    "councilSlug": "ccc",
+    "date": {
+      "value": "2027-03-14",
+      "source": "stated"
+    },
+    "startTime": {
+      "value": "12:00",
+      "source": "stated"
+    },
+    "endTime": {
+      "value": "21:00",
+      "source": "stated"
+    },
+    "venue": {
+      "name": {
+        "value": "Hagley Park",
+        "source": "stated"
+      },
+      "councilLand": {
+        "value": true,
+        "source": "inferred"
+      }
+    },
+    "openToPublic": {
+      "value": true,
+      "source": "inferred"
+    },
+    "peakAttendance": {
+      "value": 500,
+      "source": "stated"
+    },
+    "childrenAttending": {
+      "value": true,
+      "source": "stated"
+    },
     "alcohol": {
-      "supply": { "value": "sold", "source": "stated" },
-      "area": { "value": "beer tent for adults", "source": "stated" }
+      "supply": {
+        "value": "sold",
+        "source": "stated"
+      },
+      "area": {
+        "value": "bar for over 18s",
+        "source": "stated"
+      }
     },
     "food": {
-      "stalls": { "value": 3, "source": "stated" },
-      "cookingOnSite": { "value": true, "source": "answered" }
+      "stalls": {
+        "value": 4,
+        "source": "stated"
+      },
+      "cookingOnSite": {
+        "value": true,
+        "source": "inferred"
+      }
     },
     "structures": {
-      "marquees": { "value": 2, "source": "stated" },
-      "largestMarqueeSqm": { "value": null, "source": null },
-      "stageOver1m": { "value": false, "source": "inferred" },
-      "inflatables": { "value": true, "source": "stated" },
-      "mechanicalRides": { "value": false, "source": "inferred" }
+      "marquees": {
+        "value": 2,
+        "source": "stated"
+      },
+      "largestMarqueeSqm": {
+        "value": null,
+        "source": null
+      },
+      "stageOver1m": {
+        "value": null,
+        "source": null
+      },
+      "inflatables": {
+        "value": true,
+        "source": "stated"
+      },
+      "mechanicalRides": {
+        "value": false,
+        "source": "inferred"
+      }
     },
-    "generators": { "value": true, "source": "inferred" },
-    "amplifiedSound": { "value": true, "source": "inferred" },
-    "roadOrFootpathImpact": { "value": false, "source": "answered" },
-    "vehicleAccess": { "value": true, "source": "inferred" },
-    "missing": ["structures.largestMarqueeSqm"]
+    "generators": {
+      "value": true,
+      "source": "inferred"
+    },
+    "amplifiedSound": {
+      "value": true,
+      "source": "stated"
+    },
+    "roadOrFootpathImpact": {
+      "value": false,
+      "source": "answered"
+    },
+    "vehicleAccess": {
+      "value": true,
+      "source": "inferred"
+    },
+    "missing": [
+      "structures.largestMarqueeSqm",
+      "structures.stageOver1m"
+    ]
   },
   "questions": [
-    { "path": "structures.largestMarqueeSqm", "question": "How big is your largest marquee?", "options": ["Under 100 sqm", "Over 100 sqm", "Not sure"] }
+    {
+      "path": "structures.largestMarqueeSqm",
+      "question": "How big is your largest marquee?",
+      "options": [
+        "Under 100 sqm",
+        "Over 100 sqm",
+        "Not sure"
+      ]
+    }
   ],
   "classification": {
     "category": "unclear",
-    "reasoning": "The council source lists community and commercial fee bands for Hagley Park but does not define which applies here. A club fundraiser alone does not establish the organiser's legal status, use of proceeds, or council classification.",
-    "howToPresent": "Explain who runs the event, where proceeds go, and any commercial activity; ask the council to confirm the category before quoting a fee.",
-    "citedChunkIds": ["2db13665-9560-4a2d-a63c-0594b02cba32"]
+    "reasoning": "The council source lists community and commercial fee bands for Hagley Park but does not define which applies here. A music festival with a bar and food trucks could fall in either band, depending on who runs it and where the takings go.",
+    "howToPresent": "Explain who runs the festival, whether it is free or ticketed, where any profit goes, and how much of the site is commercial trading; ask the council to confirm the category before quoting a fee.",
+    "citedChunkIds": [
+      "2db13665-9560-4a2d-a63c-0594b02cba32"
+    ]
   },
   "requirements": [
-    { "documentType": "event_permit_application", "reason": "Public event on council land", "ruleId": "ccc-permit", "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits", "lastChecked": "2026-09-26" },
-    { "documentType": "site_plan", "reason": "Required with every event permit application", "ruleId": "ccc-site-plan", "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits", "lastChecked": "2026-09-26" },
-    { "documentType": "health_safety_plan", "reason": "Required with every event permit application", "ruleId": "ccc-hs-plan", "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits", "lastChecked": "2026-09-26" },
-    { "documentType": "waste_management_confirmation", "reason": "Required with every event permit application", "ruleId": "ccc-waste", "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits", "lastChecked": "2026-09-26" },
-    { "documentType": "hazard_register", "reason": "Bouncy castles and inflatables are classed as high risk", "ruleId": "ccc-inflatable", "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits", "lastChecked": "2026-09-26" },
-    { "documentType": "food_licence_check", "reason": "Food will be sold or served", "ruleId": "ccc-food", "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits", "lastChecked": "2026-09-26" },
-    { "documentType": "special_licence_application", "reason": "Alcohol will be sold", "ruleId": "ccc-special-licence", "sourceUrl": "https://ccc.tfaforms.net/177", "lastChecked": "2026-09-26" },
-    { "documentType": "alcohol_management_plan", "reason": "Special licence event expecting more than 150 guests", "ruleId": "ccc-amp", "sourceUrl": "https://ccc.govt.nz/assets/Documents/Consents-and-Licences/business-licences-and-consents/Alcohol/SpecialLicence.pdf", "lastChecked": "2026-09-26" }
+    {
+      "documentType": "event_permit_application",
+      "reason": "Public event on council land",
+      "ruleId": "ccc-permit",
+      "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits",
+      "lastChecked": "2026-09-26"
+    },
+    {
+      "documentType": "site_plan",
+      "reason": "Required with every event permit application",
+      "ruleId": "ccc-site-plan",
+      "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits",
+      "lastChecked": "2026-09-26"
+    },
+    {
+      "documentType": "health_safety_plan",
+      "reason": "Required with every event permit application",
+      "ruleId": "ccc-hs-plan",
+      "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits",
+      "lastChecked": "2026-09-26"
+    },
+    {
+      "documentType": "waste_management_confirmation",
+      "reason": "Required with every event permit application",
+      "ruleId": "ccc-waste",
+      "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits",
+      "lastChecked": "2026-09-26"
+    },
+    {
+      "documentType": "hazard_register",
+      "reason": "Bouncy castles and inflatables are classed as high risk",
+      "ruleId": "ccc-inflatable",
+      "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits",
+      "lastChecked": "2026-09-26"
+    },
+    {
+      "documentType": "food_licence_check",
+      "reason": "Food will be sold or served",
+      "ruleId": "ccc-food",
+      "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits",
+      "lastChecked": "2026-09-26"
+    },
+    {
+      "documentType": "special_licence_application",
+      "reason": "Alcohol will be sold",
+      "ruleId": "ccc-special-licence",
+      "sourceUrl": "https://ccc.tfaforms.net/177",
+      "lastChecked": "2026-09-26"
+    },
+    {
+      "documentType": "alcohol_management_plan",
+      "reason": "Special licence event expecting more than 150 guests",
+      "ruleId": "ccc-amp",
+      "sourceUrl": "https://ccc.govt.nz/assets/Documents/Consents-and-Licences/business-licences-and-consents/Alcohol/SpecialLicence.pdf",
+      "lastChecked": "2026-09-26"
+    }
   ],
   "documents": [
-    { "id": "doc-permit", "documentType": "event_permit_application", "status": "manual", "content": null, "checkResults": null, "checklistSource": null },
-    { "id": "doc-site-plan", "documentType": "site_plan", "status": "manual", "content": null, "checkResults": null, "checklistSource": null },
+    {
+      "id": "doc-permit",
+      "documentType": "event_permit_application",
+      "status": "manual",
+      "content": null,
+      "checkResults": null,
+      "checklistSource": null
+    },
+    {
+      "id": "doc-site-plan",
+      "documentType": "site_plan",
+      "status": "manual",
+      "content": null,
+      "checkResults": null,
+      "checklistSource": null
+    },
     {
       "id": "doc-hs",
       "documentType": "health_safety_plan",
@@ -65,23 +206,64 @@
         "documentType": "health_safety_plan",
         "title": "Event health and safety plan",
         "sections": [
-          { "heading": "Event overview", "body": "DEMO ONLY. Riccarton RFC Fundraiser is a proposed family event at Hagley Park on Sunday 14 March 2027, 12pm to 7pm, with an expected peak of 400 people including children. Beer sales are planned for an adults-only tent, subject to a special licence being granted." },
-          { "heading": "Key hazards and controls", "body": "Inflatable bouncy castle, anchored to manufacturer specification and supervised by Sam Example (fictional demo volunteer). Generator for food trucks, fenced and away from public areas. If licensed, alcohol sales will be confined to the designated tent with a duty manager present." },
-          { "heading": "Emergency response", "body": "First aid beside the main entrance. In an evacuation, marshals direct attendees through the north and east exits to [ASSEMBLY POINT]." },
-          { "heading": "Roles and contacts", "body": "Event manager Alex Example; proposed duty manager Taylor Example; first aid provider Demo First Aid Crew. All are fictional demo assignments to verify before lodging." }
+          {
+            "heading": "Event overview",
+            "body": "DEMO ONLY. Hagley Summer Sounds is a proposed all-ages music festival at Hagley Park on Sunday 14 March 2027, 12pm to 9pm, with an expected peak of 500 people including children. Beer and wine sales are planned at a fenced bar for over 18s, subject to a special licence being granted."
+          },
+          {
+            "heading": "Key hazards and controls",
+            "body": "Main stage and sound equipment, built and signed off by Demo Stage Hire (fictional demo contractor), with the front of stage barriered and cables covered. Inflatable bouncy castle in the kids zone, anchored to manufacturer specification and supervised by Sam Example (fictional demo volunteer). Generators for the stage and food trucks, fenced and away from public areas. If licensed, alcohol sales will be confined to the fenced bar with a duty manager present."
+          },
+          {
+            "heading": "Emergency response",
+            "body": "First aid tent beside the main entrance, staffed from 11.30am until the site is clear. In an evacuation, the stage announces it over the PA and marshals direct attendees through the north and east exits to [ASSEMBLY POINT]."
+          },
+          {
+            "heading": "Roles and contacts",
+            "body": "Event manager Jordan Example; proposed duty manager Taylor Example; first aid provider Demo First Aid Crew. All are fictional demo assignments to verify before lodging."
+          }
         ],
-        "placeholders": ["[ASSEMBLY POINT]"],
+        "placeholders": [
+          "[ASSEMBLY POINT]"
+        ],
         "citedChunkIds": []
       },
       "checkResults": {
         "items": [
-          { "itemId": "hs-1", "text": "Event details and times", "pass": true, "evidence": "Sunday 14 March 2027, 12pm to 7pm", "suggestedFix": null },
-          { "itemId": "hs-2", "text": "Hazards specific to this event", "pass": true, "evidence": "Inflatable bouncy castle, anchored to manufacturer specification", "suggestedFix": null },
-          { "itemId": "hs-3", "text": "First aid location", "pass": true, "evidence": "First aid beside the main entrance", "suggestedFix": null },
-          { "itemId": "hs-4", "text": "Emergency assembly point named", "pass": false, "evidence": "", "suggestedFix": "Name the assembly point, for example the open lawn north of the main gate, and mark it on the site plan." }
+          {
+            "itemId": "hs-1",
+            "text": "Event details and times",
+            "pass": true,
+            "evidence": "Sunday 14 March 2027, 12pm to 9pm",
+            "suggestedFix": null
+          },
+          {
+            "itemId": "hs-2",
+            "text": "Hazards specific to this event",
+            "pass": true,
+            "evidence": "Main stage and sound equipment, built and signed off by Demo Stage Hire",
+            "suggestedFix": null
+          },
+          {
+            "itemId": "hs-3",
+            "text": "First aid location",
+            "pass": true,
+            "evidence": "First aid tent beside the main entrance",
+            "suggestedFix": null
+          },
+          {
+            "itemId": "hs-4",
+            "text": "Emergency assembly point named",
+            "pass": false,
+            "evidence": "",
+            "suggestedFix": "Name the assembly point, for example the open lawn north of the main gate, away from the stage, and mark it on the site plan."
+          }
         ]
       },
-      "checklistSource": { "url": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-resources", "lastChecked": "2026-09-26" }
+      "checklistSource": {
+        "url": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-resources",
+        "lastChecked": "2026-09-26"
+      }
     },
     {
       "id": "doc-waste",
@@ -91,19 +273,40 @@
         "documentType": "waste_management_confirmation",
         "title": "Waste management confirmation",
         "sections": [
-          { "heading": "Bins and recycling", "body": "Rubbish and recycling bins at the beer tent, beside each of the three food trucks and at both entrances." },
-          { "heading": "During and after the event", "body": "Volunteers empty bins during the event and walk the site for litter after close at 7pm. Demo Waste Services (fictional demo contractor) is assigned to remove the waste that evening." }
+          {
+            "heading": "Bins and recycling",
+            "body": "Rubbish and recycling bins at the bar, beside each of the four food trucks, in the kids zone and at both entrances. Cups at the bar are reusable, with a return point beside it."
+          },
+          {
+            "heading": "During and after the event",
+            "body": "Volunteers empty bins during the event and walk the site for litter after close at 9pm. Demo Waste Services (fictional demo contractor) is assigned to remove the waste that night."
+          }
         ],
         "placeholders": [],
         "citedChunkIds": []
       },
       "checkResults": {
         "items": [
-          { "itemId": "wm-1", "text": "Bins provided where food and drink are sold", "pass": true, "evidence": "Rubbish and recycling bins at the beer tent, beside each of the three food trucks", "suggestedFix": null },
-          { "itemId": "wm-2", "text": "Site cleared after the event", "pass": true, "evidence": "walk the site for litter after close at 7pm", "suggestedFix": null }
+          {
+            "itemId": "wm-1",
+            "text": "Bins provided where food and drink are sold",
+            "pass": true,
+            "evidence": "Rubbish and recycling bins at the bar, beside each of the four food trucks",
+            "suggestedFix": null
+          },
+          {
+            "itemId": "wm-2",
+            "text": "Site cleared after the event",
+            "pass": true,
+            "evidence": "walk the site for litter after close at 9pm",
+            "suggestedFix": null
+          }
         ]
       },
-      "checklistSource": { "url": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits", "lastChecked": "2026-09-26" }
+      "checklistSource": {
+        "url": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits",
+        "lastChecked": "2026-09-26"
+      }
     },
     {
       "id": "doc-hazard",
@@ -113,24 +316,68 @@
         "documentType": "hazard_register",
         "title": "Hazard register",
         "sections": [
-          { "heading": "Inflatable bouncy castle", "body": "Risk: falls, collisions and the castle lifting in wind. Proposed controls: anchored to manufacturer specification, supervised by Sam Example (fictional demo volunteer), age and number limits posted, deflated if the wind picks up. Residual risk: to be confirmed on site." },
-          { "heading": "Generator and food truck cooking", "body": "Risk: burns, fire and fuel spills. Controls: generator fenced off from the public, fire extinguisher at each food truck, gas bottles secured upright. Residual risk: low." },
-          { "heading": "Alcohol", "body": "Risk: intoxication and under-18s being served. If a special licence is granted, proposed controls are sales only inside the fenced beer tent, duty manager Taylor Example (fictional demo assignment) on site, and ID checks at the entrance. Residual risk: to be confirmed on site." },
-          { "heading": "Crowd and lost children", "body": "Risk: crowding at the busiest time (about 400 people) and children getting separated. Controls: marshals at both entrances, lost child point at the first aid tent. Residual risk: low." }
+          {
+            "heading": "Inflatable bouncy castle",
+            "body": "Risk: falls, collisions and the castle lifting in wind. Proposed controls: anchored to manufacturer specification, supervised by Sam Example (fictional demo volunteer), age and number limits posted, deflated if the wind picks up. Residual risk: to be confirmed on site."
+          },
+          {
+            "heading": "Stage, sound and crowd at the front",
+            "body": "Risk: crushing at the front of stage, hearing damage and trips on cables. Controls: barrier along the front of stage, sound levels monitored at the mixing desk, cables covered and taped. Residual risk: low."
+          },
+          {
+            "heading": "Generators and food truck cooking",
+            "body": "Risk: burns, fire and fuel spills. Controls: generators fenced off from the public, fire extinguisher at each food truck, gas bottles secured upright. Residual risk: low."
+          },
+          {
+            "heading": "Alcohol",
+            "body": "Risk: intoxication and under-18s being served. If a special licence is granted, proposed controls are sales only inside the fenced bar, duty manager Taylor Example (fictional demo assignment) on site, and ID checks at the bar entrance. Residual risk: to be confirmed on site."
+          },
+          {
+            "heading": "Crowd and lost children",
+            "body": "Risk: crowding at the busiest time (about 500 people) and children getting separated. Controls: marshals at both entrances, lost child point at the first aid tent. Residual risk: low."
+          }
         ],
         "placeholders": [],
         "citedChunkIds": []
       },
       "checkResults": {
         "items": [
-          { "itemId": "hz-1", "text": "Every hazard has controls", "pass": true, "evidence": "Controls: generator fenced off from the public", "suggestedFix": null },
-          { "itemId": "hz-2", "text": "Inflatable devices covered", "pass": true, "evidence": "Risk: falls, collisions and the castle lifting in wind", "suggestedFix": null },
-          { "itemId": "hz-3", "text": "Alcohol risks covered", "pass": true, "evidence": "sales only inside the fenced beer tent", "suggestedFix": null }
+          {
+            "itemId": "hz-1",
+            "text": "Every hazard has controls",
+            "pass": true,
+            "evidence": "Controls: barrier along the front of stage",
+            "suggestedFix": null
+          },
+          {
+            "itemId": "hz-2",
+            "text": "Inflatable devices covered",
+            "pass": true,
+            "evidence": "Risk: falls, collisions and the castle lifting in wind",
+            "suggestedFix": null
+          },
+          {
+            "itemId": "hz-3",
+            "text": "Alcohol risks covered",
+            "pass": true,
+            "evidence": "sales only inside the fenced bar",
+            "suggestedFix": null
+          }
         ]
       },
-      "checklistSource": { "url": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits", "lastChecked": "2026-09-26" }
+      "checklistSource": {
+        "url": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits",
+        "lastChecked": "2026-09-26"
+      }
     },
-    { "id": "doc-food", "documentType": "food_licence_check", "status": "manual", "content": null, "checkResults": null, "checklistSource": null },
+    {
+      "id": "doc-food",
+      "documentType": "food_licence_check",
+      "status": "manual",
+      "content": null,
+      "checkResults": null,
+      "checklistSource": null
+    },
     {
       "id": "doc-licence",
       "documentType": "special_licence_application",
@@ -139,22 +386,55 @@
         "documentType": "special_licence_application",
         "title": "Special licence application",
         "sections": [
-          { "heading": "Applicant", "body": "DEMO ONLY — not for lodging. Proposed organiser: Riccarton Rugby Club. Contact: Alex Example, demo-contact@example.invalid. These are fictional details; legal identity and contact details must be verified before lodging." },
-          { "heading": "Event and licensed area", "body": "Riccarton RFC Fundraiser at Hagley Park on Sunday 14 March 2027. Proposed alcohol sales are limited to a fenced adults-only beer tent, 12pm to 7pm, only if a special licence is granted. The exact licensed boundary must match the site plan." },
-          { "heading": "Duty manager", "body": "Proposed duty manager Taylor Example is a fictional demo assignment for the 12pm to 7pm sales period. Manager certification must be verified before a real application is lodged." },
-          { "heading": "Host responsibility", "body": "The plan assigns three food trucks to trade during proposed alcohol sales, with free water and non-alcoholic drinks at the tent. Staff will check ID at the entrance. The fictional demo transport plan provides a marked taxi pickup at the park edge and public-transport information at the exit." }
+          {
+            "heading": "Applicant",
+            "body": "DEMO ONLY. Not for lodging. Proposed organiser: Summer Sounds Events Trust (fictional). Contact: Jordan Example, demo-contact@example.invalid. These are fictional details; legal identity and contact details must be verified before lodging."
+          },
+          {
+            "heading": "Event and licensed area",
+            "body": "Hagley Summer Sounds at Hagley Park on Sunday 14 March 2027. Proposed beer and wine sales are limited to a fenced bar for over 18s, 12pm to 8.30pm, only if a special licence is granted. The exact licensed boundary must match the site plan."
+          },
+          {
+            "heading": "Duty manager",
+            "body": "Proposed duty manager Taylor Example is a fictional demo assignment for the 12pm to 8.30pm sales period. Manager certification must be verified before a real application is lodged."
+          },
+          {
+            "heading": "Host responsibility",
+            "body": "The plan has four food trucks trading throughout proposed alcohol sales, with free water and non-alcoholic drinks at the bar. Staff will check ID at the bar entrance. The fictional demo transport plan provides a marked taxi and rideshare pickup at the park edge and public-transport information at the exit."
+          }
         ],
         "placeholders": [],
         "citedChunkIds": []
       },
       "checkResults": {
         "items": [
-          { "itemId": "sl-1", "text": "Licensed area described", "pass": true, "evidence": "Proposed alcohol sales are limited to a fenced adults-only beer tent", "suggestedFix": null },
-          { "itemId": "sl-2", "text": "Duty manager arrangements described", "pass": true, "evidence": "Proposed duty manager Taylor Example is a fictional demo assignment for the 12pm to 7pm sales period", "suggestedFix": null },
-          { "itemId": "sl-3", "text": "Food and non-alcoholic drinks available", "pass": true, "evidence": "free water and non-alcoholic drinks at the tent", "suggestedFix": null }
+          {
+            "itemId": "sl-1",
+            "text": "Licensed area described",
+            "pass": true,
+            "evidence": "Proposed beer and wine sales are limited to a fenced bar for over 18s",
+            "suggestedFix": null
+          },
+          {
+            "itemId": "sl-2",
+            "text": "Duty manager arrangements described",
+            "pass": true,
+            "evidence": "Proposed duty manager Taylor Example is a fictional demo assignment for the 12pm to 8.30pm sales period",
+            "suggestedFix": null
+          },
+          {
+            "itemId": "sl-3",
+            "text": "Food and non-alcoholic drinks available",
+            "pass": true,
+            "evidence": "free water and non-alcoholic drinks at the bar",
+            "suggestedFix": null
+          }
         ]
       },
-      "checklistSource": { "url": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-resources", "lastChecked": "2026-09-26" }
+      "checklistSource": {
+        "url": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-resources",
+        "lastChecked": "2026-09-26"
+      }
     },
     {
       "id": "doc-amp",
@@ -164,32 +444,95 @@
         "documentType": "alcohol_management_plan",
         "title": "Alcohol management plan",
         "sections": [
-          { "heading": "Type of event", "body": "DEMO ONLY. Proposed family fundraiser, about 400 people at peak including children. Beer sales in a fenced adults-only tent are planned only if a special licence is granted. Event manager Alex Example is in charge overall; proposed duty manager Taylor Example is in charge of the tent. Both are fictional demo assignments." },
-          { "heading": "Promoting your event", "body": "Promotion states the event is family-focused, that intoxicated people will be refused service and removed, that no alcohol may be brought in, and that ID is checked at the beer tent." },
-          { "heading": "Intoxication", "body": "If licensed, bar staff and the duty manager will monitor patrons and intervene early. Intoxicated people will be refused entry. The fictional demo welfare point is a quiet tent beside first aid." },
-          { "heading": "Food", "body": "Three food trucks are planned to trade throughout alcohol sales. Alex Example (fictional demo manager) will check that food stays available; if it runs out, alcohol sales stop." },
-          { "heading": "Low and non-alcohol beverages", "body": "Low-alcohol beer, soft drinks and free water are available and promoted at the beer tent at all times." },
-          { "heading": "Minors", "body": "Photo ID (NZ driver licence, passport or 18+ card) is checked for anyone who appears under 25." },
-          { "heading": "Signage", "body": "If granted, the special licence will be displayed at the beer tent with required signage at each point of sale. Alex Example (fictional demo manager) will put up the signs." },
-          { "heading": "Safe transport", "body": "The fictional demo plan marks a taxi pickup at the park edge and gives public-transport information at the tent exit. Staff will offer alternatives to anyone who has been drinking and intends to drive." },
-          { "heading": "Alcohol promotions on the day", "body": "No discounts, drinking games or alcohol prizes." },
-          { "heading": "Staff training", "body": "All bar staff and volunteers are briefed on the licence conditions and this plan before the event." },
-          { "heading": "Incident and noting book", "body": "The duty manager records refusals, removals and incidents in an incident book kept at the tent." },
-          { "heading": "Security", "body": "The fictional demo plan assigns two staff from Demo Event Security, 11am to 8pm, with Alex Example as liaison. A real provider, staffing level and qualifications must be confirmed before lodging." },
-          { "heading": "Environment", "body": "Seating and shade around the tent, a family focus, and toilets available throughout." },
-          { "heading": "Debriefing", "body": "Staff and contractors debrief after the event to note improvements." }
+          {
+            "heading": "Type of event",
+            "body": "DEMO ONLY. Proposed all-ages music festival, about 500 people at peak including children. Beer and wine sales at a fenced bar for over 18s are planned only if a special licence is granted. Event manager Jordan Example is in charge overall; proposed duty manager Taylor Example is in charge of the bar. Both are fictional demo assignments."
+          },
+          {
+            "heading": "Promoting your event",
+            "body": "Promotion states the festival is all ages, that intoxicated people will be refused service and removed, that no alcohol may be brought in, and that ID is checked at the bar."
+          },
+          {
+            "heading": "Intoxication",
+            "body": "If licensed, bar staff and the duty manager will monitor patrons and intervene early. Intoxicated people will be refused entry. The fictional demo welfare point is a quiet tent beside first aid."
+          },
+          {
+            "heading": "Food",
+            "body": "Four food trucks are planned to trade throughout alcohol sales. Jordan Example (fictional demo manager) will check that food stays available; if it runs out, alcohol sales stop."
+          },
+          {
+            "heading": "Low and non-alcohol beverages",
+            "body": "Low-alcohol beer, soft drinks and free water are available and promoted at the bar at all times."
+          },
+          {
+            "heading": "Minors",
+            "body": "Photo ID (NZ driver licence, passport or 18+ card) is checked for anyone who appears under 25."
+          },
+          {
+            "heading": "Signage",
+            "body": "If granted, the special licence will be displayed at the bar with required signage at each point of sale. Jordan Example (fictional demo manager) will put up the signs."
+          },
+          {
+            "heading": "Safe transport",
+            "body": "The fictional demo plan marks a taxi and rideshare pickup at the park edge and gives public-transport information at the exit. Staff will offer alternatives to anyone who has been drinking and intends to drive."
+          },
+          {
+            "heading": "Alcohol promotions on the day",
+            "body": "No discounts, drinking games or alcohol prizes. Last drinks are called at 8.30pm, half an hour before the music stops."
+          },
+          {
+            "heading": "Staff training",
+            "body": "All bar staff and volunteers are briefed on the licence conditions and this plan before the event."
+          },
+          {
+            "heading": "Incident and noting book",
+            "body": "The duty manager records refusals, removals and incidents in an incident book kept at the bar."
+          },
+          {
+            "heading": "Security",
+            "body": "The fictional demo plan assigns four staff from Demo Event Security, 11am to 10pm, covering both entrances, the bar and the front of stage, with Jordan Example as liaison. A real provider, staffing level and qualifications must be confirmed before lodging."
+          },
+          {
+            "heading": "Environment",
+            "body": "Seating and shade in the marquees near the bar, the kids zone kept well away from it, and toilets available throughout."
+          },
+          {
+            "heading": "Debriefing",
+            "body": "Staff and contractors debrief after the event to note improvements."
+          }
         ],
         "placeholders": [],
         "citedChunkIds": []
       },
       "checkResults": {
         "items": [
-          { "itemId": "chain-of-command", "text": "Documents who is in charge of the event and each area of responsibility", "pass": true, "evidence": "Event manager Alex Example is in charge overall; proposed duty manager Taylor Example is in charge of the tent", "suggestedFix": null },
-          { "itemId": "food", "text": "Names who keeps food available while alcohol is sold", "pass": true, "evidence": "Alex Example (fictional demo manager) will check that food stays available", "suggestedFix": null },
-          { "itemId": "minors", "text": "Sets ID checks for anyone appearing under 25", "pass": true, "evidence": "Photo ID (NZ driver licence, passport or 18+ card) is checked for anyone who appears under 25.", "suggestedFix": null }
+          {
+            "itemId": "chain-of-command",
+            "text": "Documents who is in charge of the event and each area of responsibility",
+            "pass": true,
+            "evidence": "Event manager Jordan Example is in charge overall; proposed duty manager Taylor Example is in charge of the bar",
+            "suggestedFix": null
+          },
+          {
+            "itemId": "food",
+            "text": "Names who keeps food available while alcohol is sold",
+            "pass": true,
+            "evidence": "Jordan Example (fictional demo manager) will check that food stays available",
+            "suggestedFix": null
+          },
+          {
+            "itemId": "minors",
+            "text": "Sets ID checks for anyone appearing under 25",
+            "pass": true,
+            "evidence": "Photo ID (NZ driver licence, passport or 18+ card) is checked for anyone who appears under 25.",
+            "suggestedFix": null
+          }
         ]
       },
-      "checklistSource": { "url": "https://ccc.govt.nz/assets/Documents/Consents-and-Licences/business-licences-and-consents/Alcohol/Info-AlcoholManagementPlan.pdf", "lastChecked": "2026-09-26" }
+      "checklistSource": {
+        "url": "https://ccc.govt.nz/assets/Documents/Consents-and-Licences/business-licences-and-consents/Alcohol/Info-AlcoholManagementPlan.pdf",
+        "lastChecked": "2026-09-26"
+      }
     }
   ],
   "fixedDocument": {
@@ -198,35 +541,119 @@
     "status": "ready",
     "content": {
       "documentType": "health_safety_plan",
-        "title": "Event health and safety plan",
+      "title": "Event health and safety plan",
       "sections": [
-          { "heading": "Event overview", "body": "DEMO ONLY. Riccarton RFC Fundraiser is a proposed family event at Hagley Park on Sunday 14 March 2027, 12pm to 7pm, with an expected peak of 400 people including children. Beer sales are planned for an adults-only tent, subject to a special licence being granted." },
-          { "heading": "Key hazards and controls", "body": "Inflatable bouncy castle, anchored to manufacturer specification and supervised by Sam Example (fictional demo volunteer). Generator for food trucks, fenced and away from public areas. If licensed, alcohol sales will be confined to the designated tent with a duty manager present." },
-          { "heading": "Emergency response", "body": "First aid beside the main entrance. In an evacuation, marshals direct attendees through the north and east exits to the assembly point on the open lawn north of the main gate. This point must be marked on the site plan before lodging." },
-          { "heading": "Roles and contacts", "body": "Event manager Alex Example; proposed duty manager Taylor Example; first aid provider Demo First Aid Crew. All are fictional demo assignments to verify before lodging." }
+        {
+          "heading": "Event overview",
+          "body": "DEMO ONLY. Hagley Summer Sounds is a proposed all-ages music festival at Hagley Park on Sunday 14 March 2027, 12pm to 9pm, with an expected peak of 500 people including children. Beer and wine sales are planned at a fenced bar for over 18s, subject to a special licence being granted."
+        },
+        {
+          "heading": "Key hazards and controls",
+          "body": "Main stage and sound equipment, built and signed off by Demo Stage Hire (fictional demo contractor), with the front of stage barriered and cables covered. Inflatable bouncy castle in the kids zone, anchored to manufacturer specification and supervised by Sam Example (fictional demo volunteer). Generators for the stage and food trucks, fenced and away from public areas. If licensed, alcohol sales will be confined to the fenced bar with a duty manager present."
+        },
+        {
+          "heading": "Emergency response",
+          "body": "First aid tent beside the main entrance, staffed from 11.30am until the site is clear. In an evacuation, the stage announces it over the PA and marshals direct attendees through the north and east exits to the assembly point on the open lawn north of the main gate, away from the stage. This point must be marked on the site plan before lodging."
+        },
+        {
+          "heading": "Roles and contacts",
+          "body": "Event manager Jordan Example; proposed duty manager Taylor Example; first aid provider Demo First Aid Crew. All are fictional demo assignments to verify before lodging."
+        }
       ],
-        "placeholders": [],
+      "placeholders": [],
       "citedChunkIds": []
     },
     "checkResults": {
       "items": [
-        { "itemId": "hs-1", "text": "Event details and times", "pass": true, "evidence": "Sunday 14 March 2027, 12pm to 7pm", "suggestedFix": null },
-        { "itemId": "hs-2", "text": "Hazards specific to this event", "pass": true, "evidence": "Inflatable bouncy castle, anchored to manufacturer specification", "suggestedFix": null },
-        { "itemId": "hs-3", "text": "First aid location", "pass": true, "evidence": "First aid beside the main entrance", "suggestedFix": null },
-          { "itemId": "hs-4", "text": "Emergency assembly point named", "pass": true, "evidence": "the assembly point on the open lawn north of the main gate", "suggestedFix": null }
+        {
+          "itemId": "hs-1",
+          "text": "Event details and times",
+          "pass": true,
+          "evidence": "Sunday 14 March 2027, 12pm to 9pm",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "hs-2",
+          "text": "Hazards specific to this event",
+          "pass": true,
+          "evidence": "Main stage and sound equipment, built and signed off by Demo Stage Hire",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "hs-3",
+          "text": "First aid location",
+          "pass": true,
+          "evidence": "First aid tent beside the main entrance",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "hs-4",
+          "text": "Emergency assembly point named",
+          "pass": true,
+          "evidence": "the assembly point on the open lawn north of the main gate, away from the stage",
+          "suggestedFix": null
+        }
       ]
     },
-    "checklistSource": { "url": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-resources", "lastChecked": "2026-09-26" }
+    "checklistSource": {
+      "url": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-resources",
+      "lastChecked": "2026-09-26"
+    }
   },
   "deadlines": [
-    {"documentType": "event_permit_application", "label": "Lodge event permit application with site plan and health and safety plan", "legalMinimum": "2027-02-07", "recommended": "2027-01-03", "basis": "CCC processing starts at five weeks for a low impact event. We aim for ten weeks.", "sourceUrl": "https://ccc.tfaforms.net/177"},
-    {"documentType": "special_licence_application", "label": "Lodge special licence application", "legalMinimum": "2027-02-15", "recommended": "2027-01-29", "basis": "At least 20 working days before the event. 20 Dec to 15 Jan does not count. We aim two weeks earlier.", "sourceUrl": "https://ccc.tfaforms.net/177"},
-    {"documentType": "alcohol_management_plan", "label": "Attach alcohol management plan to special licence application", "legalMinimum": "2027-02-15", "recommended": "2027-01-29", "basis": "The alcohol management plan is an attachment to the special licence application, so it shares that lodgement date.", "sourceUrl": "https://ccc.govt.nz/assets/Documents/Consents-and-Licences/business-licences-and-consents/Alcohol/SpecialLicence.pdf"},
-    {"documentType": "site_plan", "label": "Provide site plan to CCC", "legalMinimum": "2027-01-31", "recommended": "2027-01-31", "basis": "CCC's conditions for events on public land require this plan at least six weeks before the event.", "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/conditions-for-events-on-public-land"},
-    {"documentType": "health_safety_plan", "label": "Provide health and safety plan to CCC", "legalMinimum": "2027-01-31", "recommended": "2027-01-31", "basis": "CCC's conditions for events on public land require this plan at least six weeks before the event.", "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/conditions-for-events-on-public-land"}
+    {
+      "documentType": "event_permit_application",
+      "label": "Lodge event permit application with site plan and health and safety plan",
+      "legalMinimum": "2027-02-07",
+      "recommended": "2027-01-03",
+      "basis": "CCC processing starts at five weeks for a low impact event. We aim for ten weeks.",
+      "sourceUrl": "https://ccc.tfaforms.net/177"
+    },
+    {
+      "documentType": "special_licence_application",
+      "label": "Lodge special licence application",
+      "legalMinimum": "2027-02-15",
+      "recommended": "2027-01-29",
+      "basis": "At least 20 working days before the event. 20 Dec to 15 Jan does not count. We aim two weeks earlier.",
+      "sourceUrl": "https://ccc.tfaforms.net/177"
+    },
+    {
+      "documentType": "alcohol_management_plan",
+      "label": "Attach alcohol management plan to special licence application",
+      "legalMinimum": "2027-02-15",
+      "recommended": "2027-01-29",
+      "basis": "The alcohol management plan is an attachment to the special licence application, so it shares that lodgement date.",
+      "sourceUrl": "https://ccc.govt.nz/assets/Documents/Consents-and-Licences/business-licences-and-consents/Alcohol/SpecialLicence.pdf"
+    },
+    {
+      "documentType": "site_plan",
+      "label": "Provide site plan to CCC",
+      "legalMinimum": "2027-01-31",
+      "recommended": "2027-01-31",
+      "basis": "CCC's conditions for events on public land require this plan at least six weeks before the event.",
+      "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/conditions-for-events-on-public-land"
+    },
+    {
+      "documentType": "health_safety_plan",
+      "label": "Provide health and safety plan to CCC",
+      "legalMinimum": "2027-01-31",
+      "recommended": "2027-01-31",
+      "basis": "CCC's conditions for events on public land require this plan at least six weeks before the event.",
+      "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/conditions-for-events-on-public-land"
+    }
   ],
   "licences": [
-    { "id": "lic-club", "type": "Club licence", "holderName": "Riccarton RFC", "expiresOn": "2028-03-01" },
-    { "id": "lic-dm", "type": "Duty manager certificate", "holderName": "Alex Morgan", "expiresOn": "2027-01-20" }
+    {
+      "id": "lic-dm",
+      "type": "Duty manager certificate",
+      "holderName": "Taylor Example",
+      "expiresOn": "2027-01-20"
+    },
+    {
+      "id": "lic-dm-2",
+      "type": "Duty manager certificate",
+      "holderName": "Jordan Example",
+      "expiresOn": "2028-03-01"
+    }
   ]
 }

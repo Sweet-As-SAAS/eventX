@@ -4,7 +4,7 @@ import { db } from "@/lib/supabase/admin";
 import { applyFix, checkDocument } from "@/lib/ai/check";
 import { withDemoFallback, isSeeded } from "@/lib/ai/demo";
 import { CheckResult, DraftDocument } from "@/lib/schemas";
-import { MOCK, MOCK_FIXED_COOKIE, ok, fixture, handler, parseBody, requireOrg, loadDocument, loadChecklist, must, toEventDocument, mockDocument, checkedStatus, HttpError } from "@/lib/api/server";
+import { MOCK, MOCK_FIXED_COOKIE, ok, fixture, handler, parseBody, requireOrg, loadDocument, loadChecklist, must, toEventDocument, mockDocument, checkedStatus, HttpError, demoPause } from "@/lib/api/server";
 
 export const maxDuration = 60;
 
@@ -20,6 +20,7 @@ export const POST = handler(async (req, ctx: RouteContext<"/api/documents/[id]/f
     const doc = mockDocument(id);
     const failed = doc.checkResults?.items.find((item) => item.itemId === itemId && !item.pass && (item.suggestedFix || text));
     if (!failed || id !== fixture.fixedDocument.id) throw new HttpError(409, `No suggested fix for item ${itemId}`);
+    await demoPause();
     const response = NextResponse.json(fixture.fixedDocument);
     response.cookies.set(MOCK_FIXED_COOKIE, "1", { httpOnly: true, sameSite: "lax", path: "/", maxAge: 3600 });
     return response;
@@ -36,7 +37,9 @@ export const POST = handler(async (req, ctx: RouteContext<"/api/documents/[id]/f
     : item.suggestedFix!;
   // The cached demo fix ignores the organiser's words, so it only stands in for the one-click fix.
   const fixed = !text && isSeeded(event) && row.document_type === fixture.fixedDocument.documentType ? fixture.fixedDocument : null;
-  const { content, result } = await withDemoFallback(async () => {
+  // DEMO_MODE: the seeded event's fix is already known, so serve it after a short pause instead of calling the model.
+  const known = process.env.DEMO_MODE === "1" && fixed ? (await demoPause(), { content: DraftDocument.parse(fixed.content), result: CheckResult.parse(fixed.checkResults) }) : null;
+  const { content, result } = known ?? await withDemoFallback(async () => {
     const content = await applyFix(DraftDocument.parse(row.content), instruction, text);
     return { content, result: await checkDocument(content, checklist.items) };
   }, fixed && { content: DraftDocument.parse(fixed.content), result: CheckResult.parse(fixed.checkResults) });

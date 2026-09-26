@@ -16,6 +16,11 @@ export { fixture };
 export const MOCK = () => process.env.MOCK === "1";
 export const MOCK_FIXED_COOKIE = "hostready_demo_fixed";
 export const ok = (data: unknown) => NextResponse.json(data);
+/** The demo's instant answers wait this long (DEMO_PAUSE_MS, default 1 s) so the audience sees the AI step happen. */
+export const demoPause = () => {
+  const ms = Number(process.env.DEMO_PAUSE_MS ?? 1000);
+  return ms > 0 ? new Promise((r) => setTimeout(r, ms)) : Promise.resolve();
+};
 
 export class HttpError extends Error {
   constructor(readonly status: number, message: string) { super(message); }

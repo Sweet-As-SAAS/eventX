@@ -7,5 +7,6 @@ export default defineConfig({
   test: {
     include: ["tests/**/*.test.ts"],
     exclude: ["e2e/**", ".claude/**", "node_modules/**"],
+    env: { DEMO_PAUSE_MS: "0" }, // the demo's one-second pause would only slow the suite
   },
 });
