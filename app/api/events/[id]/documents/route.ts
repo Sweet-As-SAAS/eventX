@@ -1,12 +1,13 @@
 import { db } from "@/lib/supabase/admin";
 import { cookies } from "next/headers";
-import { MOCK, MOCK_FIXED_COOKIE, ok, fixture, handler, requireOrg, loadEvent, must, toEventDocument, checklistSource } from "@/lib/api/server";
+import { MOCK, MOCK_FIXED_COOKIE, mockPast, ok, fixture, handler, requireOrg, loadEvent, must, toEventDocument, checklistSource } from "@/lib/api/server";
 
 /** Every document the event needs, with status, draft and check results. Drafting is per document: POST /api/documents/:id/draft. */
 export const GET = handler(async (_req, ctx: RouteContext<"/api/events/[id]/documents">) => {
   const orgId = await requireOrg();
   const { id } = await ctx.params;
   if (MOCK()) {
+    if (mockPast(id)) return ok(fixture.documents.map((d) => d.status === "needs_fix" ? fixture.fixedDocument : d));
     const fixed = (await cookies()).get(MOCK_FIXED_COOKIE)?.value === "1";
     return ok(fixture.documents.map((d) => fixed && d.id === fixture.fixedDocument.id ? fixture.fixedDocument : d));
   }

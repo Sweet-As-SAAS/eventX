@@ -12,6 +12,16 @@ import {
 } from "../schemas";
 
 export { fixture };
+
+/** MOCK=1: past events for the dashboard and sidebar. Each opens as the demo event under its own name and date, all documents ready. */
+export const MOCK_PAST = [
+  { id: "past-carols", name: "Papanui Community Carols", date: "2025-12-13" },
+  { id: "past-sumner", name: "Sumner Seaside Market", date: "2026-02-08" },
+  { id: "past-rfc", name: "Riccarton RFC Fundraiser", date: "2026-03-14" },
+  { id: "past-kites", name: "New Brighton Kite Day", date: "2026-04-12" },
+  { id: "past-lanterns", name: "Lyttelton Winter Lantern Walk", date: "2026-06-20" },
+];
+export const mockPast = (id: string) => MOCK_PAST.find((e) => e.id === id);
 /** MOCK=1: every route returns fixture data in the exact shape of the real response. No keys needed. */
 export const MOCK = () => process.env.MOCK === "1";
 export const MOCK_FIXED_COOKIE = "hostready_demo_fixed";
