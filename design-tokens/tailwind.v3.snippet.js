@@ -1,0 +1,55 @@
+// Merge into tailwind.config.js (Tailwind v3). Import tokens.css in your global stylesheet.
+module.exports = {
+  darkMode: ['class'],
+  theme: {
+    extend: {
+      colors: {
+        'background': 'var(--background)',
+        'foreground': 'var(--foreground)',
+        'card': { DEFAULT: 'var(--card)', foreground: 'var(--card-foreground)' },
+        'popover': { DEFAULT: 'var(--popover)', foreground: 'var(--popover-foreground)' },
+        'primary': { DEFAULT: 'var(--primary)', foreground: 'var(--primary-foreground)' },
+        'secondary': { DEFAULT: 'var(--secondary)', foreground: 'var(--secondary-foreground)' },
+        'muted': { DEFAULT: 'var(--muted)', foreground: 'var(--muted-foreground)' },
+        'accent': { DEFAULT: 'var(--accent)', foreground: 'var(--accent-foreground)' },
+        'destructive': { DEFAULT: 'var(--destructive)', foreground: 'var(--destructive-foreground)' },
+        'success': { DEFAULT: 'var(--success)', foreground: 'var(--success-foreground)' },
+        'warning': { DEFAULT: 'var(--warning)', foreground: 'var(--warning-foreground)' },
+        'border': 'var(--border)',
+        'input': 'var(--input)',
+        'ring': 'var(--ring)',
+        'chart-1': 'var(--chart-1)',
+        'chart-2': 'var(--chart-2)',
+        'chart-3': 'var(--chart-3)',
+        'chart-4': 'var(--chart-4)',
+        'chart-5': 'var(--chart-5)',
+        brand: {50: 'var(--brand-50)', 100: 'var(--brand-100)', 200: 'var(--brand-200)', 300: 'var(--brand-300)', 400: 'var(--brand-400)', 500: 'var(--brand-500)', 600: 'var(--brand-600)', 700: 'var(--brand-700)', 800: 'var(--brand-800)', 900: 'var(--brand-900)', 950: 'var(--brand-950)'},
+        neutral: {50: 'var(--neutral-50)', 100: 'var(--neutral-100)', 200: 'var(--neutral-200)', 300: 'var(--neutral-300)', 400: 'var(--neutral-400)', 500: 'var(--neutral-500)', 600: 'var(--neutral-600)', 700: 'var(--neutral-700)', 800: 'var(--neutral-800)', 900: 'var(--neutral-900)', 950: 'var(--neutral-950)'},
+      },
+      fontFamily: {
+        sans: ['var(--font-ui)'],
+        display: ['var(--ds-font-display)'],
+        mono: ['var(--ds-font-mono)'],
+      },
+      fontSize: {
+        'xs': ['var(--ds-text-xs)', { lineHeight: 'var(--ds-text-xs-lh)', letterSpacing: 'var(--ds-text-xs-tracking)' }],
+        'sm': ['var(--ds-text-sm)', { lineHeight: 'var(--ds-text-sm-lh)', letterSpacing: 'var(--ds-text-sm-tracking)' }],
+        'base': ['var(--ds-text-base)', { lineHeight: 'var(--ds-text-base-lh)', letterSpacing: 'var(--ds-text-base-tracking)' }],
+        'lg': ['var(--ds-text-lg)', { lineHeight: 'var(--ds-text-lg-lh)', letterSpacing: 'var(--ds-text-lg-tracking)' }],
+        'xl': ['var(--ds-text-xl)', { lineHeight: 'var(--ds-text-xl-lh)', letterSpacing: 'var(--ds-text-xl-tracking)' }],
+        '2xl': ['var(--ds-text-2xl)', { lineHeight: 'var(--ds-text-2xl-lh)', letterSpacing: 'var(--ds-text-2xl-tracking)' }],
+        '3xl': ['var(--ds-text-3xl)', { lineHeight: 'var(--ds-text-3xl-lh)', letterSpacing: 'var(--ds-text-3xl-tracking)' }],
+        '4xl': ['var(--ds-text-4xl)', { lineHeight: 'var(--ds-text-4xl-lh)', letterSpacing: 'var(--ds-text-4xl-tracking)' }],
+        '5xl': ['var(--ds-text-5xl)', { lineHeight: 'var(--ds-text-5xl-lh)', letterSpacing: 'var(--ds-text-5xl-tracking)' }],
+        '6xl': ['var(--ds-text-6xl)', { lineHeight: 'var(--ds-text-6xl-lh)', letterSpacing: 'var(--ds-text-6xl-tracking)' }]
+      },
+      borderRadius: {
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)',
+      },
+      boxShadow: { sm: 'var(--ds-shadow-sm)', md: 'var(--ds-shadow-md)', lg: 'var(--ds-shadow-lg)' },
+      transitionDuration: { fast: 'var(--duration-fast)', DEFAULT: 'var(--duration-base)', slow: 'var(--duration-slow)' },
+    },
+  },
+};
