@@ -28,3 +28,5 @@ npm-debug.log*
 
 # agent worktrees
 .claude/worktrees/
+/playwright-report/
+/test-results/
