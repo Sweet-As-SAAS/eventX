@@ -1,5 +1,5 @@
 {
-  "recordedAt": "2026-09-26T05:37:13.544Z",
+  "recordedAt": "2026-09-26T05:51:22.922Z",
   "models": {
     "fast": "gpt-4o-mini",
     "strong": "gpt-4o"
@@ -1088,81 +1088,82 @@
   ],
   "classifications": [
     {
-      "category": "community",
-      "reasoning": "The event is a fundraiser for Riccarton RFC, which suggests it is a community or not-for-profit event. The council reference for Hagley Park indicates that community and not-for-profit events are classified separately from commercial events. The peak attendance of 400 fits within the community category for Hagley Park, which is 300 to 1000 people. Therefore, it is likely to be classified as a community event.",
-      "howToPresent": "Emphasise the fundraising purpose and community involvement of Riccarton RFC to support the community classification.",
+      "category": "unclear",
+      "reasoning": "The event is a fundraiser by Riccarton RFC, but the references do not provide specific criteria to classify it as community or commercial. The references mention fees for community and not-for-profit events, but do not define what qualifies an event as such. Without clear criteria or information on the organiser's legal status or how proceeds are used, it is unclear how the council will classify this event.",
+      "howToPresent": "Confirm with the council whether the event qualifies as community or commercial based on the organiser's legal status and use of proceeds.",
       "citedChunkIds": [
         "2db13665-9560-4a2d-a63c-0594b02cba32"
       ]
     },
     {
-      "category": "community",
-      "reasoning": "The event is a fundraiser for Riccarton RFC, which suggests it is a community or not-for-profit event. The council reference for Hagley Park indicates that community and not-for-profit events are classified separately from commercial events. Since the event is a fundraiser, it aligns with the community and not-for-profit category.",
-      "howToPresent": "Emphasise the fundraising nature of the event and its community focus to support the classification as a community event.",
+      "category": "unclear",
+      "reasoning": "The event is a fundraiser by Riccarton RFC, but the references do not provide specific criteria to classify it as community or commercial. The references mention fees for community and not-for-profit events, but do not define what qualifies an event as such. Without clear criteria or information on the organiser's legal status or how proceeds are used, classification is unclear.",
+      "howToPresent": "Confirm with the council whether the event qualifies as community or commercial based on the organiser's legal status and use of proceeds.",
       "citedChunkIds": [
         "2db13665-9560-4a2d-a63c-0594b02cba32"
       ]
     },
     {
-      "category": "community",
-      "reasoning": "The event is a fundraiser for Riccarton RFC, which suggests it is a community or not-for-profit event. The council reference for Hagley Park indicates that community and not-for-profit events are classified separately from commercial events, with different fee structures. Since the event is a fundraiser, it aligns with the community and not-for-profit category as per the council's classification for Hagley Park events.",
-      "howToPresent": "Emphasise the fundraising nature of the event and its community focus to support the classification as a community event.",
+      "category": "unclear",
+      "reasoning": "The event is a fundraiser by Riccarton RFC, but the references do not provide specific criteria to classify it as community or commercial. The references mention fees for community and not-for-profit events, but do not define what qualifies an event as such. Without clear criteria or confirmation of the organiser's legal status or how proceeds are used, the classification remains unclear.",
+      "howToPresent": "Confirm with the council whether the event qualifies as community or commercial based on the organiser's legal status and use of proceeds.",
       "citedChunkIds": [
         "2db13665-9560-4a2d-a63c-0594b02cba32"
       ]
     },
     {
-      "category": "community",
-      "reasoning": "The event is a fundraiser for Riccarton RFC, which suggests it is a community or not-for-profit event. The council reference for Hagley Park indicates that community and not-for-profit events are classified separately from commercial events. The event's nature as a fundraiser aligns with community purposes, which typically involve raising funds for local organisations or causes rather than generating profit for commercial entities.",
-      "howToPresent": "Emphasise the fundraising aspect and the community involvement of Riccarton RFC to support the classification as a community event.",
+      "category": "unclear",
+      "reasoning": "The event is a fundraiser by Riccarton RFC, which suggests it might be a community or not-for-profit event. However, the references do not provide specific criteria for classifying an event as community or commercial based on the organiser's status or the use of proceeds. The fee tables list both community and commercial categories but do not define them. Without explicit criteria or confirmation of the organiser's legal status or how proceeds are used, the classification remains unclear.",
+      "howToPresent": "Confirm with the council whether Riccarton RFC qualifies as a community or not-for-profit organisation and how the proceeds from the event will be used.",
       "citedChunkIds": [
         "2db13665-9560-4a2d-a63c-0594b02cba32"
       ]
     },
     {
-      "category": "community",
-      "reasoning": "The event is a fundraiser for Riccarton RFC, which suggests it is a community or not-for-profit event. The council reference for Hagley Park indicates that community and not-for-profit events are classified separately from commercial events, with different fee structures. Since the event is a fundraiser, it aligns with the community and not-for-profit category as per the council's classification for Hagley Park events.",
-      "howToPresent": "Emphasize the fundraising nature of the event and its community focus to align with the community and not-for-profit category.",
+      "category": "unclear",
+      "reasoning": "The event is a fundraiser by Riccarton RFC, but the references do not provide specific criteria to classify it as community or commercial. The references mention fees for community and not-for-profit events, but do not define what qualifies an event as such. Without clear criteria or information on the organiser's legal status or how proceeds are used, classification is unclear.",
+      "howToPresent": "Confirm with the council whether the event qualifies as community or commercial based on the organiser's legal status and use of proceeds.",
       "citedChunkIds": [
         "2db13665-9560-4a2d-a63c-0594b02cba32"
       ]
     },
     {
-      "category": "community",
-      "reasoning": "The event is a fundraiser for Riccarton RFC, which suggests it is a community or not-for-profit event. The council reference for Hagley Park indicates that community and not-for-profit events are classified separately from commercial events. The peak attendance of 400 fits within the community fee band for 300 to 1000 people, supporting the classification as a community event.",
-      "howToPresent": "Emphasise the fundraising nature of the event and its community focus to strengthen the community classification.",
+      "category": "unclear",
+      "reasoning": "The event is a fundraiser for Riccarton RFC, which suggests it might be a community or not-for-profit event. However, the references do not provide specific criteria for classifying an event as community or commercial based on its purpose or the organiser's status. The fee tables list different charges for community and commercial events but do not define what qualifies an event for each category. Without explicit criteria or confirmation of the organiser's legal status or how proceeds are used, the classification remains unclear.",
+      "howToPresent": "Confirm with the council whether the event qualifies as community or commercial based on the organiser's status and use of proceeds.",
+      "citedChunkIds": [
+        "2db13665-9560-4a2d-a63c-0594b02cba32",
+        "4825cf63-e7b2-4ebf-8e36-c0ad3932facd"
+      ]
+    },
+    {
+      "category": "unclear",
+      "reasoning": "The event is a fundraiser for Riccarton RFC, which suggests it might be a community or not-for-profit event. However, the references do not provide specific criteria for classifying an event as community or commercial based on its purpose or the organiser's status. The fee tables list different rates for community and commercial events but do not define what qualifies an event for each category. Without explicit criteria or confirmation of the organiser's legal status or how proceeds are used, the classification remains unclear.",
+      "howToPresent": "Confirm with the council whether the event qualifies as community or commercial based on the organiser's status and use of proceeds.",
       "citedChunkIds": [
         "2db13665-9560-4a2d-a63c-0594b02cba32"
       ]
     },
     {
-      "category": "community",
-      "reasoning": "The event is a fundraiser for Riccarton RFC, which suggests it is a community or not-for-profit event. The council reference for Hagley Park indicates that community and not-for-profit events are classified separately from commercial events, with different fee structures. Since the event is a fundraiser, it aligns with the community and not-for-profit category as per the council's classification for Hagley Park events.",
-      "howToPresent": "Emphasize the fundraising aspect and the community involvement of Riccarton RFC to support the classification as a community event.",
+      "category": "unclear",
+      "reasoning": "The event is a fundraiser for Riccarton RFC, which suggests it might be a community or not-for-profit event. However, the references do not provide specific criteria for classifying an event as community or commercial based on its purpose or the organiser's status. The fee tables list different rates for community and commercial events but do not define what qualifies an event for each category. Without explicit criteria or confirmation of the organiser's legal status or how proceeds are used, the classification remains unclear.",
+      "howToPresent": "Confirm with the council whether the event qualifies as community or commercial based on the organiser's status and use of proceeds.",
       "citedChunkIds": [
         "2db13665-9560-4a2d-a63c-0594b02cba32"
       ]
     },
     {
-      "category": "community",
-      "reasoning": "The event is a fundraiser for Riccarton RFC, which suggests it is a community or not-for-profit event. The council reference for Hagley Park indicates that community and not-for-profit events are classified separately from commercial events. The event's peak attendance of 400 fits within the community category for Hagley Park, which is 300 to 1000 people. This supports the classification as a community event.",
-      "howToPresent": "Emphasise the fundraising purpose and community involvement of Riccarton RFC to strengthen the community classification.",
+      "category": "unclear",
+      "reasoning": "The event is a fundraiser for Riccarton RFC, which suggests it might be a community or not-for-profit event. However, the references do not provide specific criteria for classifying an event as community or commercial based on its purpose or the organiser's status. The fee tables list different rates for community and commercial events but do not define what qualifies an event for each category. Without explicit criteria or confirmation of the organiser's legal status or how proceeds are used, it is unclear how the council will classify this event.",
+      "howToPresent": "Confirm with the council whether the event qualifies as community or not-for-profit based on the organiser's status and use of proceeds.",
       "citedChunkIds": [
         "2db13665-9560-4a2d-a63c-0594b02cba32"
       ]
     },
     {
-      "category": "community",
-      "reasoning": "The event is a fundraiser for Riccarton RFC, which suggests it is a not-for-profit activity. According to the council's classification, events that are community or not-for-profit fall under the 'Community and Not-for-Profit' category. The event's peak attendance of 400 people fits within the 300 to 1000 people range for community events at Hagley Park, as per chunk 2db13665-9560-4a2d-a63c-0594b02cba32.",
-      "howToPresent": "Emphasise the not-for-profit nature of the fundraiser and its community focus to align with the 'Community and Not-for-Profit' category.",
-      "citedChunkIds": [
-        "2db13665-9560-4a2d-a63c-0594b02cba32"
-      ]
-    },
-    {
-      "category": "community",
-      "reasoning": "The event is a fundraiser for Riccarton RFC, which suggests it is a community or not-for-profit event. The council reference for Hagley Park specifies different fee structures for community and commercial events, with community events being those that are not-for-profit. Since the event is a fundraiser, it aligns with the community category as per the council's classification for Hagley Park events.",
-      "howToPresent": "Emphasise the fundraising nature of the event and its alignment with community and not-for-profit activities.",
+      "category": "unclear",
+      "reasoning": "The event is a fundraiser for Riccarton RFC, which suggests it might be a community or not-for-profit event. However, the references do not provide specific criteria for classifying an event as community or commercial based on its purpose or the organiser's status. The fee tables list different rates for community and commercial events but do not define what qualifies an event for each category. Without explicit criteria or confirmation of the organiser's legal status or how proceeds are used, it is unclear how the council will classify this event.",
+      "howToPresent": "Confirm with the council whether the event qualifies as community or commercial based on the organiser's status and use of proceeds.",
       "citedChunkIds": [
         "2db13665-9560-4a2d-a63c-0594b02cba32"
       ]

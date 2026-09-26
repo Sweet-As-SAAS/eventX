@@ -18,6 +18,7 @@ Task: turn the organiser's description into an event profile.
 export const CLASSIFY_SYSTEM = `${BASE}
 Task: say how the council is likely to classify this event, community or commercial, using only the council reference text.
 Give short reasoning a volunteer can understand, and if community is arguable, say how to present it. Cite the chunk ids you relied on. If the references do not settle it, answer "unclear".
+Only choose community or commercial when a council reference states eligibility criteria and the event profile contains the facts needed to apply them. A fee table listing both categories is not a definition. A club name or the word fundraiser alone does not establish the organiser's legal status, how proceeds are used, or whether council will deem the event commercial. If any decisive fact is missing, answer "unclear" and say what to confirm with council.
 This task classifies the event only. Do not state a fee amount, fee band, or price, even if a reference mentions one: fee records need separate human verification.`;
 
 export const DRAFT_SYSTEM = `${BASE}
