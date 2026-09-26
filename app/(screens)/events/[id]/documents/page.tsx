@@ -244,6 +244,7 @@ function DocumentDetail({ doc, profile, req, failed, retry, fixing, justFixed, o
 function FixItem({ fix, busy, disabled, onFix }: { fix: string | null; busy: boolean; disabled: boolean; onFix: (text?: string) => void }) {
   const [text, setText] = useState("");
   const ask = needsYou(fix);
+  const wantsName = !!fix && /\[[^\]]*NAME[^\]]*\]/i.test(fix); // "volunteers" or "the club" won't pass; the council wants it named
   const typed = text.trim();
   return (
     <form className="space-y-3" onSubmit={(e) => { e.preventDefault(); onFix(typed || undefined); }}>
@@ -251,10 +252,11 @@ function FixItem({ fix, busy, disabled, onFix }: { fix: string | null; busy: boo
       {fix && <p className="text-base text-neutral-800"><span className="font-semibold">Suggested fix: </span><Gaps text={fix} /></p>}
       <label className="block max-w-prose">
         <span className="mb-1 block text-sm font-medium text-neutral-700">
-          {ask ? "Only you know this. Add the details and we'll write them into the draft." : "Or say it in your own words (optional)"}
+          {wantsName ? "The council wants this named. Type the actual person or company, not a group like \"volunteers\"."
+            : ask ? "Only you know this. Add the details and we'll write them into the draft." : "Or say it in your own words (optional)"}
         </span>
         <textarea value={text} onChange={(e) => setText(e.target.value)} rows={2} maxLength={1500} disabled={disabled}
-          placeholder="Names, providers or arrangements, in your words"
+          placeholder={wantsName ? "A person's or company's name" : "Names, providers or arrangements, in your words"}
           className="block w-full rounded-lg border border-neutral-300 bg-background px-3 py-2 text-base text-foreground placeholder:text-neutral-400 focus:border-primary focus:outline-none focus:ring-4 focus:ring-brand-100" />
       </label>
       <Button type="submit" busy={busy} disabled={disabled || (ask && !typed)}>
