@@ -45,6 +45,7 @@ export default function DocumentsPage({ params }: PageProps<"/events/[id]/docume
     started.current = true;
     Promise.all([api.listDocuments(id), api.getEvent(id)])
       .then(([list, ev]) => {
+        list = list.filter((d) => d.documentType !== "site_plan"); // drawn on its own step
         setDocs(list);
         setReqs(ev.requirements);
         setProfile(ev.profile);
@@ -121,7 +122,7 @@ export default function DocumentsPage({ params }: PageProps<"/events/[id]/docume
                   </div>
                   {isOpen && (
                     <div className="arrive border-t border-border bg-background px-5 py-7 sm:pl-[76px] sm:pr-10">
-                      <DocumentDetail doc={d} eventId={id} profile={profile} req={req} failed={isFailed} retry={() => work(d)}
+                      <DocumentDetail doc={d} profile={profile} req={req} failed={isFailed} retry={() => work(d)}
                         fixing={fixing} justFixed={justFixed} onFix={(itemId) => fix(d, itemId)} />
                     </div>
                   )}
@@ -147,8 +148,8 @@ export default function DocumentsPage({ params }: PageProps<"/events/[id]/docume
   );
 }
 
-function DocumentDetail({ doc, eventId, profile, req, failed, retry, fixing, justFixed, onFix }: {
-  doc: EventDocument; eventId: string; profile: EventProfile | null; req?: Requirement; failed: boolean; retry: () => void;
+function DocumentDetail({ doc, profile, req, failed, retry, fixing, justFixed, onFix }: {
+  doc: EventDocument; profile: EventProfile | null; req?: Requirement; failed: boolean; retry: () => void;
   fixing: string | null; justFixed: string | null; onFix: (itemId: string) => void;
 }) {
   if (doc.status === "manual") {
@@ -157,12 +158,11 @@ function DocumentDetail({ doc, eventId, profile, req, failed, retry, fixing, jus
         <p className="max-w-prose text-lg text-neutral-700">
           {doc.documentType === "event_permit_application"
             ? "It's the council's own form, so you lodge it. We've gathered your answers below to copy straight in."
-            : <>You handle this one. HostReady doesn&apos;t draft it{doc.documentType === "site_plan" ? ", but you can draw it here" : ""}.</>}
+            : <>You handle this one. HostReady doesn&apos;t draft it.</>}
         </p>
         {req && <p className="max-w-prose text-base text-neutral-700"><span className="font-semibold text-foreground">Why the council needs it: </span>{req.reason.replace(/\.?$/, ".")}</p>}
         {req && <SourceLine url={req.sourceUrl} checked={req.lastChecked} />}
         {doc.documentType === "event_permit_application" && profile && <PermitAnswers profile={profile} />}
-        {doc.documentType === "site_plan" && <ButtonLink href={`/events/${eventId}/site-plan`} variant="secondary">Draw your site plan</ButtonLink>}
       </div>
     );
   }
