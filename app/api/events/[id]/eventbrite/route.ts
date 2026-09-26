@@ -27,13 +27,16 @@ export const POST = handler(async (req, ctx: RouteContext<"/api/events/[id]/even
     return ok(demoDraft() ?? { id: "mock", url: "https://www.eventbrite.com/organizations/events" });
   }
   const ev = await loadEvent(id, orgId);
-  const [documents, lists] = await Promise.all([
+  const [documents, lists, requirements] = await Promise.all([
     db().from("documents").select("document_type, status, content, check_results").eq("event_id", id),
     db().from("checklists").select("document_type, items").eq("council_id", ev.council_id).eq("verified", true),
+    db().from("requirements").select("document_type").eq("event_id", id),
   ]);
   const docs = must(documents);
+  const requiredTypes = new Set(must(requirements).map((r) => r.document_type));
   const checklists = new Map(must(lists).map((list) => [list.document_type, list.items as { id: string }[]]));
-  if (!docs.length || docs.some((doc) => {
+  if (!requiredTypes.size || docs.length !== requiredTypes.size || docs.some((doc) => {
+    if (!requiredTypes.has(doc.document_type)) return true;
     if (doc.status === "manual") return false;
     if (doc.status !== "ready" || !doc.content) return true;
     const result = CheckResult.safeParse(doc.check_results);
