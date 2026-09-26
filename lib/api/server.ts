@@ -65,8 +65,12 @@ export async function requireOrg(): Promise<string> {
   throw new HttpError(500, membership.error.message);
 }
 
+// Route [id] params are Postgres uuids. Anything else is a 404, not a 500 from an invalid uuid cast.
+const RowId = z.guid();
+
 /** An event the caller's org owns, or 404. */
 export async function loadEvent(id: string, orgId: string) {
+  if (!RowId.safeParse(id).success) throw new HttpError(404, `Event ${id} not found`);
   const row = must(await db().from("events").select("*, councils(slug)").eq("id", id).eq("org_id", orgId).maybeSingle());
   if (!row) throw new HttpError(404, `Event ${id} not found`);
   return {
@@ -78,6 +82,7 @@ export async function loadEvent(id: string, orgId: string) {
 
 /** A document whose event the caller's org owns, or 404. */
 export async function loadDocument(id: string, orgId: string) {
+  if (!RowId.safeParse(id).success) throw new HttpError(404, `Document ${id} not found`);
   const row = must(await db().from("documents")
     .select("*, events!inner(org_id, council_id, description, profile, councils(slug))")
     .eq("id", id).eq("events.org_id", orgId).maybeSingle());

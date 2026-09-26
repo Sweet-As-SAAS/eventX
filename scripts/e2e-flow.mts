@@ -1,12 +1,11 @@
 // Walks the whole organiser workflow against a running server with MOCK=0, through the same `api` client the screens use.
-// Usage: npx tsx --env-file=.env.local scripts/e2e-flow.mts [baseUrl] [ccc|waimakariri]
+// Usage: npx tsx --env-file=.env.local scripts/e2e-flow.mts [baseUrl]
 import { createServerClient } from "@supabase/ssr";
 import fixture from "../fixtures/demo-event.json" with { type: "json" };
 import { api, ApiError } from "../lib/api/client";
-import type { CouncilSlug, EventDocument } from "../lib/schemas";
+import type { EventDocument } from "../lib/schemas";
 
 const base = process.argv[2] ?? "http://localhost:3001";
-const council = (process.argv[3] ?? "ccc") as CouncilSlug;
 const jar = new Map<string, string>();
 
 // Guest sign-in exactly like /login, capturing the session cookies @supabase/ssr would set in the browser.
@@ -38,7 +37,7 @@ const { error } = await supabase.auth.signInAnonymously();
 if (error) throw error;
 console.log(`guest signed in, ${jar.size} cookie(s)`);
 
-const { id } = await step("createEvent", () => api.createEvent({ council, description: fixture.description }));
+const { id } = await step("createEvent", () => api.createEvent({ description: fixture.description }));
 const ev = await step("getEvent", () => api.getEvent(id));
 console.assert(ev.profile === null, "new event has no profile");
 const built = await step("buildProfile", () => api.buildProfile(id));

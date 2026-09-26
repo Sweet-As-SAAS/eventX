@@ -23,7 +23,8 @@ const Id = z.object({ id: z.string() });
 
 export const api = {
   listEvents: () => call(z.array(EventSummary), "/api/events"),
-  createEvent: (body: { council: CouncilSlug; description: string }) => call(Id, "/api/events", body),
+  /** Every event is Christchurch City Council; `council` defaults to "ccc" on the server. */
+  createEvent: (body: { council?: CouncilSlug; description: string }) => call(Id, "/api/events", body),
   getEvent: (id: string) => call(EventDetail, `/api/events/${id}`),
 
   /** Steps 1 and 2: AI profile plus follow-up questions. Takes a few seconds. */

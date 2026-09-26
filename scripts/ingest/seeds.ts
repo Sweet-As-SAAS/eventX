@@ -1,5 +1,5 @@
 // Hand-picked seed URLs. Crawl only follows links from here, max depth 2, same domain, matching KEYWORDS.
-// CCC URLs checked 26 Sep 2026. Waimakariri: TODO(lane B) add pages found via site search on waimakariri.govt.nz.
+// CCC URLs checked 26 Sep 2026. Christchurch City Council is the only council.
 export const SEEDS = {
   ccc: {
     domain: "ccc.govt.nz",
@@ -13,19 +13,12 @@ export const SEEDS = {
       "https://ccc.govt.nz/assets/Documents/Culture-Community/Events-Festivals/CS-Smokefree-Events-Checklist.pdf",
     ],
   },
-  waimakariri: {
-    domain: "waimakariri.govt.nz",
-    urls: [
-      "https://www.waimakariri.govt.nz/home",
-      // TODO(lane B): event permit page, alcohol licensing page, special licence form, fees and charges, road closures
-    ],
-  },
 } as const;
 
 export type Council = keyof typeof SEEDS;
 export const councilArg = (): Council => {
   const c = process.argv[2];
-  if (c !== "ccc" && c !== "waimakariri") throw new Error('Pass a council: ccc or waimakariri (never "wdc", that is Whangārei)');
+  if (c !== "ccc") throw new Error("Pass a council: ccc (the only council HostReady supports)");
   return c;
 };
 

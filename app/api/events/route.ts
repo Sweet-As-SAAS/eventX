@@ -17,7 +17,8 @@ export const GET = handler(async () => {
     date: e.profile?.date?.value ?? null, status: e.status, eventbriteEventId: e.eventbrite_event_id, createdAt: e.created_at })));
 });
 
-const Body = z.object({ council: CouncilSlug, description: z.string().trim().min(10).max(2000) });
+// Christchurch City Council is the only council, so the client may leave it out.
+const Body = z.object({ council: CouncilSlug.default("ccc"), description: z.string().trim().min(10).max(2000) });
 
 /** Step 0: save the description. The profile is built by POST /api/events/:id/profile. */
 export const POST = handler(async (req) => {
