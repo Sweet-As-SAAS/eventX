@@ -1,17 +1,116 @@
 @import "tailwindcss";
+/* Generated brand tokens. Regenerate, don't hand-edit:
+   python ../.claude/skills/saas-brand-system/scripts/generate_tokens.py --primary "#2447D9" --name "HostReady" --ui-font "Inter"
+     --display-font "Bricolage Grotesque" --radius 0.625 --success "#157347" --destructive "#C0271D" --warning "#9A5B00"
+     --neutral-tint 0.3 --out design-tokens */
+@import "../design-tokens/tokens.css";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* next/font sets --font-inter and --font-bricolage on <html> */
+  --font-ui: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --ds-font-display: var(--font-display-face), var(--font-ui);
+
+  --foreground: var(--neutral-950);
+  /* The signature: "this came from your words" */
+  /* Royal navy: the landing hero band and closing CTA */
+  --navy: #00306e;
+  --navy-soft: #c6d3f5;
+  --marker: #d6e0ff;
+  --marker-strong: #b3c5ff;
+  --success-soft: #e2f3e9;
+  --destructive-soft: #fbe8e6;
+  --warning-soft: #faefd9;
+
+  /* Emil Kowalski's curves (brand.md > Motion) */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-navy: var(--navy);
+  --color-navy-soft: var(--navy-soft);
+  --color-marker: var(--marker);
+  --color-marker-strong: var(--marker-strong);
+  --color-success-soft: var(--success-soft);
+  --color-destructive-soft: var(--destructive-soft);
+  --color-warning-soft: var(--warning-soft);
+  --ease-out: var(--ease-out);
+  --ease-in-out: var(--ease-in-out);
 }
 
+@layer base {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-ui);
+}
+
+h1, .display {
+  font-family: var(--ds-font-display);
+  font-weight: 500;
+  letter-spacing: -0.028em;
+  text-wrap: balance;
+}
+
+::selection { background: var(--marker-strong); }
+
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+}
+
+@layer components {
+/* Pressable things answer the press (Emil: 0.97, ease-out, under 160ms) */
+.press { transition: transform 140ms var(--ease-out), background-color 150ms ease, color 150ms ease, border-color 150ms ease; }
+.press:active:not(:disabled) { transform: scale(0.97); }
+
+/* The marker: a highlighter stroke behind understood phrases */
+.mark {
+  background-color: transparent;
+  color: inherit;
+  background-image: linear-gradient(var(--marker), var(--marker));
+  background-repeat: no-repeat;
+  background-position: 0 88%;
+  background-size: 100% 78%;
+  border-radius: 3px;
+  padding: 0 0.12em;
+  margin: 0 -0.04em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.mark[data-active="true"] { background-image: linear-gradient(var(--marker-strong), var(--marker-strong)); }
+.mark-sweep { animation: mark-sweep 520ms var(--ease-out) both; }
+
+/* Loading: a slow sheen, linear because it is constant motion */
+.skeleton {
+  background: linear-gradient(90deg, var(--neutral-100) 0%, var(--neutral-50) 50%, var(--neutral-100) 100%);
+  background-size: 200% 100%;
+  animation: sheen 1.4s linear infinite;
+  border-radius: 6px;
+}
+
+/* Entrances for content that arrives after an AI wait */
+.arrive { animation: arrive 260ms var(--ease-out) both; }
+
+/* Guided flow: each step slides in the direction you're going */
+.step-in { animation: step-in 320ms var(--ease-out) both; }
+.step-in[data-dir="back"] { animation-name: step-back; }
+
+/* Red turns green: the one celebration in the app */
+.tick-draw path { stroke-dasharray: 24; animation: tick-draw 320ms var(--ease-out) 60ms both; }
+.flash-pass { animation: flash-pass 900ms var(--ease-out) both; }
+}
+
+@keyframes mark-sweep { from { background-size: 0% 78%; } }
+@keyframes sheen { to { background-position: -200% 0; } }
+@keyframes arrive { from { opacity: 0; transform: translateY(6px); } }
+@keyframes step-in { from { opacity: 0; transform: translateX(24px); } }
+@keyframes step-back { from { opacity: 0; transform: translateX(-24px); } }
+@keyframes tick-draw { from { stroke-dashoffset: 24; } to { stroke-dashoffset: 0; } }
+@keyframes flash-pass { from { background-color: var(--success-soft); } to { background-color: transparent; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }

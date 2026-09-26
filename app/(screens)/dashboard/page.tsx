@@ -1,6 +1,7 @@
-// Screen 6, Dashboard (lane D, PRD F15). Mockup: events list, licence renewals, duty manager certificates, "run it again".
-// Calls: api.listEvents() · api.licences()
-// "Run it again" = go to /new with the old description prefilled (api.getEvent(oldId).description), no new route needed.
-export default function DashboardPage() {
-  return <h1 className="p-4 text-2xl font-semibold">Dashboard</h1>;
+import { Home } from "@/components/home";
+import { userName } from "@/components/user";
+
+// Home (PRD F15): one greeting, one input, then where everything stands.
+export default async function HomePage() {
+  return <Home name={await userName()} />;
 }

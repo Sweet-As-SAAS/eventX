@@ -32,7 +32,8 @@ export async function checkDocument(doc: DraftDocument, checklist: { id: string;
   }) });
 }
 
-export async function applyFix(doc: DraftDocument, fix: string) {
+/** `supplied` is text the organiser typed themselves, so names in it are theirs, not invented. */
+export async function applyFix(doc: DraftDocument, fix: string, supplied = "") {
   const result = await structured({
     schema: DraftDocument, name: "draft_document", model: MODEL_FAST, system: FIX_SYSTEM,
     user: `Fix to apply:\n${fix}\n\nDocument:\n${JSON.stringify(doc)}`,
@@ -41,7 +42,7 @@ export async function applyFix(doc: DraftDocument, fix: string) {
     section.body.match(/\[[^\[\]\n]+\]/g) ?? []))];
   const originalBody = doc.sections.map((section) => section.body).join("\n");
   const newBody = result.sections.map((section) => section.body).join("\n");
-  if (unprovidedProperNames(newBody, originalBody).length) {
+  if (unprovidedProperNames(newBody, `${originalBody}\n${supplied}`).length) {
     throw new Error("Fix introduced an unsupported proper name");
   }
   return DraftDocument.parse({ ...result, documentType: doc.documentType,
