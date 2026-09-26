@@ -124,7 +124,7 @@ export default function DeadlinesPage({ params }: PageProps<"/events/[id]/deadli
           </Row>
         </ul>
       </section>
-      <ButtonLink href={`/events/${id}/documents`} variant="ghost" className="!text-neutral-700 hover:!bg-neutral-50">Back</ButtonLink>
+      <ButtonLink href={`/events/${id}/site-plan`} variant="ghost" className="!text-neutral-700 hover:!bg-neutral-50">Back</ButtonLink>
     </div>
   );
 }

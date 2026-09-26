@@ -6,17 +6,17 @@ import { api } from "@/lib/api/client";
 import { Share } from "./icons";
 import { useToast } from "./toast";
 
-// A real sequence: details, documents, deadlines. Site plan is reached from its document, so it isn't a numbered step.
+// A real sequence, so it is numbered: details, documents, site plan, deadlines.
 export const STEPS = [
   { slug: "profile", label: "Details" },
   { slug: "documents", label: "Documents" },
+  { slug: "site-plan", label: "Site plan" },
   { slug: "deadlines", label: "Deadlines" },
 ];
-const PAGE_LABEL: Record<string, string> = { "site-plan": "Site plan" };
 
 export const eventIdFrom = (path: string) => path.match(/^\/events\/([^/]+)/)?.[1] ?? null;
 
-/** Breadcrumb, where you are in the three steps, and Share. Navigation never animates (Emil). */
+/** Breadcrumb, which step you are on, and Share. Navigation never animates (Emil). */
 export function EventTopBar({ id }: { id: string }) {
   const path = usePathname();
   const toast = useToast();
@@ -25,7 +25,7 @@ export function EventTopBar({ id }: { id: string }) {
 
   const slug = path.split("/").pop() ?? "";
   const at = STEPS.findIndex((s) => s.slug === slug);
-  const label = STEPS[at]?.label ?? PAGE_LABEL[slug] ?? "";
+  const label = STEPS[at]?.label ?? "";
 
   async function share() {
     const url = location.href;

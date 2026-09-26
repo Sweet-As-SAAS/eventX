@@ -139,7 +139,7 @@ export default function DocumentsPage({ params }: PageProps<"/events/[id]/docume
 
       {docs && (
         <div className="flex flex-wrap items-center gap-6 pt-2">
-          <ButtonLink href={`/events/${id}/deadlines`} className="min-h-12 px-7 text-[17px]">Continue to deadlines</ButtonLink>
+          <ButtonLink href={`/events/${id}/site-plan`} className="min-h-12 px-7 text-[17px]">Continue to site plan</ButtonLink>
           <ButtonLink href={`/events/${id}/profile`} variant="ghost" className="!text-neutral-700 hover:!bg-neutral-50">Back</ButtonLink>
         </div>
       )}
