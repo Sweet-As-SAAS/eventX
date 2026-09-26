@@ -96,3 +96,22 @@ describe("model routing (mocked model)", () => {
     ]);
   });
 });
+
+describe("organiser-supplied fixes", () => {
+  it("keeps the organiser's exact sentence in the relevant template section without asking AI to rewrite it", async () => {
+    const draft = DraftDocument.parse({ documentType: "health_safety_plan", title: "Safety plan",
+      citedChunkIds: [], placeholders: [], sections: [
+        { heading: "Emergency plan", body: "An evacuation plan is in place." },
+        { heading: "Health and safety responsibilities", body: "Taylor Example manages site safety." },
+      ] });
+    const answer = "Morgan Example coordinates volunteers and Southern Crowd Security manages crowd safety.";
+    const fixed = await applyFix(draft, "Satisfy the checklist item", answer,
+      "Assigns health and safety responsibilities to named staff, including volunteers");
+
+    expect(fixed.sections[0].body).toBe(draft.sections[0].body);
+    expect(fixed.sections[1].body).toBe(`${draft.sections[1].body}\n\n${answer}`);
+    expect(mocked).not.toHaveBeenCalled();
+    expect((await applyFix(fixed, "Satisfy the checklist item", answer,
+      "Assigns health and safety responsibilities to named staff, including volunteers")).sections).toEqual(fixed.sections);
+  });
+});
