@@ -3,7 +3,8 @@
 import { readdir, readFile, writeFile, mkdir } from "node:fs/promises";
 import { z } from "zod";
 import { DocumentType } from "../../lib/schemas";
-import { structured, fence, MODEL_STRONG } from "../../lib/ai/client";
+import { structured, fence } from "../../lib/ai/client";
+import { normaliseSystem } from "../../lib/ai/prompts";
 import { councilArg } from "./seeds";
 
 const council = councilArg();
@@ -30,8 +31,7 @@ async function main() {
     const text = await readFile(`data/text/${council}/${f}`, "utf8");
     const url = text.match(/<!-- source: (.*) -->/)?.[1] ?? "";
     const candidate = await structured({
-      schema: Candidate, name: "candidate", model: MODEL_STRONG,
-      system: `Extract event compliance requirements for the ${council} council from the reference text. Only include items the text clearly states. Every item must quote the exact source sentence. Conditions may only use these profile paths: ${PROFILE_PATHS}. Return empty arrays if the page has nothing relevant.`,
+      schema: Candidate, name: "candidate", model: "strong", system: normaliseSystem(council, PROFILE_PATHS),
       user: fence(url, text.slice(0, 60000)),
     });
     await writeFile(`data/normalised/${council}/${f.replace(".md", ".json")}`, JSON.stringify({ url, verified: false, ...candidate }, null, 2));

@@ -50,3 +50,7 @@ Task: check a draft document against the council checklist, item by item.
 
 export const FIX_SYSTEM = `${BASE}
 Task: apply one suggested fix to a draft document. Change only what the fix needs. When the fix is ready-to-insert text, put that sentence verbatim in the relevant section in place of the placeholder or incomplete passage. Do not replace it with a promise to create a plan later. If a fact is unknown, retain a named [PLACEHOLDER] rather than invent it. Never replace [NAME TO CONFIRM] with a made-up name. Return the whole document.`;
+
+/** Ingest step 6 (scripts/ingest/normalise.ts): candidates only, a human verifies every item before publish. */
+export const normaliseSystem = (council: string, profilePaths: string) =>
+  `Extract event compliance requirements for the ${council} council from the reference text. Only include items the text clearly states. Every item must quote the exact source sentence. Conditions may only use these profile paths: ${profilePaths}. Return empty arrays if the page has nothing relevant.`;
