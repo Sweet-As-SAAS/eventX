@@ -9,7 +9,7 @@ import { useEvents } from "./event-status";
 import { daysBetween } from "./format";
 import { Skeleton, cx } from "./ui";
 
-const chip = "press inline-flex min-h-10 items-center rounded-full px-4 text-[15px]";
+const chip = "press inline-flex min-h-11 items-center rounded-full px-4 text-[15px]";
 
 export function Home({ name }: { name: string | null }) {
   const events = useEvents();

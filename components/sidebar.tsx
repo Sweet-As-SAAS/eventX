@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState, useSyncExternalStore, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { api } from "@/lib/api/client";
@@ -25,34 +25,39 @@ export const CHANGED = "hostready:changed";
 
 type Current = { ev: EventDetail; docs: EventDocument[]; deadlines: Deadline[] };
 
+// Collapsed or not lives in localStorage; read it as an external store so the server render stays wide.
+const slimSubs = new Set<() => void>();
+const readSlim = () => { try { return localStorage.getItem(KEY) === "slim"; } catch { return false; } };
+const subscribeSlim = (f: () => void) => { slimSubs.add(f); return () => { slimSubs.delete(f); }; };
+
 export function Sidebar({ name }: { name: string | null }) {
   const path = usePathname();
   const eventId = eventIdFrom(path);
   const [tick, setTick] = useState(0); // bumps when a screen changes an event's status (CHANGED)
   const events = useEvents(`${path}#${tick}`);
-  const [current, setCurrent] = useState<Current | null>(null);
-  const [slim, setSlim] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [loaded, setLoaded] = useState<Current | null>(null);
+  const current = loaded && loaded.ev.id === eventId ? loaded : null;
+  const slim = useSyncExternalStore(subscribeSlim, readSlim, () => false);
+  const [openAt, setOpenAt] = useState<string | null>(null); // the mobile menu, open on this path only
+  const open = openAt === path;
 
-  useEffect(() => { try { setSlim(localStorage.getItem(KEY) === "slim"); } catch {} }, []);
   useEffect(() => {
     const bump = () => setTick((t) => t + 1);
     addEventListener(CHANGED, bump);
     return () => removeEventListener(CHANGED, bump);
   }, []);
-  useEffect(() => setOpen(false), [path]);
   useEffect(() => {
-    if (!eventId) return setCurrent(null);
+    if (!eventId) return;
     let live = true;
     // Deadlines need a dated profile (409 before that), so ask only once the event has one.
     Promise.all([api.getEvent(eventId), api.listDocuments(eventId)])
       .then(async ([ev, docs]) => ({ ev, docs, deadlines: ev.profile?.date.value ? await api.deadlines(eventId).catch(() => []) : [] }))
-      .then((c) => live && setCurrent(c))
+      .then((c) => live && setLoaded(c))
       .catch(() => {});
     return () => { live = false; };
   }, [eventId, path, tick]);
 
-  const toggle = () => setSlim((s) => { try { localStorage.setItem(KEY, s ? "wide" : "slim"); } catch {} return !s; });
+  const toggle = () => { try { localStorage.setItem(KEY, slim ? "wide" : "slim"); } catch {} slimSubs.forEach((f) => f()); };
   const ctx = { path, name, events, eventId, current, toggle };
 
   return (
@@ -62,7 +67,7 @@ export function Sidebar({ name }: { name: string | null }) {
       </aside>
       <div className="flex items-center justify-between border-b border-border bg-neutral-50 px-4 py-2 lg:hidden">
         <Link href="/dashboard" className="flex min-h-11 items-center gap-2.5" aria-label="HostReady home"><Mark size={26} /><span className="text-lg font-semibold text-foreground">HostReady</span></Link>
-        <button onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-label="Menu" className="press grid size-11 place-items-center rounded-lg hover:bg-neutral-100"><Menu /></button>
+        <button onClick={() => setOpenAt(open ? null : path)} aria-expanded={open} aria-label="Menu" className="press grid size-11 place-items-center rounded-lg hover:bg-neutral-100"><Menu /></button>
       </div>
       {open && <div className="border-b border-border bg-neutral-50 lg:hidden"><Wide {...ctx} mobile /></div>}
     </>
@@ -78,7 +83,7 @@ const stepFlag = (slug: string, c: Current | null) =>
   : slug === "site-plan" ? !!c?.docs.some((d) => d.documentType === "site_plan")
   : slug === "deadlines" ? soonDeadline(c) : false;
 
-const row = (active: boolean) => cx("flex min-h-10 items-center gap-3 rounded-xl px-3 text-base",
+const row = (active: boolean) => cx("flex min-h-11 items-center gap-3 rounded-xl px-3 text-base",
   active ? "bg-background font-medium text-foreground shadow-sm" : "text-neutral-700 hover:bg-neutral-100 hover:text-foreground");
 
 /** Expanded sidebar. */
@@ -91,7 +96,7 @@ function Wide({ path, name, events, eventId, current, toggle, mobile }: Ctx) {
           <Link href="/dashboard" className="press flex min-h-11 items-center gap-2.5 rounded-lg" aria-label="HostReady home">
             <Mark size={26} /><span className="text-lg font-semibold tracking-[-0.01em] text-foreground">HostReady</span>
           </Link>
-          <button onClick={toggle} aria-label="Collapse sidebar" title="Collapse sidebar" className="press grid size-10 place-items-center rounded-lg text-neutral-600 hover:bg-neutral-100 hover:text-foreground"><PanelLeft /></button>
+          <button onClick={toggle} aria-label="Collapse sidebar" title="Collapse sidebar" className="press grid size-11 place-items-center rounded-lg text-neutral-600 hover:bg-neutral-100 hover:text-foreground"><PanelLeft /></button>
         </div>
       )}
 

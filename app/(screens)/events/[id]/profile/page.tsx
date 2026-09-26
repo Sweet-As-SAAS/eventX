@@ -47,6 +47,7 @@ export default function ProfilePage({ params, searchParams }: PageProps<"/events
   const [profile, setProfile] = useState<EventProfile | null>(null);
   const [questions, setQuestions] = useState<FollowUpQuestion[] | null>(null);
   const [cls, setCls] = useState<Classification | null>(null);
+  const [clsFailed, setClsFailed] = useState(false);
   const [editing, setEditing] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [leaving, setLeaving] = useState(false);
@@ -60,7 +61,7 @@ export default function ProfilePage({ params, searchParams }: PageProps<"/events
         const detail = await api.getEvent(id);
         setEv(detail);
         setCls(detail.classification);
-        if (!detail.classification) api.classify(id).then(setCls).catch(() => {});
+        if (!detail.classification) api.classify(id).then(setCls).catch(() => setClsFailed(true)); // optional: the flow goes on without it
         const r = detail.profile && !fresh ? await api.getProfile(id) : await api.buildProfile(id);
         setProfile(r.profile);
         setQuestions(r.questions);
@@ -111,7 +112,7 @@ export default function ProfilePage({ params, searchParams }: PageProps<"/events
 
   return (
     <div className="step-in max-w-[1100px] pb-4">
-      <p className="text-sm font-semibold uppercase tracking-[0.04em] text-primary">Step 1 of 4 · Check it looks right</p>
+      <p className="text-[15px] font-semibold text-primary">Check it looks right</p>
       {name.editing ? <div className="mt-3 max-w-md">{name.form}</div> : (
         <div className="mt-2 flex items-center gap-3">
           <h1 className="text-5xl font-semibold leading-[1.05] tracking-[-0.025em] text-foreground sm:text-[3.25rem]">{p.name.value ?? "Your event"}</h1>
@@ -147,13 +148,14 @@ export default function ProfilePage({ params, searchParams }: PageProps<"/events
 
       {landE.editing ? <div className="mt-6 max-w-md">{landE.form}</div> : (
         <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-[15px]">
-          {cls && cls.category !== "unclear" && <span className="rounded-full border border-neutral-300 px-3 py-1 font-medium text-foreground">Likely a {cls.category} event</span>}
           <span className="text-neutral-600">
             {COUNCIL_LABEL[ev.council]}{land === true ? " land" : land === false ? ", not council land" : ""}{p.venue.councilLand.source === "inferred" && " (our guess)"}
           </span>
-          <button onClick={landE.open} className="font-semibold text-primary hover:underline">Change</button>
+          <button onClick={landE.open} className="press inline-flex min-h-11 items-center rounded-lg px-2 font-semibold text-primary hover:underline">Change</button>
         </div>
       )}
+
+      <ClassificationNote cls={cls} failed={clsFailed} />
 
       <dl className="mt-12 grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
         {FACTS.map((label) => {
@@ -177,30 +179,56 @@ export default function ProfilePage({ params, searchParams }: PageProps<"/events
           <p className="max-w-[650px] text-lg leading-[1.75] text-foreground"><MarkedText text={ev.description} phrases={findPhrases(ev.description, p)} /></p>
           <p className="mt-4 flex flex-wrap gap-x-5 text-[15px] text-neutral-600">
             Highlights show what we used.
-            <Link href={`/new?from=${id}`} className="font-semibold text-primary hover:underline">Change description</Link>
+            <Link href={`/new?from=${id}`} className="inline-flex min-h-11 items-center font-semibold text-primary hover:underline">Change description</Link>
           </p>
         </div>
       </section>
 
       <div className="mt-10 flex flex-wrap items-center gap-5">
         <Button onClick={confirm} busy={leaving} disabled={!questions} className="min-h-12 px-7 text-[17px]">Looks right</Button>
-        <p className="text-base text-neutral-600">{!questions ? "" : n ? `Next, ${questionsLabel(n)}.` : "Next, your documents."}</p>
+        <p className="text-base text-neutral-600" aria-live="polite">{leaving ? "Working out which documents the council needs…" : n ? `Next, ${questionsLabel(n)}.` : "Next, your documents."}</p>
       </div>
     </div>
+  );
+}
+
+/** F14: community or commercial, always "likely", with the AI's reasoning. We hold no verified fee, so the fee always says so. */
+function ClassificationNote({ cls, failed }: { cls: Classification | null; failed: boolean }) {
+  const fee = <p className="mt-2 text-[15px] text-neutral-700"><span className="font-semibold text-foreground">Council fee: </span>varies, check with council.</p>;
+  if (!cls) {
+    return (
+      <section aria-live="polite" className="mt-6 max-w-[650px] rounded-xl bg-neutral-50 px-5 py-4">
+        {failed
+          ? <p className="text-[15px] text-neutral-700">We couldn&apos;t tell yet whether the council will see this as a community or commercial event. Ask them when you apply.</p>
+          : <p role="status" className="flex items-center gap-2 text-[15px] font-medium text-primary"><Spinner /> Checking whether it&apos;s a community or commercial event…</p>}
+        {fee}
+      </section>
+    );
+  }
+  return (
+    <section aria-labelledby="cls" className="mt-6 max-w-[650px] rounded-xl bg-neutral-50 px-5 py-4">
+      <h2 id="cls" className="text-[17px] font-semibold text-foreground">
+        {cls.category === "unclear" ? "Community or commercial: not clear yet" : `Likely a ${cls.category} event`}
+      </h2>
+      <p className="mt-1 text-[15px] text-neutral-700">{cls.reasoning}</p>
+      {cls.howToPresent && <p className="mt-2 text-[15px] text-neutral-700"><span className="font-semibold text-foreground">When you apply: </span>{cls.howToPresent}</p>}
+      {fee}
+      <p className="mt-2 text-sm text-muted-foreground">The council makes the final call on this.</p>
+    </section>
   );
 }
 
 function EditButton({ label, onClick, className }: { label: string; onClick: () => void; className?: string }) {
   return (
     <button onClick={onClick} aria-label={label} title={label}
-      className={cx("press grid size-9 shrink-0 place-items-center rounded-lg text-neutral-600 hover:bg-neutral-100 hover:text-foreground", className)}>
+      className={cx("press grid size-11 shrink-0 place-items-center rounded-lg text-neutral-600 hover:bg-neutral-100 hover:text-foreground", className)}>
       <Pencil width={17} height={17} />
     </button>
   );
 }
 
 const ALCOHOL_OPTIONS = [["sold", "Sold"], ["free", "Given away"], ["byo", "BYO"], ["none", "No alcohol"]];
-const box = "block min-h-10 w-full rounded-lg border border-neutral-300 bg-background px-3 text-base text-foreground focus:border-primary focus:outline-none focus:ring-4 focus:ring-brand-100";
+const box = "block min-h-11 w-full rounded-lg border border-neutral-300 bg-background px-3 text-base text-foreground focus:border-primary focus:outline-none focus:ring-4 focus:ring-brand-100";
 
 /** Small inline form for one part of the event. Empty means "not set". */
 function EditForm({ inputs, profile, busy, onSave, onCancel }: {
@@ -222,7 +250,7 @@ function EditForm({ inputs, profile, busy, onSave, onCancel }: {
         const v = field(profile, path).value as string | number | boolean | null;
         if (kind === "bool") {
           return (
-            <label key={path} className="flex min-h-9 items-center gap-2.5 text-base text-foreground">
+            <label key={path} className="flex min-h-11 items-center gap-2.5 text-base text-foreground">
               <input type="checkbox" name={path} defaultChecked={v === true} className="size-4 accent-[var(--primary)]" /> {label}
             </label>
           );
@@ -243,8 +271,8 @@ function EditForm({ inputs, profile, busy, onSave, onCancel }: {
         );
       })}
       <div className="flex items-center gap-2 pt-1">
-        <Button type="submit" busy={busy} className="min-h-10 px-4 text-[15px]">Save</Button>
-        <Button type="button" variant="ghost" onClick={onCancel} className="min-h-10 px-3 text-[15px] !text-neutral-700 hover:!bg-neutral-50">Cancel</Button>
+        <Button type="submit" busy={busy} className="min-h-11 px-4 text-[15px]">Save</Button>
+        <Button type="button" variant="ghost" onClick={onCancel} className="min-h-11 px-3 text-[15px] !text-neutral-700 hover:!bg-neutral-50">Cancel</Button>
       </div>
     </form>
   );
