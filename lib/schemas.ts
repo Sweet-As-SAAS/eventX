@@ -5,7 +5,8 @@
 // Browser-safe: this file must never import server code.
 import { z } from "zod";
 
-export const CouncilSlug = z.enum(["ccc", "waimakariri"]);
+// Christchurch City Council is the only council (audit decision, 26 Sep 2026). Kept as an enum so adding one later is data.
+export const CouncilSlug = z.enum(["ccc"]);
 export type CouncilSlug = z.infer<typeof CouncilSlug>;
 
 export const FieldSource = z.enum(["stated", "inferred", "answered"]);
