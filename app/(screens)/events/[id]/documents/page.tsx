@@ -162,7 +162,7 @@ function DocumentDetail({ doc, profile, req, failed, retry, fixing, justFixed, o
         <p className="max-w-prose text-lg text-neutral-700">
           {doc.documentType === "event_permit_application"
             ? "It's the council's own form, so you lodge it. We've gathered your answers below to copy straight in."
-            : <>You handle this one. HostReady doesn&apos;t draft it.</>}
+            : <>You handle this one. EvntX doesn&apos;t draft it.</>}
         </p>
         {req && <p className="max-w-prose text-base text-neutral-700"><span className="font-semibold text-foreground">Why the council needs it: </span>{req.reason.replace(/\.?$/, ".")}</p>}
         {req && <SourceLine url={req.sourceUrl} checked={req.lastChecked} />}

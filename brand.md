@@ -1,4 +1,4 @@
-# HostReady brand
+# EvntX brand
 
 ## Positioning
 We help **NZ clubs, venues and community groups** solve **the council permits, licences and deadlines that stand between them and their event** through **one plain-English description that becomes a checked, council-ready pack**.
@@ -10,7 +10,7 @@ We help **NZ clubs, venues and community groups** solve **the council permits, l
 
 ## Messaging
 - Hero headline: Describe your event once. Get a council-ready pack.
-- Subheadline: Tell us what you're planning in your own words. HostReady works out what the council needs, drafts it, checks it against their checklist and keeps every deadline in view.
+- Subheadline: Tell us what you're planning in your own words. EvntX works out what the council needs, drafts it, checks it against their checklist and keeps every deadline in view.
 - Brand attributes: plain, sure-footed, on your side.
 
 ## Visual identity
@@ -18,7 +18,7 @@ We help **NZ clubs, venues and community groups** solve **the council permits, l
 - Display typeface: Bricolage Grotesque, 700 to 800, optical size 96 at display sizes. Confident, a little quirky, friendly. Page titles, hero, big numbers only.
 - Type scale: 1.25 ratio, 16px base: 12, 13, 16, 20, 25, 31, 39, 49, 61, 76.
 - Primary colour: Harbour `#2447D9` (buttons, links, focus, active step). Ink `#141724` for text. Neutrals are Harbour-tinted.
-- Marker `#D6E0FF`: the highlighter blue behind phrases HostReady understood. This is the brand's signature. Use it only for "this came from your words".
+- Marker `#D6E0FF`: the highlighter blue behind phrases EvntX understood. This is the brand's signature. Use it only for "this came from your words".
 - Semantic colours: pass `#157347`, needs a fix `#C0271D`, warning `#9A5B00`. Never used for brand moments. Always paired with an icon or a word.
 - Radius personality: balanced. 10px base. Inputs and buttons 8 to 10px, tags 6px, the site plan canvas 14px. Not one radius for everything.
 - Structure: no cards. Ruled rows, list and detail splits, whitespace and type for hierarchy. One primary button per view.

@@ -8,9 +8,9 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 <!-- END:nextjs-agent-rules -->
 
-# HostReady: shared context for coding agents
+# EvntX: shared context for coding agents
 
-HostReady turns a plain-English event description into a council-ready permit and liquor licence pack for New Zealand organisers, checked against council rules, with every deadline tracked. Weekend hackathon build (Saasthon, University of Canterbury). **Hard deadline: Sunday 27 Sep 2026, 10:00 NZDT. Clocks go forward at 2am Sunday. Deploy freeze 8am.**
+EvntX turns a plain-English event description into a council-ready permit and liquor licence pack for New Zealand organisers, checked against council rules, with every deadline tracked. Weekend hackathon build (Saasthon, University of Canterbury). **Hard deadline: Sunday 27 Sep 2026, 10:00 NZDT. Clocks go forward at 2am Sunday. Deploy freeze 8am.**
 
 Demo flow (the product, whatever the event): an organiser types one paragraph about their event. In under three minutes they get the list of documents the council needs and why, drafts checked against the council checklist (one red item turns green with "Fix"), a working-day timeline, a PDF pack, a reminder email that lands live, and an Eventbrite draft that only unlocks once every check is green. Then the same event switched to Waimakariri gives a different requirement list: "councils are data, not code".
 
@@ -47,7 +47,7 @@ npm run ingest:crawl -- ccc    # lane B pipeline: crawl → extract → load →
 9. **AI routes export `maxDuration = 60`** and wrap live calls in `withDemoFallback(live, isSeeded(ev) ? cached : null)`.
 10. **`lib/` uses relative imports** (so Vitest runs without config). `app/` may use `@/`.
 11. Screens call `lib/api/client.ts` only, never `fetch` directly, and never hardcode demo data.
-12. Every screen and the PDF carry the line "HostReady prepares documents. You review them and lodge them with the council. This is not legal advice." (already in the root layout and PDF).
+12. Every screen and the PDF carry the line "EvntX prepares documents. You review them and lodge them with the council. This is not legal advice." (already in the root layout and PDF).
 
 ## Where things live
 

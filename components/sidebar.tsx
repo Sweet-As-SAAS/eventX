@@ -61,7 +61,7 @@ export function Sidebar({ name }: { name: string | null }) {
         {slim ? <Rail {...ctx} /> : <Wide {...ctx} />}
       </aside>
       <div className="flex items-center justify-between border-b border-border bg-neutral-50 px-4 py-2 lg:hidden">
-        <Link href="/dashboard" className="flex min-h-11 items-center gap-2.5" aria-label="HostReady home"><Mark size={26} /><span className="text-lg font-semibold text-foreground">HostReady</span></Link>
+        <Link href="/dashboard" className="flex min-h-11 items-center gap-2.5" aria-label="EvntX home"><Mark size={26} /><span className="text-lg font-semibold text-foreground">EvntX</span></Link>
         <button onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-label="Menu" className="press grid size-11 place-items-center rounded-lg hover:bg-neutral-100"><Menu /></button>
       </div>
       {open && <div className="border-b border-border bg-neutral-50 lg:hidden"><Wide {...ctx} mobile /></div>}
@@ -88,8 +88,8 @@ function Wide({ path, name, events, eventId, current, toggle, mobile }: Ctx) {
     <nav aria-label="Workspace" className={cx("flex flex-col px-3.5 pb-4 pt-5", mobile ? "" : "h-full")}>
       {!mobile && (
         <div className="flex items-center justify-between pl-2">
-          <Link href="/dashboard" className="press flex min-h-11 items-center gap-2.5 rounded-lg" aria-label="HostReady home">
-            <Mark size={26} /><span className="text-lg font-semibold tracking-[-0.01em] text-foreground">HostReady</span>
+          <Link href="/dashboard" className="press flex min-h-11 items-center gap-2.5 rounded-lg" aria-label="EvntX home">
+            <Mark size={26} /><span className="text-lg font-semibold tracking-[-0.01em] text-foreground">EvntX</span>
           </Link>
           <button onClick={toggle} aria-label="Collapse sidebar" title="Collapse sidebar" className="press grid size-10 place-items-center rounded-lg text-neutral-600 hover:bg-neutral-100 hover:text-foreground"><PanelLeft /></button>
         </div>
@@ -162,7 +162,7 @@ function Rail({ path, name, events, eventId, current, toggle }: Ctx) {
   const d = date && /^\d{4}-\d{2}-\d{2}$/.test(date) ? new Date(`${date}T00:00:00Z`) : null;
   return (
     <nav aria-label="Workspace" className="flex h-full flex-col items-center gap-2 py-5">
-      <Link href="/dashboard" aria-label="HostReady home" className="press grid size-11 place-items-center rounded-lg"><Mark size={26} /></Link>
+      <Link href="/dashboard" aria-label="EvntX home" className="press grid size-11 place-items-center rounded-lg"><Mark size={26} /></Link>
       <Tile label="Expand sidebar" onClick={toggle}><PanelLeft /></Tile>
 
       {eventId ? (

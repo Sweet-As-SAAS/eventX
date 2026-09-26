@@ -1,4 +1,4 @@
--- HostReady initial schema. Paste into the Supabase SQL editor once (or `supabase db push`).
+-- EvntX initial schema. Paste into the Supabase SQL editor once (or `supabase db push`).
 -- Knowledge tables: written only by scripts/ingest with the service role. RLS on with no policies = closed to the public API.
 -- App tables: RLS per organisation. Server routes use the service role and filter by org explicitly (lib/api/server.ts).
 create extension if not exists vector with schema extensions;

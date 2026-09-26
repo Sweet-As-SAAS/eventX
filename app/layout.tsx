@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "sw
 const display = Inter_Tight({ subsets: ["latin"], variable: "--font-display-face", display: "swap" });
 
 export const metadata: Metadata = {
-  title: { default: "HostReady", template: "%s · HostReady" },
+  title: { default: "EvntX", template: "%s · EvntX" },
   description: "Describe your event once. Get a council-ready permit and liquor licence pack, checked and on time.",
 };
 
@@ -23,7 +23,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </Toaster>
         {/* Liability line required on every screen (TRD: Security, privacy and scraping compliance). */}
         <footer className="mx-auto w-full max-w-6xl px-4 pb-6 pt-10 text-sm text-muted-foreground sm:px-6">
-          HostReady prepares documents. You review them and lodge them with the council. This is not legal advice.
+          EvntX prepares documents. You review them and lodge them with the council. This is not legal advice.
         </footer>
       </body>
     </html>

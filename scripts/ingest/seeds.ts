@@ -30,5 +30,5 @@ export const councilArg = (): Council => {
 };
 
 export const KEYWORDS = ["event", "alcohol", "liquor", "licen", "road-closure", "temporary-road", "park", "fees", "noise", "food", "marquee", "safety", "form"];
-// TRD: the user agent names HostReady and a contact email. crawl.ts refuses to run until you replace the placeholder.
-export const USER_AGENT = "HostReadyBot/0.1 (hackathon research; contact: [YOUR EMAIL])";
+// TRD: the user agent names EvntX and a contact email. crawl.ts refuses to run until you replace the placeholder.
+export const USER_AGENT = "EvntXBot/0.1 (hackathon research; contact: [YOUR EMAIL])";

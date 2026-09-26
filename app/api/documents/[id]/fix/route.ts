@@ -8,7 +8,7 @@ import { MOCK, MOCK_FIXED_COOKIE, ok, fixture, handler, parseBody, requireOrg, l
 
 export const maxDuration = 60;
 
-// text: the organiser's own answer (a name, a provider, a menu) for facts HostReady must never invent.
+// text: the organiser's own answer (a name, a provider, a menu) for facts EvntX must never invent.
 const Body = z.object({ itemId: z.string(), text: z.string().trim().min(1).max(1500).optional() });
 
 /** Applies the suggested fix (or the organiser's own answer) for one failed checklist item, then re-checks. */
