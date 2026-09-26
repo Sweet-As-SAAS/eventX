@@ -1,6 +1,6 @@
 {
   "_about": "Working stage scenario, still subject to site-plan and product changes; do not build logic or default copy around its details. This seeded MOCK/DEMO_MODE run uses fictional organiser names, contact details, suppliers and arrangements for demonstration only. It is not an actual application or evidence that a special licence has been granted. Every key is validated by tests/contract.test.ts. Council rules and checklists for live events come from verified knowledge, not this fixture.",
-  "description": "Hagley Summer Sounds is a music festival at Hagley Park on Sunday 14 March, 12 till 9pm. Around 500 people, all ages welcome, with a kids zone and a bouncy castle. Live music from local bands on a main stage, a bar selling beer and wine to over 18s, four food trucks, and a couple of marquees for shade.",
+  "description": "Hagley Summer Sounds is a music festival at Hagley Park on Sunday 14 March, 12 till 9pm. Around 500 people, all ages welcome, with a kids zone and a bouncy castle. Live music from local bands on a main stage, a bar selling beer and wine to over 18s, four food trucks, and a couple of marquees for shade. Jordan Example from the Summer Sounds Trust is organising it, on 021 555 0199 or jordan@summersounds.example. Taylor Example is the duty manager, Southern Crowd Security is doing security, and the food trucks bring their own food.",
   "profile": {
     "name": {
       "value": "Hagley Summer Sounds",
@@ -79,8 +79,8 @@
         "source": "stated"
       },
       "mechanicalRides": {
-        "value": false,
-        "source": "inferred"
+        "value": null,
+        "source": null
       }
     },
     "generators": {
@@ -92,8 +92,8 @@
       "source": "stated"
     },
     "roadOrFootpathImpact": {
-      "value": false,
-      "source": "answered"
+      "value": null,
+      "source": null
     },
     "vehicleAccess": {
       "value": true,
@@ -101,8 +101,36 @@
     },
     "missing": [
       "structures.largestMarqueeSqm",
+      "roadOrFootpathImpact",
+      "structures.mechanicalRides",
       "structures.stageOver1m"
-    ]
+    ],
+    "people": {
+      "organiser": {
+        "value": "Jordan Example, Summer Sounds Trust",
+        "source": "stated"
+      },
+      "contact": {
+        "value": "021 555 0199, jordan@summersounds.example",
+        "source": "stated"
+      },
+      "dutyManager": {
+        "value": "Taylor Example",
+        "source": "stated"
+      },
+      "security": {
+        "value": "Southern Crowd Security",
+        "source": "stated"
+      },
+      "foodProvider": {
+        "value": "Each food truck provides its own food",
+        "source": "stated"
+      },
+      "wasteCollector": {
+        "value": null,
+        "source": null
+      }
+    }
   },
   "questions": [
     {
@@ -112,6 +140,23 @@
         "Under 100 sqm",
         "Over 100 sqm",
         "Not sure"
+      ]
+    },
+    {
+      "path": "roadOrFootpathImpact",
+      "question": "Will any roads or footpaths be closed or affected?",
+      "options": [
+        "Yes",
+        "No",
+        "Not sure"
+      ]
+    },
+    {
+      "path": "structures.mechanicalRides",
+      "question": "Any mechanical rides, like a Ferris wheel?",
+      "options": [
+        "Yes",
+        "No"
       ]
     }
   ],

@@ -34,6 +34,7 @@ export default function QuestionsPage({ params }: PageProps<"/events/[id]/questi
   const [later, setLater] = useState<Set<RoleKey>>(new Set());
   const [saving, setSaving] = useState<string | null>(null);
   const [leaving, setLeaving] = useState(false);
+  const [showPeople, setShowPeople] = useState(false); // everyone already named: a summary line until they ask to change
 
   const load = (r: { profile: EventProfile; questions: FollowUpQuestion[] }) => { setProfile(r.profile); setQuestions(r.questions); };
   useEffect(() => {
@@ -75,6 +76,7 @@ export default function QuestionsPage({ params }: PageProps<"/events/[id]/questi
   const roles = profile ? rolesFor(profile) : [];
   const named = roles.filter((r) => (people[r.key] ?? "").trim()).length;
   const organiser = (people.organiser ?? "").trim();
+  const allNamed = !!profile && roles.every((r) => profile.people[r.key].value);
   const title = n > 0 ? questionsLabel(n) : "who's doing what";
 
   return (
@@ -110,7 +112,14 @@ export default function QuestionsPage({ params }: PageProps<"/events/[id]/questi
         </ul>
       )}
 
-      {roles.length > 0 && (
+      {roles.length > 0 && allNamed && !showPeople && (
+        <p className="mt-10 flex flex-wrap items-center gap-x-4 text-base text-neutral-700">
+          <span>Your description already names all {roles.length} people the council asks for, so they&apos;re in every document.</span>
+          <button onClick={() => setShowPeople(true)} className="press inline-flex min-h-11 items-center font-semibold text-primary hover:underline">Change names</button>
+        </p>
+      )}
+
+      {roles.length > 0 && (!allNamed || showPeople) && (
         <section aria-labelledby="people" className="mt-12">
           {n > 0 && <h2 id="people" className="text-2xl font-semibold text-foreground">Who&apos;s doing what</h2>}
           <p className={cx("max-w-2xl text-base text-neutral-600", n > 0 && "mt-2")} id={n > 0 ? undefined : "people"}>

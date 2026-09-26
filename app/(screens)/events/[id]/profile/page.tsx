@@ -7,7 +7,7 @@ import type { Classification, EventDetail, EventProfile, FollowUpQuestion } from
 import { COUNCIL_LABEL, questionsLabel } from "@/components/format";
 import { field, findPhrases, keyFacts } from "@/components/profile-fields";
 import { MarkedText } from "@/components/marked-text";
-import { Calendar, Food, Glass, People, Pin, Tent } from "@/components/icons";
+import { Calendar, Food, Glass, IdCard, People, Pin, Tent } from "@/components/icons";
 import { peopleToAsk } from "@/components/people";
 import { useFail } from "@/components/toast";
 import { Button, Skeleton, Spinner } from "@/components/ui";
@@ -114,6 +114,7 @@ export default function ProfilePage({ params, searchParams }: PageProps<"/events
     { label: "Alcohol", icon: Glass, ...fact("Alcohol") },
     { label: "Food", icon: Food, ...fact("Food") },
     { label: "Setup", icon: Tent, ...fact("Setup") },
+    { label: "Organiser", icon: IdCard, value: p.people.organiser.value ?? undefined, sub: p.people.contact.value ?? undefined },
   ];
 
   return (
