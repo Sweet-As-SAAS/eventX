@@ -1,0 +1,37 @@
+{
+  "url": "https://ccc.govt.nz/assets/Documents/News-Events/Events/Running-an-event/Risk-Assessment-template.doc",
+  "verified": true,
+  "reviewedBy": "lane B, 26 Sep 2026: CCC Safety Risk Assessment Form (linked from event resources)",
+  "rules": [],
+  "checklists": [
+    {
+      "documentType": "hazard_register",
+      "items": [
+        { "id": "activity", "text": "Each row describes the activity and how it could pose a risk", "sourceQuote": "Describe the activity and the ways in which it could pose a risk" },
+        { "id": "hazards", "text": "Each row names the hazards (e.g. injury, electric shock, falls from height, crushing)", "sourceQuote": "e.g. personal injury, electric shock, people or objects falling from height, crushing" },
+        { "id": "controls", "text": "Each row describes controls that reduce the risk to a tolerable or acceptable rating", "sourceQuote": "Describe controls used to reduce risk to a tolerable or preferably acceptable rating" },
+        { "id": "scoring", "text": "Risk is scored before and after controls as severity x likelihood (1-5 each)", "sourceQuote": "Risk Scoring Key Severity Likelihood" },
+        { "id": "unacceptable", "text": "No residual risk scores 10 to 25 (unacceptable: do not proceed)", "sourceQuote": "10 to 25 Unacceptable Do not proceed; seek immediate guidance from the safety team" },
+        { "id": "owner", "text": "Each row names the person responsible for the controls", "sourceQuote": "Person responsible for the controls" },
+        { "id": "distributed", "text": "The register is given to everyone named as an owner", "sourceQuote": "This form must be distributed to all persons named in the Owner column" }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "documentType": "hazard_register",
+      "sections": [
+        "Activity",
+        "Hazards",
+        "Persons at risk",
+        "Risk before control measures (severity x likelihood)",
+        "Controls",
+        "Residual risk after control measures",
+        "Additional controls",
+        "Owner"
+      ]
+    }
+  ],
+  "leadTimes": [],
+  "fees": []
+}
