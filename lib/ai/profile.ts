@@ -6,7 +6,7 @@ import { conditionPaths, type Rule } from "../rules/engine";
 /** Step 1. `today` is the NZ date (nzToday) so "this Sunday" resolves correctly. */
 export async function buildProfile(description: string, council: CouncilSlug, today: string) {
   const profile = await structured({
-    schema: EventProfile, name: "event_profile", model: "fast", system: PROFILE_SYSTEM,
+    schema: EventProfile.omit({ people: true }), name: "event_profile", model: "fast", system: PROFILE_SYSTEM,
     user: `Reference date: ${today}\nCouncil: ${council}\nDescription:\n${description}`,
   });
   const date = resolveStatedDate(description, today, profile.date);
@@ -43,7 +43,8 @@ export function resolveStatedDate(description: string, today: string, modelDate:
 }
 
 /** Keep question paths tied to actual unknown fields, independent of how the model spelled them. */
-export function missingPaths(profile: EventProfile): string[] {
+/** People are asked on their own (Questions page), so they never count as missing from the description. */
+export function missingPaths(profile: Omit<EventProfile, "people">): string[] {
   const paths: string[] = [];
   const visit = (value: unknown, path: string) => {
     if (!value || typeof value !== "object" || Array.isArray(value)) return;
@@ -52,7 +53,7 @@ export function missingPaths(profile: EventProfile): string[] {
       return;
     }
     for (const [key, child] of Object.entries(value)) {
-      if (key !== "missing") visit(child, path ? `${path}.${key}` : key);
+      if (key !== "missing" && key !== "people") visit(child, path ? `${path}.${key}` : key);
     }
   };
   visit(profile, "");

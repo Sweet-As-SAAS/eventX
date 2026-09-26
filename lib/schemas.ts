@@ -16,6 +16,19 @@ const f = <T extends z.ZodType>(t: T) =>
 
 // ---------- AI outputs ----------
 
+/** Who's doing what. The organiser types these on the Questions page; drafts use them instead of [NAME] gaps. */
+export const People = z.object({
+  organiser: f(z.string()), // the applicant, in charge overall
+  contact: f(z.string()), // the organiser's phone and email
+  dutyManager: f(z.string()),
+  security: f(z.string()),
+  foodProvider: f(z.string()),
+  wasteCollector: f(z.string()),
+});
+export type People = z.infer<typeof People>;
+const unknown = { value: null, source: null };
+const NO_PEOPLE: People = { organiser: unknown, contact: unknown, dutyManager: unknown, security: unknown, foodProvider: unknown, wasteCollector: unknown };
+
 export const EventProfile = z.object({
   name: f(z.string()),
   councilSlug: CouncilSlug,
@@ -43,6 +56,7 @@ export const EventProfile = z.object({
   roadOrFootpathImpact: f(z.boolean()),
   vehicleAccess: f(z.boolean()),
   missing: z.array(z.string()).describe("Dot paths of fields the description did not settle"),
+  people: People.default(NO_PEOPLE),
 });
 export type EventProfile = z.infer<typeof EventProfile>;
 
@@ -148,7 +162,12 @@ export const EventDocument = z.object({
   status: DocumentStatus,
   content: DraftDocument.nullable(),
   checkResults: CheckResult.nullable(),
-  checklistSource: z.object({ url: z.string(), lastChecked: z.string().nullable() }).nullable(),
+  checklistSource: z.object({
+    url: z.string(),
+    lastChecked: z.string().nullable(),
+    /** The council's own wording behind each checklist item, so the screen can say why it's asked. */
+    quotes: z.array(z.object({ itemId: z.string(), quote: z.string() })).default([]),
+  }).nullable(),
 });
 export type EventDocument = z.infer<typeof EventDocument>;
 
