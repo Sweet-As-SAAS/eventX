@@ -26,7 +26,7 @@ You receive:
 | --- | --- | --- |
 | A | `buildProfile`, `followUps`, `applyAnswers` live | 8pm |
 | A | `draftDocument`, `checkDocument`, `applyFix` live; `classify` | midnight / 4am |
-| B | Verified `rules`, `templates`, `checklists` rows for CCC, then Waimakariri | midnight / 4am |
+| B | Verified `rules`, `templates`, `checklists` rows for CCC | midnight / 4am |
 
 You deliver:
 | To | What | When |

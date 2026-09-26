@@ -12,7 +12,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 HostReady turns a plain-English event description into a council-ready permit and liquor licence pack for New Zealand organisers, checked against council rules, with every deadline tracked. Weekend hackathon build (Saasthon, University of Canterbury). **Hard deadline: Sunday 27 Sep 2026, 10:00 NZDT. Clocks go forward at 2am Sunday. Deploy freeze 8am.**
 
-Demo flow (the product, whatever the event): an organiser types one paragraph about their event. In under three minutes they get the list of documents the council needs and why, drafts checked against the council checklist (one red item turns green with "Fix"), a working-day timeline, a PDF pack, a reminder email that lands live, and an Eventbrite draft that only unlocks once every check is green. Then the same event switched to Waimakariri gives a different requirement list: "councils are data, not code".
+Demo flow (the product, whatever the event): an organiser types one paragraph about their event. In under three minutes they get the list of documents the council needs and why, drafts checked against the council checklist (one red item turns green with "Fix"), a working-day timeline, a PDF pack, a reminder email that lands live, and an Eventbrite draft that only unlocks once every check is green. Christchurch City Council is the only council; councils stay data, not code.
 
 ## Demo scenario: a placeholder, not a spec
 
@@ -57,7 +57,7 @@ npm run ingest:crawl -- ccc    # lane B pipeline: crawl → extract → load →
 | `fixtures/demo-event.json` | Mocked run of the demo event; MOCK and DEMO_MODE source | A |
 | `lib/ai/*` | OpenAI client, prompts, profile + questions, classify, draft, check/fix, retrieval, demo fallback | A |
 | `scripts/ingest/*` | Crawl, extract, load, normalise, publish | B |
-| `lib/rules/ccc.ts`, `lib/rules/waimakariri.ts` | Hand-verified static rules (fallback + tests) | B |
+| `lib/rules/ccc.ts` | Hand-verified static rules (fallback + tests) | B |
 | `lib/rules/engine.ts`, `lib/deadlines/*` | Deterministic engines | C |
 | `app/api/*`, `lib/api/*`, `lib/supabase/*`, `proxy.ts`, `app/auth/*` | Routes, auth, DB access | C |
 | `lib/integrations/*`, `lib/pdf/*`, `vercel.json`, `supabase/migrations/*` | Eventbrite, Resend, PDF, cron, schema | C |

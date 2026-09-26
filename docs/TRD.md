@@ -4,12 +4,11 @@
 
 ## Overview and scope
 
-HostReady runs on a pre-built council knowledge base. Council rules, checklists, templates, forms and fees are scraped ahead of time from two council sites, reviewed by a human and stored in Supabase. At runtime the AI never browses the web, it reads only from our store, which makes the demo fast, repeatable and explainable.
+HostReady runs on a pre-built council knowledge base. Council rules, checklists, templates, forms and fees are scraped ahead of time from the CCC site, reviewed by a human and stored in Supabase. At runtime the AI never browses the web, it reads only from our store, which makes the demo fast, repeatable and explainable.
 
 | Council | Slug | Site | Demo role |
 | --- | --- | --- | --- |
-| Christchurch City Council | `ccc` | ccc.govt.nz | Primary demo, the demo event |
-| Waimakariri District Council | `waimakariri` | waimakariri.govt.nz | Same event switched to Rangiora proves "councils are data, not code". Never "WDC": that is Whangārei (wdc.govt.nz) |
+| Christchurch City Council | `ccc` | ccc.govt.nz | The only council (audit decision, 26 Sep 2026) |
 
 **In scope:** ingestion pipeline, knowledge base, event profiling, rules engine, drafting, checklist checking, deadline engine, PDF export, reminders, Eventbrite draft, auth.
 **Out of scope:** live scraping at runtime, real lodgement, payments, other councils.
@@ -68,11 +67,13 @@ flowchart LR
 | Document status adds `manual` | Official form, site plan and food licence are not AI drafts. Eventbrite unlocks when every document is `ready` or `manual` |
 | `Requirement.lastChecked`, `EventDocument.checklistSource` | F13: every requirement and checklist shows its source and last-checked date |
 | Auth: service-role client plus explicit org filter, with RLS as backup | The kit took `orgId` from the request body and had no auth |
-| Static CCC rules merge with published rules by id, per council | Publishing Waimakariri rules must not switch off the CCC fallback |
-| DEMO_MODE fallback only for the seeded event (same description, council ccc) | Never show the demo data for a judge's event or the Waimakariri switch |
+| Static CCC rules merge with published rules by id, per council | Publishing rules must not switch off the static CCC fallback |
+| DEMO_MODE fallback only for the seeded event (same description, council ccc) | Never show the demo data for a judge's event |
 | `nzToday()` for "today" in NZ; `nzLocalToUtc` fixed for the day DST changes | The demo is on the morning daylight saving starts |
 | Vercel `regions: ["syd1"]`, Supabase in Sydney | Every DB round trip stays in Australia instead of crossing to Washington |
 | Guest login (Supabase anonymous sign-in) next to email magic link | Judges can try it in one click; Supabase's built-in email is rate limited |
+| CCC is the only council: no council picker, every event is `ccc`, second council removed (migration `0003_ccc_only.sql`) | Audit decision, 26 Sep 2026 |
+| Reminder emails go only to `REMINDER_TO` | Safety: never email an address we have not configured |
 
 ## Knowledge ingestion (lane B)
 
@@ -90,7 +91,7 @@ CCC seeds (confirmed): event permits, conditions for events on public land, even
 
 CCC permit triggers (question 2 on the permits page): marquee over 100 sqm, stage over 1 m or large structures, bouncy castles or inflatables (high risk), mechanical rides, activities affecting roads or footpaths. Most applications need event details, a site plan, a health and safety management plan, waste management plan confirmation, possible fees and acceptance of the terms. These are hand-coded in `lib/rules/ccc.ts`.
 
-Waimakariri seeds: to find tonight with the site search ("events", "event permit", "special licence", "alcohol licensing", "road closure", "parks booking", "fees and charges"). Both councils run a District Licensing Committee: seed their alcohol licensing pages for special licence forms, fees, the 20 working day rule and host responsibility requirements.
+CCC runs a District Licensing Committee: seed its alcohol licensing pages for special licence forms, fees, the 20 working day rule and host responsibility requirements.
 
 ## Data model
 
@@ -100,7 +101,7 @@ Waimakariri seeds: to find tonight with the site search ("events", "event permit
 
 | Table | Key columns | Notes |
 | --- | --- | --- |
-| councils | id, slug (`ccc`, `waimakariri`), name, timezone | Seeded by the migration |
+| councils | id, slug (`ccc`), name, timezone | Seeded by the migration |
 | kb_sources | council_id, url, type, sha256, storage_path, fetched_at | Unique (council_id, url) |
 | kb_chunks | source_id, heading, content, embedding vector(1536) | HNSW index; `match_kb_chunks(council_slug, query_embedding, match_count)` |
 | rules | id (text), council_id, condition, outcome, source_url, source_quote, verified, last_checked | Merged with `lib/rules/ccc.ts` by id |
@@ -182,7 +183,7 @@ Dates use `Intl` with `Pacific/Auckland`, never hardcoded offsets. Daylight savi
 | Area | Requirement | Where |
 | --- | --- | --- |
 | Scraping etiquette | robots.txt, 1 req/s, user agent with contact email, seed list + depth 2, run once | `scripts/ingest/crawl.ts` |
-| Terms and copyright | Read the CCC terms of use and copyright pages, and Waimakariri's, before crawling. Store sources for our own use, always link back, never republish council documents as our own | `data/` is gitignored |
+| Terms and copyright | Read the CCC terms of use and copyright pages before crawling. Store sources for our own use, always link back, never republish council documents as our own | `data/` is gitignored |
 | Secrets | Server env vars only, never in the client or the repo. Secrets scan before the repo goes public | `.env*` gitignored |
 | Data access | Every query filtered by the caller's org; RLS on every table; knowledge tables closed to the public API | `lib/api/server.ts`, migration |
 | Personal data | Only event and organisation details. Demo uses fake people | |
@@ -199,7 +200,6 @@ Dates use `Intl` with `Pacific/Auckland`, never hardcoded offsets. Daylight savi
 | `tests/contract.test.ts` | Every fixture piece parses against its schema; questions match the follow-up logic; one red item and its fix | A | Passing |
 | Schema tests | Every live AI response parses, 10 runs of the seeded event | A | To do |
 | Golden path end to end | Describe to export to Eventbrite draft on the deployed URL | D | To do |
-| Council switch | Same event against Waimakariri returns a different, sensible list | A / B | To do |
 | Device check | Live URL on a phone and a second laptop, logged out and in | Lead | To do |
 
 Demo safety net: `DEMO_MODE=1` serves cached AI answers for the seeded event if a call takes over 20 s or fails. Deploy freeze 8am Sunday.
@@ -213,7 +213,7 @@ Four lanes, one contract. Everyone builds against `lib/schemas.ts` and the MOCK 
 | Now to +45m | Review schemas and fixture with the team, then freeze | Seed URLs, robots and terms check, start CCC crawl | Repo, Supabase, Vercel with MOCK=1 (docs/SETUP.md) | Deploy check, layout shell, stepper |
 | To 8pm | Profile and follow-ups live against CCC | Extract, chunk, embed CCC | Auth end to end, real events/profile/answers/requirements | Describe and Profile screens on MOCK |
 | 8pm to midnight | Drafting with retrieval, checking, fix | Normalise and review CCC rules, checklists, templates, publish | Real documents/draft/check/fix, deadlines | Documents and checklist screen |
-| Midnight to 4am | Classification, DEMO_MODE on every AI route | Waimakariri seeds, rules, publish | PDF export, Eventbrite draft, reminders | Site plan, deadlines, dashboard |
+| Midnight to 4am | Classification, DEMO_MODE on every AI route | CCC source re-check | PDF export, Eventbrite draft, reminders | Site plan, deadlines, dashboard |
 | 4am to 8am | Schema tests, prompt tuning on the seeded event | Check every source and fee shown on screen | Unit tests, secrets scan, seed demo org | End to end on live URL, phone check, polish |
 | 8am to 10am | Rehearse pitch twice, submit | Demo operator backup | Deploy freeze at 8am, watch logs | Demo driver |
 
@@ -230,7 +230,6 @@ Four lanes, one contract. Everyone builds against `lib/schemas.ts` and the MOCK 
 | B | C | Verified CCC rules | `rules` rows, npm test still green | midnight |
 | A | C | Draft, check, fix live | `draftDocument`, `checkDocument`, `applyFix` | midnight |
 | C | D | Real routes behind the same shapes | MOCK=0 on the preview | 2am |
-| B | Everyone | Waimakariri verified | rules/templates/checklists for `waimakariri` | 4am |
 
 ### Check-ins
 
@@ -240,15 +239,13 @@ Ten minutes at 8pm, midnight, 4am and 8am: done, blocked, need from whom. Anythi
 
 - [ ] The demo event runs from description to Eventbrite draft on the live URL with real AI calls
 - [ ] Every rule, fee and deadline on screen has a verified source and last-checked date
-- [ ] Switching the event to Waimakariri changes the requirements
 - [ ] DEMO_MODE fallback tested with the network throttled
 - [ ] Repo public or `justus-lumin` invited, no secrets in history
 - [ ] Live URL works on a phone and a second laptop, logged out and in
 
 ## Open technical questions
 
-- [ ] Waimakariri event permit, alcohol licensing and fees page URLs (B)
-- [ ] robots.txt and terms of use on both sites before crawling (B)
+- [ ] robots.txt and terms of use on ccc.govt.nz before crawling (B)
 - [ ] Does the CCC event permit form (tfaforms) expose field names, or map by label? (B, P2)
 - [ ] Are CCC special licence fees council-set or the national default bands? (B)
 - [ ] Host responsibility requirement wording and alcohol management plan threshold, with sources (B)
