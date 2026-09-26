@@ -16,7 +16,7 @@ const LINKS = [
 ];
 
 const STEPS = [
-  { title: "Tell us where and what", body: "One paragraph, typed or spoken. We work out the council from the place." },
+  { title: "Tell us where and what", body: "One paragraph, typed or spoken, about your Christchurch event." },
   { title: "Answer a question or two", body: "Only the ones that change what the council needs." },
   { title: "Get a checked pack", body: "Drafts checked line by line against the council's own checklist." },
   { title: "Lodge on time", body: "Every deadline in working days, with a reminder before each one." },
@@ -40,7 +40,7 @@ export default function Landing() {
           <Wordmark />
           <nav className="flex items-center gap-2">
             <Link href="/login" className="press inline-flex min-h-11 items-center rounded-lg px-3 text-base font-medium text-neutral-700 hover:text-foreground">Log in</Link>
-            <ButtonLink href="/dashboard" className="min-h-10 rounded-full px-5 text-base">Get started free</ButtonLink>
+            <ButtonLink href="/dashboard" className="min-h-11 rounded-full px-5 text-base">Get started free</ButtonLink>
           </nav>
         </header>
 
@@ -64,7 +64,7 @@ export default function Landing() {
         <section className="py-16 text-center sm:py-20" aria-labelledby="meet">
           <h2 id="meet" className="display text-4xl text-foreground sm:text-5xl">Meet HostReady</h2>
           <p className="mx-auto mt-4 max-w-xl text-lg text-muted-foreground">
-            Every event, document, licence and deadline in one place, checked against your council&apos;s own rules.
+            Every event, document, licence and deadline in one place, checked against Christchurch City Council&apos;s own rules.
           </p>
         </section>
       </div>

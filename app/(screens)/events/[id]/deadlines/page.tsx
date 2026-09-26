@@ -1,7 +1,7 @@
 "use client";
 import { use, useEffect, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
-import { api } from "@/lib/api/client";
+import { ApiError, api } from "@/lib/api/client";
 import { nzToday } from "@/lib/deadlines";
 import type { Deadline, EventbriteDraft, EventDetail, EventDocument } from "@/lib/schemas";
 import { daysBetween, fmtDate, fmtDay } from "@/components/format";
@@ -22,13 +22,18 @@ export default function DeadlinesPage({ params }: PageProps<"/events/[id]/deadli
   const [sent, setSent] = useState(false);
   const [creating, setCreating] = useState(false);
   const [draft, setDraft] = useState<EventbriteDraft | null>(null);
+  const [ebError, setEbError] = useState<string | null>(null);
+  const [dlError, setDlError] = useState<string | null>(null);
   const started = useRef(false);
   const today = nzToday();
 
   useEffect(() => {
     if (started.current) return;
     started.current = true;
-    api.deadlines(id).then(setDeadlines).catch(fail);
+    api.deadlines(id).then(setDeadlines).catch((e) => {
+      if (e instanceof ApiError && e.status === 401) return fail(e);
+      setDlError(e instanceof Error ? e.message : "Couldn't load your deadlines.");
+    });
     api.listDocuments(id).then(setDocs).catch(fail);
     api.getEvent(id).then(setEv).catch(fail);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -45,10 +50,15 @@ export default function DeadlinesPage({ params }: PageProps<"/events/[id]/deadli
 
   async function eventbrite() {
     setCreating(true);
+    setEbError(null);
     try {
       setDraft(await api.eventbrite(id));
-      toast("Eventbrite draft created.");
-    } catch (e) { fail(e); } finally { setCreating(false); }
+      toast("Eventbrite draft created. It isn't published.");
+    } catch (e) {
+      // 409: the route's own reason (documents not ready) stays on screen, not only in a toast
+      if (e instanceof ApiError && e.status === 409) setEbError(e.message);
+      else fail(e);
+    } finally { setCreating(false); }
   }
 
   const eventDate = ev?.profile?.date.value ?? null;
@@ -86,7 +96,7 @@ export default function DeadlinesPage({ params }: PageProps<"/events/[id]/deadli
                       <p className="text-base text-neutral-700">
                         {d.legalMinimum ? <>Legal minimum: <span className="font-semibold text-foreground">{fmtDate(d.legalMinimum)}</span></> : "No legal minimum published. Our recommended date is the one to aim for."}
                       </p>
-                      {d.sourceUrl && <SourceLine url={d.sourceUrl} checked={null} />}
+                      {d.sourceUrl && <SourceLine url={d.sourceUrl} checked={ev?.requirements.find((r) => r.documentType === d.documentType)?.lastChecked ?? null} />}
                     </div>
                   </li>
                 );
@@ -94,6 +104,11 @@ export default function DeadlinesPage({ params }: PageProps<"/events/[id]/deadli
             </ul>
             {deadlines.length === 0 && <p className="text-lg text-neutral-700">No deadlines yet. They appear once your event has a date and a document list.</p>}
           </>
+        ) : dlError ? (
+          <div className="space-y-3">
+            <p role="alert" className="text-lg text-neutral-700">{dlError}</p>
+            <p className="text-base text-neutral-700">Deadlines need your event date and document list. <Link href={`/events/${id}/profile`} className="font-semibold text-primary underline decoration-brand-200 underline-offset-2">Check your details</Link></p>
+          </div>
         ) : (
           <div className="space-y-4" aria-hidden><Skeleton className="h-16" /><Skeleton className="h-24" /><Skeleton className="h-24" /></div>
         )}
@@ -107,18 +122,23 @@ export default function DeadlinesPage({ params }: PageProps<"/events/[id]/deadli
           </Row>
           <Row icon={<Mail />} title="Reminders" body="We email you 14 days and 3 days before each deadline, so nothing slips.">
             <Button variant="secondary" busy={sending} onClick={remind}>
-              {sent ? <><Check className="text-success" /> Sent. Send again</> : "Send me the reminder now"}
+              {sending ? "Sending" : sent ? <><Check className="text-success" /> Sent. Send again</> : "Send me the reminder now"}
             </Button>
           </Row>
           <Row icon={unlocked ? <Ticket /> : <Lock />} title="Tickets on Eventbrite"
-            body={!docs ? "Checking your documents…" : unlocked
-              ? "Every document is ready, so tickets can go on sale. This creates a draft you publish yourself."
-              : <>Unlocks when every document is ready. {left} still {left === 1 ? "needs" : "need"} work. <Link href={`/events/${id}/documents`} className="font-semibold text-primary underline decoration-brand-200 underline-offset-2">Go to documents</Link></>}>
+            body={<span id="eventbrite-why" aria-live="polite">
+              {draft ? "Your Eventbrite draft is ready. It is a draft, not published: check it on Eventbrite and publish it yourself."
+                : !docs ? "Checking your documents…"
+                : creating ? "Creating your Eventbrite draft…"
+                : ebError ? <span className="text-destructive">{ebError}</span>
+                : unlocked ? "Every document is ready or yours to handle, so tickets can go on sale. This creates a draft on Eventbrite. Nothing is published."
+                : <>Locked until every document is ready. {left} still {left === 1 ? "needs" : "need"} work. <Link href={`/events/${id}/documents`} className="font-semibold text-primary underline decoration-brand-200 underline-offset-2">Go to documents</Link></>}
+            </span>}>
             {draft ? (
               <ButtonA href={draft.url} target="_blank" rel="noreferrer" variant="secondary"><External /> Open your Eventbrite draft</ButtonA>
             ) : (
-              <Button variant="secondary" busy={creating} disabled={!unlocked} onClick={eventbrite}>
-                {!unlocked && <Lock />} Create Eventbrite draft
+              <Button variant="secondary" busy={creating} disabled={!unlocked} aria-describedby="eventbrite-why" onClick={eventbrite}>
+                {!unlocked && <Lock />} {creating ? "Creating draft" : "Create Eventbrite draft"}
               </Button>
             )}
           </Row>
@@ -168,13 +188,12 @@ function Axis({ deadlines, today, eventDate, active }: { deadlines: Deadline[]; 
   }
 
   return (
-    <div aria-hidden className="pb-10 pt-8">
+    <div aria-hidden className="overflow-x-clip pb-10 pt-8">
       <div className="relative h-10">
         <div className="absolute inset-x-0 top-1/2 h-0.5 -translate-y-1/2 bg-neutral-200" />
         {periods.map(([a, b]) => (
-          <div key={a} className="absolute inset-y-0 rounded-md bg-warning-soft" style={{ left: pos(a), width: `calc(${pos(b)} - ${pos(a)})` }}>
-            <span className="absolute -top-6 left-0 whitespace-nowrap text-xs font-medium text-warning">Liquor holiday period</span>
-          </div>
+          // Named in the legend below; an inline label collides with the event-day label on a phone
+          <div key={a} className="absolute inset-y-0 rounded-md bg-warning-soft" style={{ left: pos(a), width: `calc(${pos(b)} - ${pos(a)})` }} />
         ))}
         {months.map((m) => (
           <span key={m} className="absolute top-full mt-2 -translate-x-1/2 text-xs text-muted-foreground" style={{ left: pos(m) }}>
@@ -199,9 +218,14 @@ function Axis({ deadlines, today, eventDate, active }: { deadlines: Deadline[]; 
   );
 }
 
-const Marker = ({ at, label, className }: { at: string; label: string; className: string }) => (
-  <span className="absolute inset-y-0 -translate-x-1/2" style={{ left: at }}>
-    <span className={cx("absolute left-1/2 top-0 h-full w-0.5 -translate-x-1/2", className)} />
-    <span className="absolute -top-6 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-semibold text-foreground">{label}</span>
-  </span>
-);
+// Labels near either end hang inwards, so they never push the page wider than a phone.
+const Marker = ({ at, label, className }: { at: string; label: string; className: string }) => {
+  const pct = parseFloat(at);
+  const side = pct < 15 ? "left-0" : pct > 85 ? "right-0" : "left-1/2 -translate-x-1/2";
+  return (
+    <span className="absolute inset-y-0 -translate-x-1/2" style={{ left: at }}>
+      <span className={cx("absolute left-1/2 top-0 h-full w-0.5 -translate-x-1/2", className)} />
+      <span className={cx("absolute -top-6 whitespace-nowrap text-xs font-semibold text-foreground", side)}>{label}</span>
+    </span>
+  );
+};

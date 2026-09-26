@@ -9,8 +9,8 @@ export const cx = (...c: (string | false | null | undefined)[]) => c.filter(Bool
 
 const BTN = {
   primary: "bg-primary text-primary-foreground hover:bg-brand-600 disabled:bg-neutral-300",
-  secondary: "border border-neutral-300 bg-background text-foreground hover:border-neutral-400 hover:bg-neutral-50 disabled:text-neutral-400",
-  ghost: "text-primary hover:bg-brand-50 disabled:text-neutral-400",
+  secondary: "border border-neutral-300 bg-background text-foreground hover:border-neutral-400 hover:bg-neutral-50 disabled:text-neutral-500",
+  ghost: "text-primary hover:bg-brand-50 disabled:text-neutral-500",
 };
 type Variant = keyof typeof BTN;
 const btn = (v: Variant, className?: string) =>
@@ -80,7 +80,7 @@ export function SourceLine({ url, checked, className }: { url: string; checked: 
     <p className={cx("text-sm text-muted-foreground", className)}>
       Source:{" "}
       {real ? (
-        <a href={url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-medium text-primary underline decoration-brand-200 underline-offset-2 hover:decoration-primary">
+        <a href={url} target="_blank" rel="noreferrer" className="relative inline-flex items-center gap-1 font-medium after:absolute after:-inset-y-3 after:inset-x-0 after:content-[''] text-primary underline decoration-brand-200 underline-offset-2 hover:decoration-primary">
           {sourceName(url)}
           <External width={13} height={13} />
         </a>

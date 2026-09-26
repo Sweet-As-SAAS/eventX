@@ -18,7 +18,6 @@ export const DOC_LABEL: Record<DocumentType, string> = {
 
 export const COUNCIL_LABEL: Record<CouncilSlug, string> = {
   ccc: "Christchurch City Council",
-  waimakariri: "Waimakariri District Council",
 };
 
 export const STATUS_LABEL: Record<DocumentStatus, string> = {
@@ -56,7 +55,7 @@ export function fmtTime(t: string) {
 export function sourceName(url: string) {
   try {
     const u = new URL(url);
-    const who = u.hostname.includes("ccc.govt.nz") ? "CCC" : u.hostname.includes("waimakariri") ? "Waimakariri DC" : u.hostname.replace(/^www\./, "");
+    const who = u.hostname.includes("ccc.govt.nz") ? "CCC" : u.hostname.replace(/^www\./, "");
     const page = u.pathname.split("/").filter(Boolean).pop()?.replace(/[-_]/g, " ");
     return page ? `${who} ${page}` : who;
   } catch {
