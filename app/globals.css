@@ -34,6 +34,7 @@
   --color-success-soft: var(--success-soft);
   --color-destructive-soft: var(--destructive-soft);
   --color-warning-soft: var(--warning-soft);
+  --font-logo: var(--font-logo-face), var(--font-ui);
   --ease-out: var(--ease-out);
   --ease-in-out: var(--ease-in-out);
 }

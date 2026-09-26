@@ -1,22 +1,25 @@
 import Link from "next/link";
-import { Mark, Wordmark } from "@/components/brand";
+import { Logotype, Mark, Wordmark } from "@/components/brand";
 import { DescribeForm } from "@/components/describe-form";
 import { LandingExample } from "@/components/landing-example";
 import { DOC_LABEL } from "@/components/format";
 import { Alert, Badge, Calendar, Check, Hand, Home as HomeIcon, Plus, Wallet } from "@/components/icons";
 import { ButtonLink } from "@/components/ui";
 import { cccRules } from "@/lib/rules/ccc";
+import fixture from "@/fixtures/demo-event.json";
 
-// An illustrative paragraph, deliberately not the demo event. Reasons and sources come from the verified CCC rules.
-const EXAMPLE = "Our school gala is on the field one Saturday in November. Around 600 people. The PTA runs a wine and beer tent, there's a bouncy castle and six food stalls.";
+// The hero paragraph is the demo event (team decision, 27 Sep 2026), so the landing page and the live demo tell one story.
+// Reasons and sources come from the verified CCC rules; a phrase missing from the paragraph just drops its row.
+const EXAMPLE = fixture.description;
 const LINKS = [
-  { phrase: "wine and beer tent", ruleId: "ccc-special-licence" },
+  { phrase: "Hagley Park", ruleId: "ccc-permit" },
+  { phrase: "a bar selling beer and wine", ruleId: "ccc-special-licence" },
   { phrase: "bouncy castle", ruleId: "ccc-inflatable" },
-  { phrase: "six food stalls", ruleId: "ccc-food" },
+  { phrase: "four food trucks", ruleId: "ccc-food" },
 ];
 
 const STEPS = [
-  { title: "Tell us where and what", body: "One paragraph, typed or spoken, about your Christchurch event." },
+  { title: "Tell us where and what", body: "One paragraph, typed or spoken, about your Christchurch event: a festival, a market, a gala." },
   { title: "Answer a question or two", body: "Only the ones that change what the council needs." },
   { title: "Get a checked pack", body: "Drafts checked line by line against the council's own checklist." },
   { title: "Lodge on time", body: "Every deadline in working days, with a reminder before each one." },
@@ -182,7 +185,7 @@ function AppWindow() {
       </div>
       <div className="grid md:grid-cols-[15rem_1fr]">
         <div className="hidden border-r border-border p-4 md:block">
-          <div className="flex items-center gap-2 px-2"><Mark size={24} /><span className="display text-lg font-medium">EvntX</span></div>
+          <div className="flex items-center gap-2 px-2"><Mark size={24} /><Logotype className="text-lg" /></div>
           <ul className="mt-5 space-y-0.5">
             {nav.map(([Icon, label, on]) => (
               <li key={label} className={`flex items-center gap-3 rounded-xl px-3 py-2 text-sm ${on ? "bg-neutral-100 font-semibold" : "text-neutral-700"}`}><Icon width={16} height={16} className="text-neutral-500" />{label}</li>
@@ -190,7 +193,7 @@ function AppWindow() {
           </ul>
           <p className="mt-6 border-t border-border px-3 pt-4 text-xs font-medium text-muted-foreground">Your events</p>
           <ul className="mt-2 space-y-0.5">
-            {["School gala", "Street market", "Club prizegiving"].map((e, i) => (
+            {[fixture.profile.name.value, "Riverside night market", "Autumn jazz picnic"].map((e, i) => (
               <li key={e} className={`flex items-center gap-3 rounded-xl px-3 py-2 text-sm ${i === 0 ? "bg-brand-50 font-semibold" : "text-neutral-700"}`}><Calendar width={16} height={16} className="text-neutral-500" />{e}</li>
             ))}
           </ul>
