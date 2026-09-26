@@ -1,0 +1,2569 @@
+{
+  "recordedAt": "2026-09-26T05:37:13.544Z",
+  "models": {
+    "fast": "gpt-4o-mini",
+    "strong": "gpt-4o"
+  },
+  "profiles": [
+    {
+      "name": {
+        "value": "Fundraiser for Riccarton Rugby Club",
+        "source": "stated"
+      },
+      "councilSlug": "ccc",
+      "date": {
+        "value": "2027-03-14",
+        "source": "stated"
+      },
+      "startTime": {
+        "value": "12:00",
+        "source": "stated"
+      },
+      "endTime": {
+        "value": "19:00",
+        "source": "stated"
+      },
+      "venue": {
+        "name": {
+          "value": "Hagley Park",
+          "source": "stated"
+        },
+        "councilLand": {
+          "value": true,
+          "source": "inferred"
+        }
+      },
+      "openToPublic": {
+        "value": true,
+        "source": "stated"
+      },
+      "peakAttendance": {
+        "value": 400,
+        "source": "stated"
+      },
+      "childrenAttending": {
+        "value": true,
+        "source": "stated"
+      },
+      "alcohol": {
+        "supply": {
+          "value": "sold",
+          "source": "stated"
+        },
+        "area": {
+          "value": "beer tent for adults",
+          "source": "stated"
+        }
+      },
+      "food": {
+        "stalls": {
+          "value": 3,
+          "source": "stated"
+        },
+        "cookingOnSite": {
+          "value": null,
+          "source": null
+        }
+      },
+      "structures": {
+        "marquees": {
+          "value": 2,
+          "source": "stated"
+        },
+        "largestMarqueeSqm": {
+          "value": null,
+          "source": null
+        },
+        "stageOver1m": {
+          "value": null,
+          "source": null
+        },
+        "inflatables": {
+          "value": true,
+          "source": "stated"
+        },
+        "mechanicalRides": {
+          "value": null,
+          "source": null
+        }
+      },
+      "generators": {
+        "value": null,
+        "source": null
+      },
+      "amplifiedSound": {
+        "value": true,
+        "source": "stated"
+      },
+      "roadOrFootpathImpact": {
+        "value": null,
+        "source": null
+      },
+      "vehicleAccess": {
+        "value": null,
+        "source": null
+      },
+      "missing": [
+        "food.cookingOnSite",
+        "structures.largestMarqueeSqm",
+        "structures.stageOver1m",
+        "structures.mechanicalRides",
+        "generators",
+        "roadOrFootpathImpact",
+        "vehicleAccess"
+      ]
+    },
+    {
+      "name": {
+        "value": "Fundraiser for Riccarton Rugby Club",
+        "source": "stated"
+      },
+      "councilSlug": "ccc",
+      "date": {
+        "value": "2027-03-14",
+        "source": "stated"
+      },
+      "startTime": {
+        "value": "12:00",
+        "source": "stated"
+      },
+      "endTime": {
+        "value": "19:00",
+        "source": "stated"
+      },
+      "venue": {
+        "name": {
+          "value": "Hagley Park",
+          "source": "stated"
+        },
+        "councilLand": {
+          "value": true,
+          "source": "inferred"
+        }
+      },
+      "openToPublic": {
+        "value": true,
+        "source": "stated"
+      },
+      "peakAttendance": {
+        "value": 400,
+        "source": "stated"
+      },
+      "childrenAttending": {
+        "value": true,
+        "source": "stated"
+      },
+      "alcohol": {
+        "supply": {
+          "value": "sold",
+          "source": "stated"
+        },
+        "area": {
+          "value": "beer tent for adults",
+          "source": "stated"
+        }
+      },
+      "food": {
+        "stalls": {
+          "value": 3,
+          "source": "stated"
+        },
+        "cookingOnSite": {
+          "value": null,
+          "source": null
+        }
+      },
+      "structures": {
+        "marquees": {
+          "value": 2,
+          "source": "stated"
+        },
+        "largestMarqueeSqm": {
+          "value": null,
+          "source": null
+        },
+        "stageOver1m": {
+          "value": null,
+          "source": null
+        },
+        "inflatables": {
+          "value": true,
+          "source": "stated"
+        },
+        "mechanicalRides": {
+          "value": null,
+          "source": null
+        }
+      },
+      "generators": {
+        "value": null,
+        "source": null
+      },
+      "amplifiedSound": {
+        "value": true,
+        "source": "stated"
+      },
+      "roadOrFootpathImpact": {
+        "value": null,
+        "source": null
+      },
+      "vehicleAccess": {
+        "value": null,
+        "source": null
+      },
+      "missing": [
+        "food.cookingOnSite",
+        "structures.largestMarqueeSqm",
+        "structures.stageOver1m",
+        "structures.mechanicalRides",
+        "generators",
+        "roadOrFootpathImpact",
+        "vehicleAccess"
+      ]
+    },
+    {
+      "name": {
+        "value": "Fundraiser for Riccarton Rugby Club",
+        "source": "stated"
+      },
+      "councilSlug": "ccc",
+      "date": {
+        "value": "2027-03-14",
+        "source": "stated"
+      },
+      "startTime": {
+        "value": "12:00",
+        "source": "stated"
+      },
+      "endTime": {
+        "value": "19:00",
+        "source": "stated"
+      },
+      "venue": {
+        "name": {
+          "value": "Hagley Park",
+          "source": "stated"
+        },
+        "councilLand": {
+          "value": true,
+          "source": "inferred"
+        }
+      },
+      "openToPublic": {
+        "value": true,
+        "source": "stated"
+      },
+      "peakAttendance": {
+        "value": 400,
+        "source": "stated"
+      },
+      "childrenAttending": {
+        "value": true,
+        "source": "stated"
+      },
+      "alcohol": {
+        "supply": {
+          "value": "sold",
+          "source": "stated"
+        },
+        "area": {
+          "value": "beer tent for adults",
+          "source": "stated"
+        }
+      },
+      "food": {
+        "stalls": {
+          "value": 3,
+          "source": "stated"
+        },
+        "cookingOnSite": {
+          "value": null,
+          "source": null
+        }
+      },
+      "structures": {
+        "marquees": {
+          "value": 2,
+          "source": "stated"
+        },
+        "largestMarqueeSqm": {
+          "value": null,
+          "source": null
+        },
+        "stageOver1m": {
+          "value": null,
+          "source": null
+        },
+        "inflatables": {
+          "value": true,
+          "source": "stated"
+        },
+        "mechanicalRides": {
+          "value": null,
+          "source": null
+        }
+      },
+      "generators": {
+        "value": null,
+        "source": null
+      },
+      "amplifiedSound": {
+        "value": true,
+        "source": "stated"
+      },
+      "roadOrFootpathImpact": {
+        "value": null,
+        "source": null
+      },
+      "vehicleAccess": {
+        "value": null,
+        "source": null
+      },
+      "missing": [
+        "food.cookingOnSite",
+        "structures.largestMarqueeSqm",
+        "structures.stageOver1m",
+        "structures.mechanicalRides",
+        "generators",
+        "roadOrFootpathImpact",
+        "vehicleAccess"
+      ]
+    },
+    {
+      "name": {
+        "value": "Fundraiser for Riccarton Rugby Club",
+        "source": "stated"
+      },
+      "councilSlug": "ccc",
+      "date": {
+        "value": "2027-03-14",
+        "source": "stated"
+      },
+      "startTime": {
+        "value": "12:00",
+        "source": "stated"
+      },
+      "endTime": {
+        "value": "19:00",
+        "source": "stated"
+      },
+      "venue": {
+        "name": {
+          "value": "Hagley Park",
+          "source": "stated"
+        },
+        "councilLand": {
+          "value": true,
+          "source": "inferred"
+        }
+      },
+      "openToPublic": {
+        "value": true,
+        "source": "stated"
+      },
+      "peakAttendance": {
+        "value": 400,
+        "source": "stated"
+      },
+      "childrenAttending": {
+        "value": true,
+        "source": "stated"
+      },
+      "alcohol": {
+        "supply": {
+          "value": "sold",
+          "source": "stated"
+        },
+        "area": {
+          "value": "beer tent for adults",
+          "source": "stated"
+        }
+      },
+      "food": {
+        "stalls": {
+          "value": 3,
+          "source": "stated"
+        },
+        "cookingOnSite": {
+          "value": null,
+          "source": null
+        }
+      },
+      "structures": {
+        "marquees": {
+          "value": 2,
+          "source": "stated"
+        },
+        "largestMarqueeSqm": {
+          "value": null,
+          "source": null
+        },
+        "stageOver1m": {
+          "value": null,
+          "source": null
+        },
+        "inflatables": {
+          "value": true,
+          "source": "stated"
+        },
+        "mechanicalRides": {
+          "value": null,
+          "source": null
+        }
+      },
+      "generators": {
+        "value": null,
+        "source": null
+      },
+      "amplifiedSound": {
+        "value": true,
+        "source": "stated"
+      },
+      "roadOrFootpathImpact": {
+        "value": null,
+        "source": null
+      },
+      "vehicleAccess": {
+        "value": null,
+        "source": null
+      },
+      "missing": [
+        "food.cookingOnSite",
+        "structures.largestMarqueeSqm",
+        "structures.stageOver1m",
+        "structures.mechanicalRides",
+        "generators",
+        "roadOrFootpathImpact",
+        "vehicleAccess"
+      ]
+    },
+    {
+      "name": {
+        "value": "Fundraiser for Riccarton Rugby Club",
+        "source": "stated"
+      },
+      "councilSlug": "ccc",
+      "date": {
+        "value": "2027-03-14",
+        "source": "stated"
+      },
+      "startTime": {
+        "value": "12:00",
+        "source": "stated"
+      },
+      "endTime": {
+        "value": "19:00",
+        "source": "stated"
+      },
+      "venue": {
+        "name": {
+          "value": "Hagley Park",
+          "source": "stated"
+        },
+        "councilLand": {
+          "value": true,
+          "source": "inferred"
+        }
+      },
+      "openToPublic": {
+        "value": true,
+        "source": "stated"
+      },
+      "peakAttendance": {
+        "value": 400,
+        "source": "stated"
+      },
+      "childrenAttending": {
+        "value": true,
+        "source": "stated"
+      },
+      "alcohol": {
+        "supply": {
+          "value": "sold",
+          "source": "stated"
+        },
+        "area": {
+          "value": "beer tent for adults",
+          "source": "stated"
+        }
+      },
+      "food": {
+        "stalls": {
+          "value": 3,
+          "source": "stated"
+        },
+        "cookingOnSite": {
+          "value": null,
+          "source": null
+        }
+      },
+      "structures": {
+        "marquees": {
+          "value": 2,
+          "source": "stated"
+        },
+        "largestMarqueeSqm": {
+          "value": null,
+          "source": null
+        },
+        "stageOver1m": {
+          "value": null,
+          "source": null
+        },
+        "inflatables": {
+          "value": true,
+          "source": "stated"
+        },
+        "mechanicalRides": {
+          "value": null,
+          "source": null
+        }
+      },
+      "generators": {
+        "value": null,
+        "source": null
+      },
+      "amplifiedSound": {
+        "value": true,
+        "source": "stated"
+      },
+      "roadOrFootpathImpact": {
+        "value": null,
+        "source": null
+      },
+      "vehicleAccess": {
+        "value": null,
+        "source": null
+      },
+      "missing": [
+        "food.cookingOnSite",
+        "structures.largestMarqueeSqm",
+        "structures.stageOver1m",
+        "structures.mechanicalRides",
+        "generators",
+        "roadOrFootpathImpact",
+        "vehicleAccess"
+      ]
+    },
+    {
+      "name": {
+        "value": "Fundraiser for Riccarton Rugby Club",
+        "source": "stated"
+      },
+      "councilSlug": "ccc",
+      "date": {
+        "value": "2027-03-14",
+        "source": "stated"
+      },
+      "startTime": {
+        "value": "12:00",
+        "source": "stated"
+      },
+      "endTime": {
+        "value": "19:00",
+        "source": "stated"
+      },
+      "venue": {
+        "name": {
+          "value": "Hagley Park",
+          "source": "stated"
+        },
+        "councilLand": {
+          "value": true,
+          "source": "inferred"
+        }
+      },
+      "openToPublic": {
+        "value": true,
+        "source": "stated"
+      },
+      "peakAttendance": {
+        "value": 400,
+        "source": "stated"
+      },
+      "childrenAttending": {
+        "value": true,
+        "source": "stated"
+      },
+      "alcohol": {
+        "supply": {
+          "value": "sold",
+          "source": "stated"
+        },
+        "area": {
+          "value": "beer tent for adults",
+          "source": "stated"
+        }
+      },
+      "food": {
+        "stalls": {
+          "value": 3,
+          "source": "stated"
+        },
+        "cookingOnSite": {
+          "value": null,
+          "source": null
+        }
+      },
+      "structures": {
+        "marquees": {
+          "value": 2,
+          "source": "stated"
+        },
+        "largestMarqueeSqm": {
+          "value": null,
+          "source": null
+        },
+        "stageOver1m": {
+          "value": null,
+          "source": null
+        },
+        "inflatables": {
+          "value": true,
+          "source": "stated"
+        },
+        "mechanicalRides": {
+          "value": null,
+          "source": null
+        }
+      },
+      "generators": {
+        "value": null,
+        "source": null
+      },
+      "amplifiedSound": {
+        "value": true,
+        "source": "stated"
+      },
+      "roadOrFootpathImpact": {
+        "value": null,
+        "source": null
+      },
+      "vehicleAccess": {
+        "value": null,
+        "source": null
+      },
+      "missing": [
+        "food.cookingOnSite",
+        "structures.largestMarqueeSqm",
+        "structures.stageOver1m",
+        "structures.mechanicalRides",
+        "generators",
+        "roadOrFootpathImpact",
+        "vehicleAccess"
+      ]
+    },
+    {
+      "name": {
+        "value": "Fundraiser for Riccarton Rugby Club",
+        "source": "stated"
+      },
+      "councilSlug": "ccc",
+      "date": {
+        "value": "2027-03-14",
+        "source": "stated"
+      },
+      "startTime": {
+        "value": "12:00",
+        "source": "stated"
+      },
+      "endTime": {
+        "value": "19:00",
+        "source": "stated"
+      },
+      "venue": {
+        "name": {
+          "value": "Hagley Park",
+          "source": "stated"
+        },
+        "councilLand": {
+          "value": true,
+          "source": "inferred"
+        }
+      },
+      "openToPublic": {
+        "value": true,
+        "source": "stated"
+      },
+      "peakAttendance": {
+        "value": 400,
+        "source": "stated"
+      },
+      "childrenAttending": {
+        "value": true,
+        "source": "stated"
+      },
+      "alcohol": {
+        "supply": {
+          "value": "sold",
+          "source": "stated"
+        },
+        "area": {
+          "value": "beer tent for adults",
+          "source": "stated"
+        }
+      },
+      "food": {
+        "stalls": {
+          "value": 3,
+          "source": "stated"
+        },
+        "cookingOnSite": {
+          "value": null,
+          "source": null
+        }
+      },
+      "structures": {
+        "marquees": {
+          "value": 2,
+          "source": "stated"
+        },
+        "largestMarqueeSqm": {
+          "value": null,
+          "source": null
+        },
+        "stageOver1m": {
+          "value": null,
+          "source": null
+        },
+        "inflatables": {
+          "value": true,
+          "source": "stated"
+        },
+        "mechanicalRides": {
+          "value": null,
+          "source": null
+        }
+      },
+      "generators": {
+        "value": null,
+        "source": null
+      },
+      "amplifiedSound": {
+        "value": true,
+        "source": "stated"
+      },
+      "roadOrFootpathImpact": {
+        "value": null,
+        "source": null
+      },
+      "vehicleAccess": {
+        "value": null,
+        "source": null
+      },
+      "missing": [
+        "food.cookingOnSite",
+        "structures.largestMarqueeSqm",
+        "structures.stageOver1m",
+        "structures.mechanicalRides",
+        "generators",
+        "roadOrFootpathImpact",
+        "vehicleAccess"
+      ]
+    },
+    {
+      "name": {
+        "value": "Fundraiser for Riccarton Rugby Club",
+        "source": "stated"
+      },
+      "councilSlug": "ccc",
+      "date": {
+        "value": "2027-03-14",
+        "source": "stated"
+      },
+      "startTime": {
+        "value": "12:00",
+        "source": "stated"
+      },
+      "endTime": {
+        "value": "19:00",
+        "source": "stated"
+      },
+      "venue": {
+        "name": {
+          "value": "Hagley Park",
+          "source": "stated"
+        },
+        "councilLand": {
+          "value": true,
+          "source": "inferred"
+        }
+      },
+      "openToPublic": {
+        "value": true,
+        "source": "stated"
+      },
+      "peakAttendance": {
+        "value": 400,
+        "source": "stated"
+      },
+      "childrenAttending": {
+        "value": true,
+        "source": "stated"
+      },
+      "alcohol": {
+        "supply": {
+          "value": "sold",
+          "source": "stated"
+        },
+        "area": {
+          "value": "beer tent for adults",
+          "source": "stated"
+        }
+      },
+      "food": {
+        "stalls": {
+          "value": 3,
+          "source": "stated"
+        },
+        "cookingOnSite": {
+          "value": null,
+          "source": null
+        }
+      },
+      "structures": {
+        "marquees": {
+          "value": 2,
+          "source": "stated"
+        },
+        "largestMarqueeSqm": {
+          "value": null,
+          "source": null
+        },
+        "stageOver1m": {
+          "value": null,
+          "source": null
+        },
+        "inflatables": {
+          "value": true,
+          "source": "stated"
+        },
+        "mechanicalRides": {
+          "value": null,
+          "source": null
+        }
+      },
+      "generators": {
+        "value": null,
+        "source": null
+      },
+      "amplifiedSound": {
+        "value": true,
+        "source": "stated"
+      },
+      "roadOrFootpathImpact": {
+        "value": null,
+        "source": null
+      },
+      "vehicleAccess": {
+        "value": null,
+        "source": null
+      },
+      "missing": [
+        "food.cookingOnSite",
+        "structures.largestMarqueeSqm",
+        "structures.stageOver1m",
+        "structures.mechanicalRides",
+        "generators",
+        "roadOrFootpathImpact",
+        "vehicleAccess"
+      ]
+    },
+    {
+      "name": {
+        "value": "Fundraiser for Riccarton Rugby Club",
+        "source": "stated"
+      },
+      "councilSlug": "ccc",
+      "date": {
+        "value": "2027-03-14",
+        "source": "stated"
+      },
+      "startTime": {
+        "value": "12:00",
+        "source": "stated"
+      },
+      "endTime": {
+        "value": "19:00",
+        "source": "stated"
+      },
+      "venue": {
+        "name": {
+          "value": "Hagley Park",
+          "source": "stated"
+        },
+        "councilLand": {
+          "value": true,
+          "source": "inferred"
+        }
+      },
+      "openToPublic": {
+        "value": true,
+        "source": "stated"
+      },
+      "peakAttendance": {
+        "value": 400,
+        "source": "stated"
+      },
+      "childrenAttending": {
+        "value": true,
+        "source": "stated"
+      },
+      "alcohol": {
+        "supply": {
+          "value": "sold",
+          "source": "stated"
+        },
+        "area": {
+          "value": "beer tent for adults",
+          "source": "stated"
+        }
+      },
+      "food": {
+        "stalls": {
+          "value": 3,
+          "source": "stated"
+        },
+        "cookingOnSite": {
+          "value": null,
+          "source": null
+        }
+      },
+      "structures": {
+        "marquees": {
+          "value": 2,
+          "source": "stated"
+        },
+        "largestMarqueeSqm": {
+          "value": null,
+          "source": null
+        },
+        "stageOver1m": {
+          "value": null,
+          "source": null
+        },
+        "inflatables": {
+          "value": true,
+          "source": "stated"
+        },
+        "mechanicalRides": {
+          "value": null,
+          "source": null
+        }
+      },
+      "generators": {
+        "value": null,
+        "source": null
+      },
+      "amplifiedSound": {
+        "value": true,
+        "source": "stated"
+      },
+      "roadOrFootpathImpact": {
+        "value": null,
+        "source": null
+      },
+      "vehicleAccess": {
+        "value": null,
+        "source": null
+      },
+      "missing": [
+        "food.cookingOnSite",
+        "structures.largestMarqueeSqm",
+        "structures.stageOver1m",
+        "structures.mechanicalRides",
+        "generators",
+        "roadOrFootpathImpact",
+        "vehicleAccess"
+      ]
+    },
+    {
+      "name": {
+        "value": "Fundraiser for Riccarton Rugby Club",
+        "source": "stated"
+      },
+      "councilSlug": "ccc",
+      "date": {
+        "value": "2027-03-14",
+        "source": "stated"
+      },
+      "startTime": {
+        "value": "12:00",
+        "source": "stated"
+      },
+      "endTime": {
+        "value": "19:00",
+        "source": "stated"
+      },
+      "venue": {
+        "name": {
+          "value": "Hagley Park",
+          "source": "stated"
+        },
+        "councilLand": {
+          "value": true,
+          "source": "inferred"
+        }
+      },
+      "openToPublic": {
+        "value": true,
+        "source": "stated"
+      },
+      "peakAttendance": {
+        "value": 400,
+        "source": "stated"
+      },
+      "childrenAttending": {
+        "value": true,
+        "source": "stated"
+      },
+      "alcohol": {
+        "supply": {
+          "value": "sold",
+          "source": "stated"
+        },
+        "area": {
+          "value": "beer tent for adults",
+          "source": "stated"
+        }
+      },
+      "food": {
+        "stalls": {
+          "value": 3,
+          "source": "stated"
+        },
+        "cookingOnSite": {
+          "value": null,
+          "source": null
+        }
+      },
+      "structures": {
+        "marquees": {
+          "value": 2,
+          "source": "stated"
+        },
+        "largestMarqueeSqm": {
+          "value": null,
+          "source": null
+        },
+        "stageOver1m": {
+          "value": null,
+          "source": null
+        },
+        "inflatables": {
+          "value": true,
+          "source": "stated"
+        },
+        "mechanicalRides": {
+          "value": null,
+          "source": null
+        }
+      },
+      "generators": {
+        "value": null,
+        "source": null
+      },
+      "amplifiedSound": {
+        "value": true,
+        "source": "stated"
+      },
+      "roadOrFootpathImpact": {
+        "value": null,
+        "source": null
+      },
+      "vehicleAccess": {
+        "value": null,
+        "source": null
+      },
+      "missing": [
+        "food.cookingOnSite",
+        "structures.largestMarqueeSqm",
+        "structures.stageOver1m",
+        "structures.mechanicalRides",
+        "generators",
+        "roadOrFootpathImpact",
+        "vehicleAccess"
+      ]
+    }
+  ],
+  "classifications": [
+    {
+      "category": "community",
+      "reasoning": "The event is a fundraiser for Riccarton RFC, which suggests it is a community or not-for-profit event. The council reference for Hagley Park indicates that community and not-for-profit events are classified separately from commercial events. The peak attendance of 400 fits within the community category for Hagley Park, which is 300 to 1000 people. Therefore, it is likely to be classified as a community event.",
+      "howToPresent": "Emphasise the fundraising purpose and community involvement of Riccarton RFC to support the community classification.",
+      "citedChunkIds": [
+        "2db13665-9560-4a2d-a63c-0594b02cba32"
+      ]
+    },
+    {
+      "category": "community",
+      "reasoning": "The event is a fundraiser for Riccarton RFC, which suggests it is a community or not-for-profit event. The council reference for Hagley Park indicates that community and not-for-profit events are classified separately from commercial events. Since the event is a fundraiser, it aligns with the community and not-for-profit category.",
+      "howToPresent": "Emphasise the fundraising nature of the event and its community focus to support the classification as a community event.",
+      "citedChunkIds": [
+        "2db13665-9560-4a2d-a63c-0594b02cba32"
+      ]
+    },
+    {
+      "category": "community",
+      "reasoning": "The event is a fundraiser for Riccarton RFC, which suggests it is a community or not-for-profit event. The council reference for Hagley Park indicates that community and not-for-profit events are classified separately from commercial events, with different fee structures. Since the event is a fundraiser, it aligns with the community and not-for-profit category as per the council's classification for Hagley Park events.",
+      "howToPresent": "Emphasise the fundraising nature of the event and its community focus to support the classification as a community event.",
+      "citedChunkIds": [
+        "2db13665-9560-4a2d-a63c-0594b02cba32"
+      ]
+    },
+    {
+      "category": "community",
+      "reasoning": "The event is a fundraiser for Riccarton RFC, which suggests it is a community or not-for-profit event. The council reference for Hagley Park indicates that community and not-for-profit events are classified separately from commercial events. The event's nature as a fundraiser aligns with community purposes, which typically involve raising funds for local organisations or causes rather than generating profit for commercial entities.",
+      "howToPresent": "Emphasise the fundraising aspect and the community involvement of Riccarton RFC to support the classification as a community event.",
+      "citedChunkIds": [
+        "2db13665-9560-4a2d-a63c-0594b02cba32"
+      ]
+    },
+    {
+      "category": "community",
+      "reasoning": "The event is a fundraiser for Riccarton RFC, which suggests it is a community or not-for-profit event. The council reference for Hagley Park indicates that community and not-for-profit events are classified separately from commercial events, with different fee structures. Since the event is a fundraiser, it aligns with the community and not-for-profit category as per the council's classification for Hagley Park events.",
+      "howToPresent": "Emphasize the fundraising nature of the event and its community focus to align with the community and not-for-profit category.",
+      "citedChunkIds": [
+        "2db13665-9560-4a2d-a63c-0594b02cba32"
+      ]
+    },
+    {
+      "category": "community",
+      "reasoning": "The event is a fundraiser for Riccarton RFC, which suggests it is a community or not-for-profit event. The council reference for Hagley Park indicates that community and not-for-profit events are classified separately from commercial events. The peak attendance of 400 fits within the community fee band for 300 to 1000 people, supporting the classification as a community event.",
+      "howToPresent": "Emphasise the fundraising nature of the event and its community focus to strengthen the community classification.",
+      "citedChunkIds": [
+        "2db13665-9560-4a2d-a63c-0594b02cba32"
+      ]
+    },
+    {
+      "category": "community",
+      "reasoning": "The event is a fundraiser for Riccarton RFC, which suggests it is a community or not-for-profit event. The council reference for Hagley Park indicates that community and not-for-profit events are classified separately from commercial events, with different fee structures. Since the event is a fundraiser, it aligns with the community and not-for-profit category as per the council's classification for Hagley Park events.",
+      "howToPresent": "Emphasize the fundraising aspect and the community involvement of Riccarton RFC to support the classification as a community event.",
+      "citedChunkIds": [
+        "2db13665-9560-4a2d-a63c-0594b02cba32"
+      ]
+    },
+    {
+      "category": "community",
+      "reasoning": "The event is a fundraiser for Riccarton RFC, which suggests it is a community or not-for-profit event. The council reference for Hagley Park indicates that community and not-for-profit events are classified separately from commercial events. The event's peak attendance of 400 fits within the community category for Hagley Park, which is 300 to 1000 people. This supports the classification as a community event.",
+      "howToPresent": "Emphasise the fundraising purpose and community involvement of Riccarton RFC to strengthen the community classification.",
+      "citedChunkIds": [
+        "2db13665-9560-4a2d-a63c-0594b02cba32"
+      ]
+    },
+    {
+      "category": "community",
+      "reasoning": "The event is a fundraiser for Riccarton RFC, which suggests it is a not-for-profit activity. According to the council's classification, events that are community or not-for-profit fall under the 'Community and Not-for-Profit' category. The event's peak attendance of 400 people fits within the 300 to 1000 people range for community events at Hagley Park, as per chunk 2db13665-9560-4a2d-a63c-0594b02cba32.",
+      "howToPresent": "Emphasise the not-for-profit nature of the fundraiser and its community focus to align with the 'Community and Not-for-Profit' category.",
+      "citedChunkIds": [
+        "2db13665-9560-4a2d-a63c-0594b02cba32"
+      ]
+    },
+    {
+      "category": "community",
+      "reasoning": "The event is a fundraiser for Riccarton RFC, which suggests it is a community or not-for-profit event. The council reference for Hagley Park specifies different fee structures for community and commercial events, with community events being those that are not-for-profit. Since the event is a fundraiser, it aligns with the community category as per the council's classification for Hagley Park events.",
+      "howToPresent": "Emphasise the fundraising nature of the event and its alignment with community and not-for-profit activities.",
+      "citedChunkIds": [
+        "2db13665-9560-4a2d-a63c-0594b02cba32"
+      ]
+    }
+  ],
+  "drafts": [
+    {
+      "documentType": "health_safety_plan",
+      "title": "Riccarton RFC Fundraiser Health and Safety Plan",
+      "sections": [
+        {
+          "heading": "Hazard identification, assessment, control and review",
+          "body": "A system will be implemented to identify, assess, control, and review hazards before and during the Riccarton RFC Fundraiser. This includes regular inspections and risk assessments of the site at Hagley Park. Identified hazards such as cooking on site, the use of generators, and the presence of inflatables will be assessed for risk. Controls will be put in place to mitigate these risks, such as ensuring all electrical equipment is properly installed and maintained, and inflatables are securely anchored. A review process will be conducted throughout the event to ensure ongoing safety."
+        },
+        {
+          "heading": "Health and safety responsibilities",
+          "body": "Health and safety responsibilities will be assigned to specific staff members and volunteers. [HEALTH AND SAFETY OFFICER NAME] will oversee the implementation of the health and safety plan. Volunteers will be briefed on their specific responsibilities, including monitoring crowd safety and ensuring compliance with safety protocols."
+        },
+        {
+          "heading": "Staff competency and supervision",
+          "body": "All staff and volunteers will be required to demonstrate the necessary knowledge and skills for their roles. Those lacking experience will be supervised by more experienced personnel. Training sessions will be conducted prior to the event to ensure everyone is adequately prepared."
+        },
+        {
+          "heading": "Pre-event site inspection",
+          "body": "A comprehensive site inspection will be conducted at Hagley Park prior to the event. This inspection will ensure that all structures, including marquees and inflatables, are safely erected and that the site is free from hazards. [INSPECTION TEAM LEADER NAME] will lead this inspection."
+        },
+        {
+          "heading": "Accident register",
+          "body": "An accident register will be maintained on site to record any incidents that occur during the event. This register will be reviewed regularly to identify any patterns or recurring issues that need addressing."
+        },
+        {
+          "heading": "Emergency plan",
+          "body": "An emergency plan specific to the Riccarton RFC Fundraiser will be in place. This plan will cover potential emergencies such as fire, medical incidents, and severe weather. Emergency procedures will be communicated to all staff and volunteers, and emergency contact numbers will be readily available."
+        },
+        {
+          "heading": "Health and safety briefings",
+          "body": "Documented health and safety briefings will be conducted for all staff and volunteers before each session of the event. These briefings will cover emergency procedures, hazard awareness, and individual responsibilities. Attendance will be recorded to ensure compliance."
+        },
+        {
+          "heading": "Working with partners and suppliers",
+          "body": "Collaboration with partners and suppliers will be essential to ensure public safety. All suppliers will be required to adhere to the health and safety standards set for the event. Regular communication will be maintained to address any safety concerns that arise."
+        }
+      ],
+      "placeholders": [
+        "[HEALTH AND SAFETY OFFICER NAME]",
+        "[INSPECTION TEAM LEADER NAME]"
+      ],
+      "citedChunkIds": [
+        "2c3648d0-e4b1-4cfe-8b01-f5b953d88d4c",
+        "dbc002d1-2e51-41fa-bb47-26b0a2f865bf"
+      ]
+    },
+    {
+      "documentType": "waste_management_confirmation",
+      "title": "Waste Management Confirmation for Riccarton RFC Fundraiser",
+      "sections": [
+        {
+          "heading": "How waste will be managed",
+          "body": "The organiser will ensure that all waste generated during the Riccarton RFC Fundraiser at Hagley Park is collected and disposed of appropriately. Waste management will involve setting up designated waste collection points throughout the event site to encourage proper disposal by attendees."
+        },
+        {
+          "heading": "Types and amounts of waste",
+          "body": "As the event is expecting fewer than 1000 attendees, a detailed estimate of the types and amounts of waste is not required. However, it is anticipated that waste will primarily consist of food packaging, beverage containers, and general litter from the food stalls and beer tent."
+        },
+        {
+          "heading": "Waste minimisation",
+          "body": "Although not required for this event size, the organiser is encouraged to implement waste minimisation strategies such as using recyclable materials and encouraging vendors to minimise packaging."
+        },
+        {
+          "heading": "Landfill diversion target",
+          "body": "A specific landfill diversion target is not required for this event size. However, the organiser is encouraged to aim for a high rate of recycling and composting to reduce landfill waste."
+        },
+        {
+          "heading": "Collection equipment",
+          "body": "The organiser will provide bins for general waste, recycling, and composting at various locations around the event site to facilitate waste collection and separation."
+        },
+        {
+          "heading": "Who is responsible",
+          "body": "The responsibility for waste collection and disposal lies with the event organiser. The organiser will need to confirm the individual or company responsible for this task."
+        },
+        {
+          "heading": "Collection schedule",
+          "body": "The organiser will need to establish a schedule for waste collection during the event. This should include regular checks and emptying of bins to prevent overflow."
+        },
+        {
+          "heading": "Litter and spillages",
+          "body": "The organiser will ensure that litter and spillages are promptly managed by having staff or volunteers regularly patrol the event area to clean up any waste or spills."
+        }
+      ],
+      "placeholders": [],
+      "citedChunkIds": [
+        "9e99c446-346e-49c9-b34d-76e28961a34f",
+        "71a6eb60-d1f3-4aab-97f8-cbd32c518ddf"
+      ]
+    },
+    {
+      "documentType": "hazard_register",
+      "title": "Hazard Register for Riccarton RFC Fundraiser",
+      "sections": [
+        {
+          "heading": "Activity",
+          "body": "1. Setting up and dismantling marquees and inflatables.\n2. Operating food stalls with on-site cooking.\n3. Managing the beer tent area where alcohol is sold.\n4. Use of generators for power supply.\n5. Amplified sound equipment operation."
+        },
+        {
+          "heading": "Hazards",
+          "body": "1. Personal injury from lifting heavy equipment or structures.\n2. Burns or fire hazards from cooking equipment.\n3. Alcohol-related incidents in the beer tent.\n4. Electric shock from generators.\n5. Hearing damage from loud amplified sound."
+        },
+        {
+          "heading": "Persons at risk",
+          "body": "1. Event staff and volunteers.\n2. Attendees, including children.\n3. Food stall operators.\n4. Performers and sound technicians."
+        },
+        {
+          "heading": "Risk before control measures (severity x likelihood)",
+          "body": "1. Personal injury: Severity 3 x Likelihood 3 = 9\n2. Burns/fire: Severity 4 x Likelihood 3 = 12\n3. Alcohol incidents: Severity 3 x Likelihood 4 = 12\n4. Electric shock: Severity 4 x Likelihood 2 = 8\n5. Hearing damage: Severity 3 x Likelihood 3 = 9"
+        },
+        {
+          "heading": "Controls",
+          "body": "1. Provide manual handling training and use of lifting equipment.\n2. Fire extinguishers and fire blankets at each cooking station.\n3. Designated sober supervisors in the beer tent.\n4. Regular inspection and maintenance of electrical equipment.\n5. Limit sound levels and provide ear protection for staff."
+        },
+        {
+          "heading": "Residual risk after control measures",
+          "body": "1. Personal injury: Severity 2 x Likelihood 2 = 4\n2. Burns/fire: Severity 3 x Likelihood 2 = 6\n3. Alcohol incidents: Severity 2 x Likelihood 3 = 6\n4. Electric shock: Severity 3 x Likelihood 1 = 3\n5. Hearing damage: Severity 2 x Likelihood 2 = 4"
+        },
+        {
+          "heading": "Additional controls",
+          "body": "1. Monitor and review manual handling practices.\n2. Conduct fire drills with staff.\n3. Regularly review alcohol management policies.\n4. Schedule regular electrical safety checks.\n5. Monitor sound levels throughout the event."
+        },
+        {
+          "heading": "Owner",
+          "body": "1. [EVENT SAFETY OFFICER NAME] for manual handling and electrical safety.\n2. [FIRE SAFETY OFFICER NAME] for fire safety.\n3. [ALCOHOL MANAGEMENT OFFICER NAME] for alcohol-related controls.\n4. [SOUND TECHNICIAN NAME] for sound level management."
+        }
+      ],
+      "placeholders": [
+        "[EVENT SAFETY OFFICER NAME]",
+        "[FIRE SAFETY OFFICER NAME]",
+        "[ALCOHOL MANAGEMENT OFFICER NAME]",
+        "[SOUND TECHNICIAN NAME]"
+      ],
+      "citedChunkIds": [
+        "31826aa8-1576-404c-a82f-28e341091630"
+      ]
+    },
+    {
+      "documentType": "special_licence_application",
+      "title": "Special Licence Application for Riccarton RFC Fundraiser",
+      "sections": [
+        {
+          "heading": "Application details",
+          "body": "This application is for a special licence for the Riccarton RFC Fundraiser event to be held on 14 March 2027. The event will take place at Hagley Park from 12:00 to 19:00. Alcohol will be sold in a designated beer tent for adults. The expected peak attendance is 400 people."
+        },
+        {
+          "heading": "Details of applicant",
+          "body": "[APPLICANT NAME] is the applicant for this special licence. Contact details and further information about the applicant's role and responsibilities at the event are required."
+        },
+        {
+          "heading": "Premises details",
+          "body": "The event will be held at Hagley Park, which is council land. Confirmation of the venue hire agreement and permission for alcohol use on the site is required. [EXISTING LICENCE STATUS] and no building work is conditional for the licence."
+        },
+        {
+          "heading": "Event details",
+          "body": "The Riccarton RFC Fundraiser is a genuine event aimed at raising funds. Alcohol will be sold in a beer tent designated for adults only. The event is open to the public, and children will be attending. Food will be available from three stalls, with cooking on site. Amplified sound will be used, and inflatables will be present. Vehicle access is required for the event setup."
+        },
+        {
+          "heading": "Conditions",
+          "body": "- Alcohol will be sold from 12:00 to 19:00 on 14 March 2027.\n- Food will be provided by three stalls, with cooking on site.\n- Low-alcohol and non-alcoholic drinks will be available.\n- Drinking water will be freely available.\n- Measures will be proposed to prevent service to minors, intoxicated persons, and uninvited guests.\n- Noise management strategies will be proposed to minimize disturbance.\n- Security measures will be proposed to prevent disorderly behaviour, nuisance, and vandalism.\n- Staff will be trained to ensure compliance with alcohol regulations.\n- Alternative transport options will be communicated to attendees."
+        },
+        {
+          "heading": "Documents attached",
+          "body": "- [SITE PLAN]\n- [CONFIRMATION OF OTHER CONSENTS]\n- [ALCOHOL MANAGEMENT PLAN]\n- [FOOD AND DRINKS MENUS]"
+        }
+      ],
+      "placeholders": [
+        "[APPLICANT NAME]",
+        "[EXISTING LICENCE STATUS]",
+        "[SITE PLAN]",
+        "[CONFIRMATION OF OTHER CONSENTS]",
+        "[ALCOHOL MANAGEMENT PLAN]",
+        "[FOOD AND DRINKS MENUS]"
+      ],
+      "citedChunkIds": [
+        "9ca30715-fe5a-40f4-971b-68764d784fe0",
+        "3f5d7c4e-4352-4e74-94bc-a671ba73086c",
+        "5f20cb3f-8139-40df-9529-581b18afacf4",
+        "9440d504-b677-41a9-8174-819ed626da92",
+        "85659beb-e612-49e2-bddd-7804b51087a2"
+      ]
+    },
+    {
+      "documentType": "alcohol_management_plan",
+      "title": "Alcohol Management Plan for Riccarton RFC Fundraiser",
+      "sections": [
+        {
+          "heading": "Type of event",
+          "body": "The Riccarton RFC Fundraiser is a public event held at Hagley Park on 14 March 2027, from 12:00 to 19:00. The event is expected to attract up to 400 attendees, including children. Alcohol will be sold in a designated beer tent for adults. The event's risks include managing intoxication, ensuring minors do not consume alcohol, and maintaining a safe environment for families."
+        },
+        {
+          "heading": "Promoting your event",
+          "body": "Pre-event communication will include information on alcohol restrictions, age limits, and expected behaviour. This will be disseminated through event promotions and signage at the venue."
+        },
+        {
+          "heading": "Intoxication",
+          "body": "Procedures will be established to monitor patrons and prevent intoxication. Staff will be trained to identify early signs of intoxication and intervene appropriately. A designated safe place will be identified for patrons who become intoxicated."
+        },
+        {
+          "heading": "Food",
+          "body": "[FOOD RESPONSIBLE PERSON] will ensure that food is available at all times while alcohol is sold. Three food stalls will be present, and food options will be promoted throughout the event."
+        },
+        {
+          "heading": "Low and non-alcohol beverages",
+          "body": "[BEVERAGE RESPONSIBLE PERSON] will ensure a reasonable range of low and non-alcohol beverages is available at all times. Free water will be readily available and promoted to all patrons."
+        },
+        {
+          "heading": "Minors",
+          "body": "ID checks will be conducted for anyone appearing under 25 years of age. Acceptable forms of identification will include a passport, New Zealand driver's licence, or HANZ 18+ card."
+        },
+        {
+          "heading": "Signage",
+          "body": "Signage will be displayed at each point of sale, including the licence and prohibited-person signage. This will ensure compliance with legal requirements."
+        },
+        {
+          "heading": "Safe transport",
+          "body": "Safe transport options will be promoted, including public transport and taxi services. Information will be displayed prominently at the event, and staff will assist patrons in arranging transport if needed."
+        },
+        {
+          "heading": "Alcohol promotions on the day",
+          "body": "Promotions will not encourage excessive drinking. No discounts or offers will be made that could lead to excessive consumption."
+        },
+        {
+          "heading": "Staff training",
+          "body": "All staff will receive training on host responsibility, the conditions of the special licence, and procedures for managing intoxication and minors. Training will occur before the event."
+        },
+        {
+          "heading": "Incident and noting book",
+          "body": "An incident and noting book will be maintained to record any issues related to patron behaviour, refusals of service, and other relevant incidents. [INCIDENT BOOK RESPONSIBLE PERSON] will manage this."
+        },
+        {
+          "heading": "Security",
+          "body": "Certified security staff will be employed to manage the crowd, given the expected attendance of 400 patrons. [SECURITY FIRM NAME] will provide security services, and [SECURITY RESPONSIBLE PERSON] will liaise with them."
+        },
+        {
+          "heading": "Environment",
+          "body": "The event will provide a relaxed atmosphere with appropriate lighting, seating, and entertainment. Drinking games and activities promoting excessive alcohol consumption are prohibited. Adequate toilet facilities will be available."
+        },
+        {
+          "heading": "Debriefing",
+          "body": "A debriefing session will be held with staff and contractors after the event to identify areas for improvement. Feedback from Police, Council, and Health may be included if necessary."
+        }
+      ],
+      "placeholders": [
+        "[FOOD RESPONSIBLE PERSON]",
+        "[BEVERAGE RESPONSIBLE PERSON]",
+        "[INCIDENT BOOK RESPONSIBLE PERSON]",
+        "[SECURITY FIRM NAME]",
+        "[SECURITY RESPONSIBLE PERSON]"
+      ],
+      "citedChunkIds": [
+        "44fd807e-e151-4db5-aadc-99d19b8893f4",
+        "6484d7ff-4fe2-4991-96e9-166080f155bc",
+        "f716c9a9-b301-46b5-8549-1ea812a6a891",
+        "3f8efd8e-86bb-4f98-a7c4-68e75978db55",
+        "78b26ee3-b95d-416c-b80f-51794bfd9d57"
+      ]
+    },
+    {
+      "documentType": "health_safety_plan",
+      "title": "Riccarton RFC Fundraiser Health and Safety Plan",
+      "sections": [
+        {
+          "heading": "Hazard identification, assessment, control and review",
+          "body": "A system will be implemented to identify, assess, control, and review hazards before and during the Riccarton RFC Fundraiser. This includes regular inspections and risk assessments of the site at Hagley Park. Identified hazards such as cooking on site, the use of generators, and the presence of inflatables will be assessed for risk. Controls will be put in place to mitigate these risks, such as ensuring all electrical equipment is properly installed and maintained, and inflatables are securely anchored. A review process will be conducted throughout the event to ensure ongoing safety."
+        },
+        {
+          "heading": "Health and safety responsibilities",
+          "body": "Health and safety responsibilities will be assigned to specific staff members and volunteers. [DUTY MANAGER NAME] will oversee the implementation of the health and safety plan. Each food stall operator will be responsible for the safety of their cooking equipment. Volunteers will be briefed on their specific roles and responsibilities regarding crowd management and emergency procedures."
+        },
+        {
+          "heading": "Staff competency and supervision",
+          "body": "All staff and volunteers will be required to demonstrate the necessary knowledge and skills for their roles. Those lacking experience will be supervised by more experienced personnel. Training sessions will be conducted prior to the event to ensure everyone is aware of safety protocols and procedures."
+        },
+        {
+          "heading": "Pre-event site inspection",
+          "body": "A comprehensive site inspection will be conducted prior to the event to ensure all areas of Hagley Park are safe for use. This will include checking the stability of marquees, the secure setup of inflatables, and the proper functioning of generators and electrical equipment."
+        },
+        {
+          "heading": "Accident register",
+          "body": "An accident register will be maintained on site to record any incidents that occur during the event. This will be managed by [DUTY MANAGER NAME] and will be reviewed regularly to identify any patterns or areas for improvement."
+        },
+        {
+          "heading": "Emergency plan",
+          "body": "An emergency plan specific to the Riccarton RFC Fundraiser will be in place. This plan will cover procedures for dealing with medical emergencies, fire, and severe weather conditions. Emergency exits will be clearly marked, and staff will be trained in evacuation procedures."
+        },
+        {
+          "heading": "Health and safety briefings",
+          "body": "Documented health and safety briefings will be conducted with all staff and volunteers before each session of the event. These briefings will cover emergency procedures, hazard awareness, and individual responsibilities."
+        },
+        {
+          "heading": "Working with partners and suppliers",
+          "body": "Collaboration with partners and suppliers will be essential to ensure public safety. All suppliers will be required to comply with health and safety regulations and will be briefed on site-specific hazards and controls. Regular communication will be maintained to address any safety concerns that arise."
+        }
+      ],
+      "placeholders": [
+        "[DUTY MANAGER NAME]"
+      ],
+      "citedChunkIds": [
+        "2c3648d0-e4b1-4cfe-8b01-f5b953d88d4c",
+        "dbc002d1-2e51-41fa-bb47-26b0a2f865bf"
+      ]
+    },
+    {
+      "documentType": "waste_management_confirmation",
+      "title": "Waste Management Confirmation for Riccarton RFC Fundraiser",
+      "sections": [
+        {
+          "heading": "How waste will be managed",
+          "body": "The organiser will ensure that all waste generated during the Riccarton RFC Fundraiser at Hagley Park is collected and disposed of appropriately. Waste management will include the use of designated waste collection points throughout the event site."
+        },
+        {
+          "heading": "Types and amounts of waste",
+          "body": "As the event is expecting fewer than 1000 attendees, a detailed estimate of the types and amounts of waste is not required. However, typical waste may include food packaging, beverage containers, and general litter from the food stalls and beer tent."
+        },
+        {
+          "heading": "Waste minimisation",
+          "body": "Although not required for this event size, the organiser is encouraged to implement waste minimisation strategies such as encouraging vendors to use recyclable or compostable materials."
+        },
+        {
+          "heading": "Landfill diversion target",
+          "body": "A landfill diversion target is not required for this event size. However, the organiser is encouraged to aim for a high diversion rate by providing recycling bins and promoting their use."
+        },
+        {
+          "heading": "Collection equipment",
+          "body": "The organiser will provide bins for general waste and recycling at strategic locations around the event site to facilitate easy waste collection and transport."
+        },
+        {
+          "heading": "Who is responsible",
+          "body": "The responsibility for waste collection and disposal lies with the event organiser. The organiser should confirm the individual or company responsible for these tasks."
+        },
+        {
+          "heading": "Collection schedule",
+          "body": "The organiser should establish a schedule for waste collection during and after the event to ensure the site remains clean. This schedule should be confirmed by the organiser."
+        },
+        {
+          "heading": "Litter and spillages",
+          "body": "The organiser will ensure that litter and spillages are promptly managed by having staff or volunteers regularly patrol the event area to maintain cleanliness."
+        }
+      ],
+      "placeholders": [],
+      "citedChunkIds": [
+        "9e99c446-346e-49c9-b34d-76e28961a34f"
+      ]
+    },
+    {
+      "documentType": "hazard_register",
+      "title": "Hazard Register for Riccarton RFC Fundraiser",
+      "sections": [
+        {
+          "heading": "Activity",
+          "body": "1. Setting up and dismantling marquees and inflatables.\n2. Operating food stalls with on-site cooking.\n3. Managing the beer tent area where alcohol is sold.\n4. Use of generators for power supply.\n5. Amplified sound equipment operation."
+        },
+        {
+          "heading": "Hazards",
+          "body": "1. Personal injury from lifting heavy equipment or structures.\n2. Burns or fire hazards from cooking equipment.\n3. Alcohol-related incidents in the beer tent.\n4. Electric shock from generators.\n5. Hearing damage from loud amplified sound."
+        },
+        {
+          "heading": "Persons at risk",
+          "body": "1. Event staff and volunteers.\n2. Attendees, including children.\n3. Food stall operators.\n4. Performers and sound technicians."
+        },
+        {
+          "heading": "Risk before control measures (severity x likelihood)",
+          "body": "1. Personal injury: Severity 3 x Likelihood 3 = 9\n2. Burns/fire: Severity 4 x Likelihood 3 = 12\n3. Alcohol incidents: Severity 3 x Likelihood 4 = 12\n4. Electric shock: Severity 4 x Likelihood 2 = 8\n5. Hearing damage: Severity 3 x Likelihood 3 = 9"
+        },
+        {
+          "heading": "Controls",
+          "body": "1. Provide manual handling training and use of lifting equipment.\n2. Fire extinguishers and fire blankets at each cooking station.\n3. Designated sober supervisors in the beer tent.\n4. Regular inspection and maintenance of electrical equipment.\n5. Limit sound levels and provide ear protection for staff."
+        },
+        {
+          "heading": "Residual risk after control measures",
+          "body": "1. Personal injury: Severity 2 x Likelihood 2 = 4\n2. Burns/fire: Severity 3 x Likelihood 2 = 6\n3. Alcohol incidents: Severity 2 x Likelihood 3 = 6\n4. Electric shock: Severity 3 x Likelihood 1 = 3\n5. Hearing damage: Severity 2 x Likelihood 2 = 4"
+        },
+        {
+          "heading": "Additional controls",
+          "body": "1. Monitor and review the effectiveness of controls during the event.\n2. Conduct a post-event review to identify any further improvements."
+        },
+        {
+          "heading": "Owner",
+          "body": "1. [EVENT SAFETY OFFICER NAME] for manual handling and equipment safety.\n2. [FIRE SAFETY OFFICER NAME] for fire safety at cooking stations.\n3. [ALCOHOL MANAGEMENT OFFICER NAME] for beer tent supervision.\n4. [ELECTRICAL SAFETY OFFICER NAME] for generator safety.\n5. [SOUND TECHNICIAN NAME] for sound level management."
+        }
+      ],
+      "placeholders": [
+        "[EVENT SAFETY OFFICER NAME]",
+        "[FIRE SAFETY OFFICER NAME]",
+        "[ALCOHOL MANAGEMENT OFFICER NAME]",
+        "[ELECTRICAL SAFETY OFFICER NAME]",
+        "[SOUND TECHNICIAN NAME]"
+      ],
+      "citedChunkIds": [
+        "31826aa8-1576-404c-a82f-28e341091630"
+      ]
+    },
+    {
+      "documentType": "special_licence_application",
+      "title": "Special Licence Application for Riccarton RFC Fundraiser",
+      "sections": [
+        {
+          "heading": "Application details",
+          "body": "This application is for a special licence for the Riccarton RFC Fundraiser event to be held on 14 March 2027. The event will take place at Hagley Park from 12:00 to 19:00. Alcohol will be sold in a designated beer tent for adults."
+        },
+        {
+          "heading": "Details of applicant",
+          "body": "[APPLICANT NAME] is the applicant for this special licence. Contact details and further information about the applicant's role and responsibilities at the event are required."
+        },
+        {
+          "heading": "Premises details",
+          "body": "The event will be held at Hagley Park, which is council land. Confirmation of the venue hire agreement and permission for alcohol use on the site is required. [EXISTING LICENCE STATUS] and no building work is conditional for the licence."
+        },
+        {
+          "heading": "Event details",
+          "body": "The Riccarton RFC Fundraiser is a genuine event aimed at raising funds. The event is open to the public with an expected attendance of 400 people. Alcohol will be sold in a beer tent designated for adults only. The event will also feature three food stalls with on-site cooking, and inflatables for entertainment. Amplified sound will be used during the event."
+        },
+        {
+          "heading": "Conditions",
+          "body": "- Alcohol will be sold from 12:00 to 19:00.\n- Food available includes items from three stalls, with on-site cooking.\n- Low-alcohol and non-alcoholic drinks will be available.\n- Drinking water will be freely available.\n- Measures will be in place to prevent service to minors, intoxicated, and uninvited persons.\n- Staff will be trained to ensure compliance with alcohol regulations.\n- Noise management strategies will be implemented to minimize disturbance.\n- Security measures will be in place to prevent disorderly behaviour and vandalism.\n- Alternative transport options will be communicated to attendees."
+        },
+        {
+          "heading": "Documents attached",
+          "body": "- [SITE PLAN]\n- [CONFIRMATION OF OTHER CONSENTS]\n- [ALCOHOL MANAGEMENT PLAN]\n- [FOOD AND DRINKS MENUS]"
+        }
+      ],
+      "placeholders": [
+        "[APPLICANT NAME]",
+        "[EXISTING LICENCE STATUS]",
+        "[SITE PLAN]",
+        "[CONFIRMATION OF OTHER CONSENTS]",
+        "[ALCOHOL MANAGEMENT PLAN]",
+        "[FOOD AND DRINKS MENUS]"
+      ],
+      "citedChunkIds": [
+        "9ca30715-fe5a-40f4-971b-68764d784fe0",
+        "3f5d7c4e-4352-4e74-94bc-a671ba73086c",
+        "5f20cb3f-8139-40df-9529-581b18afacf4",
+        "9440d504-b677-41a9-8174-819ed626da92",
+        "85659beb-e612-49e2-bddd-7804b51087a2"
+      ]
+    },
+    {
+      "documentType": "alcohol_management_plan",
+      "title": "Alcohol Management Plan for Riccarton RFC Fundraiser",
+      "sections": [
+        {
+          "heading": "Type of event",
+          "body": "The Riccarton RFC Fundraiser is a public event held at Hagley Park on 14 March 2027, from 12:00 to 19:00. The event is expected to attract up to 400 attendees, including children. Alcohol will be sold in a designated beer tent for adults. The event's risks include managing intoxication, ensuring minors do not consume alcohol, and maintaining a family-friendly environment."
+        },
+        {
+          "heading": "Promoting your event",
+          "body": "Pre-event communication will include information on alcohol restrictions, age limits, and expected behaviour. This will be disseminated through event promotions and signage at the venue."
+        },
+        {
+          "heading": "Intoxication",
+          "body": "Procedures will be established to monitor patrons and prevent intoxication. Staff will be trained to identify early signs of intoxication and intervene appropriately. A designated safe place will be identified for patrons who become intoxicated."
+        },
+        {
+          "heading": "Food",
+          "body": "Food will be available from three stalls throughout the event. [FOOD RESPONSIBLE PERSON] will ensure that food is available as long as alcohol is sold. The menu will be promoted at the event to encourage consumption."
+        },
+        {
+          "heading": "Low and non-alcohol beverages",
+          "body": "A reasonable range of low and non-alcohol beverages will be available at all times. [BEVERAGE RESPONSIBLE PERSON] will ensure their availability and promotion. Free water will be readily available and promoted."
+        },
+        {
+          "heading": "Minors",
+          "body": "ID checks will be conducted for anyone appearing under 25. Acceptable forms of ID will include a passport, New Zealand driver’s licence, or HANZ 18+ card."
+        },
+        {
+          "heading": "Signage",
+          "body": "Signage will be displayed at each point of sale, including the licence and prohibited-person signage. [SIGNAGE RESPONSIBLE PERSON] will ensure compliance."
+        },
+        {
+          "heading": "Safe transport",
+          "body": "Safe transport options will be promoted, including public transport and taxi services. Information will be displayed prominently at the event."
+        },
+        {
+          "heading": "Alcohol promotions on the day",
+          "body": "Promotions will not encourage excessive drinking. No discounts or offers will suggest consumption beyond responsible limits."
+        },
+        {
+          "heading": "Staff training",
+          "body": "All staff will receive training on host responsibility, the conditions of the special licence, and procedures for managing intoxication and minors. Training will occur before the event."
+        },
+        {
+          "heading": "Incident and noting book",
+          "body": "An incident and noting book will be maintained to record any issues related to patron behaviour, refusals of service, and other relevant incidents. [INCIDENT BOOK RESPONSIBLE PERSON] will manage this."
+        },
+        {
+          "heading": "Security",
+          "body": "Certified security staff will be employed to manage the crowd, with a recommended ratio of security to patrons. [SECURITY FIRM NAME] will provide security services. [SECURITY RESPONSIBLE PERSON] will liaise with them."
+        },
+        {
+          "heading": "Environment",
+          "body": "The event will provide a relaxed atmosphere with appropriate lighting, seating, and entertainment. Drinking games and activities promoting excessive consumption are prohibited. Adequate toilet facilities will be available."
+        },
+        {
+          "heading": "Debriefing",
+          "body": "A debriefing session will be held post-event to identify areas for improvement. Feedback from staff, contractors, and possibly Police, Council, and Health will be considered."
+        }
+      ],
+      "placeholders": [
+        "[FOOD RESPONSIBLE PERSON]",
+        "[BEVERAGE RESPONSIBLE PERSON]",
+        "[SIGNAGE RESPONSIBLE PERSON]",
+        "[INCIDENT BOOK RESPONSIBLE PERSON]",
+        "[SECURITY FIRM NAME]",
+        "[SECURITY RESPONSIBLE PERSON]"
+      ],
+      "citedChunkIds": [
+        "44fd807e-e151-4db5-aadc-99d19b8893f4",
+        "6484d7ff-4fe2-4991-96e9-166080f155bc",
+        "f716c9a9-b301-46b5-8549-1ea812a6a891",
+        "3f8efd8e-86bb-4f98-a7c4-68e75978db55",
+        "78b26ee3-b95d-416c-b80f-51794bfd9d57"
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "items": [
+        {
+          "itemId": "hazard-system",
+          "text": "Describes a system to identify, assess, control and review hazards before and during the event",
+          "pass": true,
+          "evidence": "A system will be implemented to identify, assess, control, and review hazards before and during the Riccarton RFC Fundraiser. This includes regular inspections and risk assessments of the site at Hagley Park.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "responsibilities",
+          "text": "Assigns health and safety responsibilities to named staff, including volunteers",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "Health and safety responsibilities will be assigned to specific staff members and volunteers. [HEALTH AND SAFETY OFFICER NAME] will oversee the implementation of the health and safety plan. Volunteers will be briefed on their specific responsibilities, including monitoring crowd safety and ensuring compliance with safety protocols. [VOLUNTEER COORDINATOR NAME] will manage volunteer assignments."
+        },
+        {
+          "itemId": "competency",
+          "text": "Confirms staff have the knowledge and skills for their jobs, or will be supervised",
+          "pass": true,
+          "evidence": "All staff and volunteers will be required to demonstrate the necessary knowledge and skills for their roles. Those lacking experience will be supervised by more experienced personnel.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "site-inspection",
+          "text": "Includes a plan to inspect the venue for safety before the event",
+          "pass": true,
+          "evidence": "A comprehensive site inspection will be conducted at Hagley Park prior to the event. This inspection will ensure that all structures, including marquees and inflatables, are safely erected and that the site is free from hazards.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "accident-register",
+          "text": "States that an accident register is kept on site",
+          "pass": true,
+          "evidence": "An accident register will be maintained on site to record any incidents that occur during the event.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "emergency-plan",
+          "text": "Includes an emergency plan designed for this event",
+          "pass": true,
+          "evidence": "An emergency plan specific to the Riccarton RFC Fundraiser will be in place. This plan will cover potential emergencies such as fire, medical incidents, and severe weather.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "briefings",
+          "text": "Describes a documented health and safety briefing for staff and volunteers before each session",
+          "pass": true,
+          "evidence": "Documented health and safety briefings will be conducted for all staff and volunteers before each session of the event.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "partners-suppliers",
+          "text": "Describes how partners and suppliers work together so the public is not endangered",
+          "pass": true,
+          "evidence": "Collaboration with partners and suppliers will be essential to ensure public safety. All suppliers will be required to adhere to the health and safety standards set for the event.",
+          "suggestedFix": null
+        }
+      ]
+    },
+    {
+      "items": [
+        {
+          "itemId": "removal",
+          "text": "Confirms the organiser will remove and dispose of all waste from the event location",
+          "pass": true,
+          "evidence": "The organiser will ensure that all waste generated during the Riccarton RFC Fundraiser at Hagley Park is collected and disposed of appropriately.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "detail",
+          "text": "Explains how waste will be managed at the event",
+          "pass": true,
+          "evidence": "Waste management will involve setting up designated waste collection points throughout the event site to encourage proper disposal by attendees.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "types-amounts",
+          "text": "For events of about 1000 attendees or more: estimates the types and amounts of waste",
+          "pass": true,
+          "evidence": "As the event is expecting fewer than 1000 attendees, a detailed estimate of the types and amounts of waste is not required.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "minimise",
+          "text": "For events of about 1000 attendees or more: lists actions to minimise waste",
+          "pass": true,
+          "evidence": "Although not required for this event size, the organiser is encouraged to implement waste minimisation strategies such as using recyclable materials and encouraging vendors to minimise packaging.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "diversion",
+          "text": "For events of about 1000 attendees or more: gives a landfill diversion estimate or target percentage",
+          "pass": true,
+          "evidence": "A specific landfill diversion target is not required for this event size.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "equipment",
+          "text": "For events of about 1000 attendees or more: lists equipment to collect and transport waste and diverted materials",
+          "pass": true,
+          "evidence": "The organiser will provide bins for general waste, recycling, and composting at various locations around the event site to facilitate waste collection and separation.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "responsible",
+          "text": "For events of about 1000 attendees or more: names who collects and disposes of the waste",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "The responsibility for waste collection and disposal lies with the event organiser, who will confirm the individual or company responsible for this task."
+        },
+        {
+          "itemId": "schedule",
+          "text": "For events of about 1000 attendees or more: says when and how often waste is collected",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "The organiser will establish a schedule for waste collection during the event, including regular checks and emptying of bins every hour to prevent overflow."
+        },
+        {
+          "itemId": "litter",
+          "text": "For events of about 1000 attendees or more: explains how litter and spillages are managed",
+          "pass": true,
+          "evidence": "The organiser will ensure that litter and spillages are promptly managed by having staff or volunteers regularly patrol the event area to clean up any waste or spills.",
+          "suggestedFix": null
+        }
+      ]
+    },
+    {
+      "items": [
+        {
+          "itemId": "activity",
+          "text": "Each row describes the activity and how it could pose a risk",
+          "pass": true,
+          "evidence": "1. Setting up and dismantling marquees and inflatables.\n2. Operating food stalls with on-site cooking.\n3. Managing the beer tent area where alcohol is sold.\n4. Use of generators for power supply.\n5. Amplified sound equipment operation.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "hazards",
+          "text": "Each row names the hazards (e.g. injury, electric shock, falls from height, crushing)",
+          "pass": true,
+          "evidence": "1. Personal injury from lifting heavy equipment or structures.\n2. Burns or fire hazards from cooking equipment.\n3. Alcohol-related incidents in the beer tent.\n4. Electric shock from generators.\n5. Hearing damage from loud amplified sound.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "controls",
+          "text": "Each row describes controls that reduce the risk to a tolerable or acceptable rating",
+          "pass": true,
+          "evidence": "1. Provide manual handling training and use of lifting equipment.\n2. Fire extinguishers and fire blankets at each cooking station.\n3. Designated sober supervisors in the beer tent.\n4. Regular inspection and maintenance of electrical equipment.\n5. Limit sound levels and provide ear protection for staff.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "scoring",
+          "text": "Risk is scored before and after controls as severity x likelihood (1-5 each)",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "unacceptable",
+          "text": "No residual risk scores 10 to 25 (unacceptable: do not proceed)",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "owner",
+          "text": "Each row names the person responsible for the controls",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "1. [EVENT SAFETY OFFICER NAME] for manual handling and electrical safety.\n2. [FIRE SAFETY OFFICER NAME] for fire safety.\n3. [ALCOHOL MANAGEMENT OFFICER NAME] for alcohol-related controls.\n4. [SOUND TECHNICIAN NAME] for sound level management."
+        },
+        {
+          "itemId": "distributed",
+          "text": "The register is given to everyone named as an owner",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "The hazard register will be distributed to [EVENT SAFETY OFFICER NAME], [FIRE SAFETY OFFICER NAME], [ALCOHOL MANAGEMENT OFFICER NAME], and [SOUND TECHNICIAN NAME]."
+        }
+      ]
+    },
+    {
+      "items": [
+        {
+          "itemId": "lodge-20wd",
+          "text": "Lodged at least 20 working days before the event",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "The application must be lodged at least 20 working days before the event on 14 March 2027."
+        },
+        {
+          "itemId": "late-letter",
+          "text": "If lodged late, includes a letter explaining the reason for lateness",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "If the application is lodged late, include a letter explaining the reason for the delay."
+        },
+        {
+          "itemId": "summer",
+          "text": "Allows for the 20 December to 15 January non-working period",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "fee-class",
+          "text": "States expected attendance per event and number of events so the fee class can be set",
+          "pass": true,
+          "evidence": "The expected peak attendance is 400 people.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "manager",
+          "text": "Names a manager for the event, or asks for the section 213(1) exemption",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "The application should name a manager for the event or request a section 213(1) exemption."
+        },
+        {
+          "itemId": "purpose",
+          "text": "Describes a genuine event and its purpose, not extra trading hours",
+          "pass": true,
+          "evidence": "The Riccarton RFC Fundraiser is a genuine event aimed at raising funds.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "designation",
+          "text": "Lists the areas to be licensed and any restricted or supervised designation",
+          "pass": true,
+          "evidence": "Alcohol will be sold in a designated beer tent for adults.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "hours",
+          "text": "States the days and hours alcohol will be sold or supplied",
+          "pass": true,
+          "evidence": "Alcohol will be sold from 12:00 to 19:00 on 14 March 2027.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "food",
+          "text": "Describes the food available and who provides it",
+          "pass": true,
+          "evidence": "Food will be provided by three stalls, with cooking on site.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "low-non-alcohol",
+          "text": "Lists low-alcohol and non-alcoholic drinks",
+          "pass": true,
+          "evidence": "Low-alcohol and non-alcoholic drinks will be available.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "transport",
+          "text": "Describes help with alternative transport",
+          "pass": true,
+          "evidence": "Alternative transport options will be communicated to attendees.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "prohibited-persons",
+          "text": "Explains how minors, intoxicated people and uninvited people will not be served",
+          "pass": true,
+          "evidence": "Measures will be proposed to prevent service to minors, intoxicated persons, and uninvited guests.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "water",
+          "text": "Explains how drinking water is freely available",
+          "pass": true,
+          "evidence": "Drinking water will be freely available.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "staff-training",
+          "text": "Describes staff, systems and training for compliance",
+          "pass": true,
+          "evidence": "Staff will be trained to ensure compliance with alcohol regulations.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "noise",
+          "text": "Explains how noise will be managed",
+          "pass": true,
+          "evidence": "Noise management strategies will be proposed to minimize disturbance.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "disorder",
+          "text": "Explains how disorderly behaviour, nuisance and vandalism will be prevented",
+          "pass": true,
+          "evidence": "Security measures will be proposed to prevent disorderly behaviour, nuisance, and vandalism.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "site-plan",
+          "text": "Attaches a site plan of the area to be licensed",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "Attach a site plan of the area to be licensed."
+        },
+        {
+          "itemId": "other-consents",
+          "text": "Attaches confirmation of other consents (building, traffic management, lease of public space)",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "Attach confirmation of other consents, including building, traffic management, and lease of public space."
+        },
+        {
+          "itemId": "amp",
+          "text": "Attaches an Alcohol Management Plan if more than 150 guests are expected",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "Attach an Alcohol Management Plan as more than 150 guests are expected."
+        },
+        {
+          "itemId": "menus",
+          "text": "Attaches food and drinks menus",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "Attach food and drinks menus."
+        }
+      ]
+    },
+    {
+      "items": [
+        {
+          "itemId": "chain-of-command",
+          "text": "Documents who is in charge of the event and each area of responsibility",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "Include a section that lists the names of individuals responsible for each area, such as food, beverages, incident book, and security."
+        },
+        {
+          "itemId": "event-risks",
+          "text": "Defines the type of event and its risks",
+          "pass": true,
+          "evidence": "The Riccarton RFC Fundraiser is a public event held at Hagley Park on 14 March 2027, from 12:00 to 19:00. The event is expected to attract up to 400 attendees, including children. Alcohol will be sold in a designated beer tent for adults. The event's risks include managing intoxication, ensuring minors do not consume alcohol, and maintaining a safe environment for families.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "pre-event-comms",
+          "text": "Pre-event communication covers intoxication, alcohol restrictions, age limits and behaviour",
+          "pass": true,
+          "evidence": "Pre-event communication will include information on alcohol restrictions, age limits, and expected behaviour. This will be disseminated through event promotions and signage at the venue.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "intoxication",
+          "text": "Sets procedures to monitor patrons and prevent intoxication",
+          "pass": true,
+          "evidence": "Procedures will be established to monitor patrons and prevent intoxication. Staff will be trained to identify early signs of intoxication and intervene appropriately.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "safe-place",
+          "text": "Identifies a safe place for intoxicated patrons",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "Specify the location or description of the designated safe place for intoxicated patrons."
+        },
+        {
+          "itemId": "food",
+          "text": "Names who keeps food available while alcohol is sold",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "[FOOD RESPONSIBLE PERSON] will ensure that food is available at all times while alcohol is sold."
+        },
+        {
+          "itemId": "low-non-alcohol",
+          "text": "Keeps a reasonable range of low and non-alcohol drinks available at all times",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "[BEVERAGE RESPONSIBLE PERSON] will ensure a reasonable range of low and non-alcohol beverages is available at all times."
+        },
+        {
+          "itemId": "water",
+          "text": "Free water is readily available and promoted",
+          "pass": true,
+          "evidence": "Free water will be readily available and promoted to all patrons.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "minors",
+          "text": "Sets ID checks for anyone appearing under 25",
+          "pass": true,
+          "evidence": "ID checks will be conducted for anyone appearing under 25 years of age. Acceptable forms of identification will include a passport, New Zealand driver's licence, or HANZ 18+ card.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "signage",
+          "text": "Licence displayed and prohibited-person signage at each point of sale",
+          "pass": true,
+          "evidence": "Signage will be displayed at each point of sale, including the licence and prohibited-person signage.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "transport",
+          "text": "Lists safe transport options and how they are promoted",
+          "pass": true,
+          "evidence": "Safe transport options will be promoted, including public transport and taxi services. Information will be displayed prominently at the event, and staff will assist patrons in arranging transport if needed.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "promotions",
+          "text": "Promotions do not encourage excessive drinking",
+          "pass": true,
+          "evidence": "Promotions will not encourage excessive drinking. No discounts or offers will be made that could lead to excessive consumption.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "training",
+          "text": "All staff are trained and briefed before the event",
+          "pass": true,
+          "evidence": "All staff will receive training on host responsibility, the conditions of the special licence, and procedures for managing intoxication and minors. Training will occur before the event.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "incident-book",
+          "text": "Keeps an incident and noting book",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "An incident and noting book will be maintained to record any issues related to patron behaviour, refusals of service, and other relevant incidents. [INCIDENT BOOK RESPONSIBLE PERSON] will manage this."
+        },
+        {
+          "itemId": "security",
+          "text": "Details certified security (guideline: over 100 patrons)",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "Certified security staff will be employed to manage the crowd, given the expected attendance of 400 patrons. [SECURITY FIRM NAME] will provide security services, and [SECURITY RESPONSIBLE PERSON] will liaise with them."
+        },
+        {
+          "itemId": "toilets",
+          "text": "Adequate toilets throughout the event",
+          "pass": true,
+          "evidence": "Adequate toilet facilities will be available.",
+          "suggestedFix": null
+        }
+      ]
+    },
+    {
+      "items": [
+        {
+          "itemId": "hazard-system",
+          "text": "Describes a system to identify, assess, control and review hazards before and during the event",
+          "pass": true,
+          "evidence": "A system will be implemented to identify, assess, control, and review hazards before and during the Riccarton RFC Fundraiser.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "responsibilities",
+          "text": "Assigns health and safety responsibilities to named staff, including volunteers",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "Health and safety responsibilities will be assigned to specific staff members and volunteers. John Smith will oversee the implementation of the health and safety plan. Each food stall operator will be responsible for the safety of their cooking equipment. Volunteers will be briefed on their specific roles and responsibilities regarding crowd management and emergency procedures."
+        },
+        {
+          "itemId": "competency",
+          "text": "Confirms staff have the knowledge and skills for their jobs, or will be supervised",
+          "pass": true,
+          "evidence": "All staff and volunteers will be required to demonstrate the necessary knowledge and skills for their roles. Those lacking experience will be supervised by more experienced personnel.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "site-inspection",
+          "text": "Includes a plan to inspect the venue for safety before the event",
+          "pass": true,
+          "evidence": "A comprehensive site inspection will be conducted prior to the event to ensure all areas of Hagley Park are safe for use.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "accident-register",
+          "text": "States that an accident register is kept on site",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "An accident register will be maintained on site to record any incidents that occur during the event. This will be managed by John Smith and will be reviewed regularly to identify any patterns or areas for improvement."
+        },
+        {
+          "itemId": "emergency-plan",
+          "text": "Includes an emergency plan designed for this event",
+          "pass": true,
+          "evidence": "An emergency plan specific to the Riccarton RFC Fundraiser will be in place.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "briefings",
+          "text": "Describes a documented health and safety briefing for staff and volunteers before each session",
+          "pass": true,
+          "evidence": "Documented health and safety briefings will be conducted with all staff and volunteers before each session of the event.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "partners-suppliers",
+          "text": "Describes how partners and suppliers work together so the public is not endangered",
+          "pass": true,
+          "evidence": "Collaboration with partners and suppliers will be essential to ensure public safety.",
+          "suggestedFix": null
+        }
+      ]
+    },
+    {
+      "items": [
+        {
+          "itemId": "removal",
+          "text": "Confirms the organiser will remove and dispose of all waste from the event location",
+          "pass": true,
+          "evidence": "The organiser will ensure that all waste generated during the Riccarton RFC Fundraiser at Hagley Park is collected and disposed of appropriately.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "detail",
+          "text": "Explains how waste will be managed at the event",
+          "pass": true,
+          "evidence": "Waste management will include the use of designated waste collection points throughout the event site.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "types-amounts",
+          "text": "For events of about 1000 attendees or more: estimates the types and amounts of waste",
+          "pass": true,
+          "evidence": "As the event is expecting fewer than 1000 attendees, a detailed estimate of the types and amounts of waste is not required.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "minimise",
+          "text": "For events of about 1000 attendees or more: lists actions to minimise waste",
+          "pass": true,
+          "evidence": "Although not required for this event size, the organiser is encouraged to implement waste minimisation strategies such as encouraging vendors to use recyclable or compostable materials.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "diversion",
+          "text": "For events of about 1000 attendees or more: gives a landfill diversion estimate or target percentage",
+          "pass": true,
+          "evidence": "A landfill diversion target is not required for this event size.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "equipment",
+          "text": "For events of about 1000 attendees or more: lists equipment to collect and transport waste and diverted materials",
+          "pass": true,
+          "evidence": "The organiser will provide bins for general waste and recycling at strategic locations around the event site to facilitate easy waste collection and transport.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "responsible",
+          "text": "For events of about 1000 attendees or more: names who collects and disposes of the waste",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "The responsibility for waste collection and disposal lies with the event organiser, [NAME]."
+        },
+        {
+          "itemId": "schedule",
+          "text": "For events of about 1000 attendees or more: says when and how often waste is collected",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "Waste will be collected at regular intervals during the event and after it concludes to ensure the site remains clean."
+        },
+        {
+          "itemId": "litter",
+          "text": "For events of about 1000 attendees or more: explains how litter and spillages are managed",
+          "pass": true,
+          "evidence": "The organiser will ensure that litter and spillages are promptly managed by having staff or volunteers regularly patrol the event area to maintain cleanliness.",
+          "suggestedFix": null
+        }
+      ]
+    },
+    {
+      "items": [
+        {
+          "itemId": "activity",
+          "text": "Each row describes the activity and how it could pose a risk",
+          "pass": true,
+          "evidence": "1. Setting up and dismantling marquees and inflatables.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "hazards",
+          "text": "Each row names the hazards (e.g. injury, electric shock, falls from height, crushing)",
+          "pass": true,
+          "evidence": "1. Personal injury from lifting heavy equipment or structures.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "controls",
+          "text": "Each row describes controls that reduce the risk to a tolerable or acceptable rating",
+          "pass": true,
+          "evidence": "1. Provide manual handling training and use of lifting equipment.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "scoring",
+          "text": "Risk is scored before and after controls as severity x likelihood (1-5 each)",
+          "pass": true,
+          "evidence": "1. Personal injury: Severity 3 x Likelihood 3 = 9",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "unacceptable",
+          "text": "No residual risk scores 10 to 25 (unacceptable: do not proceed)",
+          "pass": true,
+          "evidence": "1. Personal injury: Severity 2 x Likelihood 2 = 4",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "owner",
+          "text": "Each row names the person responsible for the controls",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "1. [EVENT SAFETY OFFICER NAME] for manual handling and equipment safety."
+        },
+        {
+          "itemId": "distributed",
+          "text": "The register is given to everyone named as an owner",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "The hazard register will be distributed to all named owners, including [EVENT SAFETY OFFICER NAME], [FIRE SAFETY OFFICER NAME], [ALCOHOL MANAGEMENT OFFICER NAME], [ELECTRICAL SAFETY OFFICER NAME], and [SOUND TECHNICIAN NAME]."
+        }
+      ]
+    },
+    {
+      "items": [
+        {
+          "itemId": "lodge-20wd",
+          "text": "Lodged at least 20 working days before the event",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "Ensure the application is lodged at least 20 working days before 14 March 2027."
+        },
+        {
+          "itemId": "late-letter",
+          "text": "If lodged late, includes a letter explaining the reason for lateness",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "summer",
+          "text": "Allows for the 20 December to 15 January non-working period",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "fee-class",
+          "text": "States expected attendance per event and number of events so the fee class can be set",
+          "pass": true,
+          "evidence": "The event is open to the public with an expected attendance of 400 people.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "manager",
+          "text": "Names a manager for the event, or asks for the section 213(1) exemption",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "Include the name of the event manager or request a section 213(1) exemption."
+        },
+        {
+          "itemId": "purpose",
+          "text": "Describes a genuine event and its purpose, not extra trading hours",
+          "pass": true,
+          "evidence": "The Riccarton RFC Fundraiser is a genuine event aimed at raising funds.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "designation",
+          "text": "Lists the areas to be licensed and any restricted or supervised designation",
+          "pass": true,
+          "evidence": "Alcohol will be sold in a designated beer tent for adults.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "hours",
+          "text": "States the days and hours alcohol will be sold or supplied",
+          "pass": true,
+          "evidence": "Alcohol will be sold from 12:00 to 19:00.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "food",
+          "text": "Describes the food available and who provides it",
+          "pass": true,
+          "evidence": "Food available includes items from three stalls, with on-site cooking.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "low-non-alcohol",
+          "text": "Lists low-alcohol and non-alcoholic drinks",
+          "pass": true,
+          "evidence": "Low-alcohol and non-alcoholic drinks will be available.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "transport",
+          "text": "Describes help with alternative transport",
+          "pass": true,
+          "evidence": "Alternative transport options will be communicated to attendees.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "prohibited-persons",
+          "text": "Explains how minors, intoxicated people and uninvited people will not be served",
+          "pass": true,
+          "evidence": "Measures will be in place to prevent service to minors, intoxicated, and uninvited persons.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "water",
+          "text": "Explains how drinking water is freely available",
+          "pass": true,
+          "evidence": "Drinking water will be freely available.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "staff-training",
+          "text": "Describes staff, systems and training for compliance",
+          "pass": true,
+          "evidence": "Staff will be trained to ensure compliance with alcohol regulations.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "noise",
+          "text": "Explains how noise will be managed",
+          "pass": true,
+          "evidence": "Noise management strategies will be implemented to minimize disturbance.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "disorder",
+          "text": "Explains how disorderly behaviour, nuisance and vandalism will be prevented",
+          "pass": true,
+          "evidence": "Security measures will be in place to prevent disorderly behaviour and vandalism.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "site-plan",
+          "text": "Attaches a site plan of the area to be licensed",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "Attach a site plan of the area to be licensed."
+        },
+        {
+          "itemId": "other-consents",
+          "text": "Attaches confirmation of other consents (building, traffic management, lease of public space)",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "Attach confirmation of other consents, including building, traffic management, and lease of public space."
+        },
+        {
+          "itemId": "amp",
+          "text": "Attaches an Alcohol Management Plan if more than 150 guests are expected",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "Attach an Alcohol Management Plan as more than 150 guests are expected."
+        },
+        {
+          "itemId": "menus",
+          "text": "Attaches food and drinks menus",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "Attach food and drinks menus."
+        }
+      ]
+    },
+    {
+      "items": [
+        {
+          "itemId": "chain-of-command",
+          "text": "Documents who is in charge of the event and each area of responsibility",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "The event manager, [EVENT MANAGER NAME], will oversee the entire event. [FOOD RESPONSIBLE PERSON] will manage food availability, [BEVERAGE RESPONSIBLE PERSON] will ensure beverage availability, [SIGNAGE RESPONSIBLE PERSON] will handle signage, [INCIDENT BOOK RESPONSIBLE PERSON] will manage the incident book, and [SECURITY RESPONSIBLE PERSON] will coordinate security."
+        },
+        {
+          "itemId": "event-risks",
+          "text": "Defines the type of event and its risks",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "pre-event-comms",
+          "text": "Pre-event communication covers intoxication, alcohol restrictions, age limits and behaviour",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "Pre-event communication will include information on intoxication, alcohol restrictions, age limits, and expected behaviour."
+        },
+        {
+          "itemId": "intoxication",
+          "text": "Sets procedures to monitor patrons and prevent intoxication",
+          "pass": true,
+          "evidence": "Procedures will be established to monitor patrons and prevent intoxication. Staff will be trained to identify early signs of intoxication and intervene appropriately.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "safe-place",
+          "text": "Identifies a safe place for intoxicated patrons",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "A designated safe place, the [SAFE PLACE LOCATION], will be identified for patrons who become intoxicated."
+        },
+        {
+          "itemId": "food",
+          "text": "Names who keeps food available while alcohol is sold",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "John Doe will ensure that food is available as long as alcohol is sold."
+        },
+        {
+          "itemId": "low-non-alcohol",
+          "text": "Keeps a reasonable range of low and non-alcohol drinks available at all times",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "A reasonable range of low and non-alcohol beverages will be available at all times. Jane Smith will ensure their availability and promotion."
+        },
+        {
+          "itemId": "water",
+          "text": "Free water is readily available and promoted",
+          "pass": true,
+          "evidence": "Free water will be readily available and promoted.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "minors",
+          "text": "Sets ID checks for anyone appearing under 25",
+          "pass": true,
+          "evidence": "ID checks will be conducted for anyone appearing under 25. Acceptable forms of ID will include a passport, New Zealand driver’s licence, or HANZ 18+ card.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "signage",
+          "text": "Licence displayed and prohibited-person signage at each point of sale",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "Signage will be displayed at each point of sale, including the licence and prohibited-person signage. Mark Brown will ensure compliance."
+        },
+        {
+          "itemId": "transport",
+          "text": "Lists safe transport options and how they are promoted",
+          "pass": true,
+          "evidence": "Safe transport options will be promoted, including public transport and taxi services. Information will be displayed prominently at the event.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "promotions",
+          "text": "Promotions do not encourage excessive drinking",
+          "pass": true,
+          "evidence": "Promotions will not encourage excessive drinking. No discounts or offers will suggest consumption beyond responsible limits.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "training",
+          "text": "All staff are trained and briefed before the event",
+          "pass": true,
+          "evidence": "All staff will receive training on host responsibility, the conditions of the special licence, and procedures for managing intoxication and minors. Training will occur before the event.",
+          "suggestedFix": null
+        },
+        {
+          "itemId": "incident-book",
+          "text": "Keeps an incident and noting book",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "An incident and noting book will be maintained to record any issues related to patron behaviour, refusals of service, and other relevant incidents. Sarah Lee will manage this."
+        },
+        {
+          "itemId": "security",
+          "text": "Details certified security (guideline: over 100 patrons)",
+          "pass": false,
+          "evidence": "",
+          "suggestedFix": "Certified security staff will be employed to manage the crowd, with a recommended ratio of security to patrons. SecureGuard Ltd will provide security services. Tom Wilson will liaise with them."
+        },
+        {
+          "itemId": "toilets",
+          "text": "Adequate toilets throughout the event",
+          "pass": true,
+          "evidence": "Adequate toilet facilities will be available.",
+          "suggestedFix": null
+        }
+      ]
+    }
+  ]
+}

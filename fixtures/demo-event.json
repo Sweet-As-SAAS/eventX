@@ -1,6 +1,6 @@
 {
   "_about": "PLACEHOLDER demo scenario, not decided yet: do not build anything around its details. Mocked run of the seeded demo event. MOCK=1 routes return these pieces; DEMO_MODE=1 falls back to them for this event only. Every key is validated by tests/contract.test.ts. Checklist items and draft text here are mock data for building screens; the real ones come from lane B's verified knowledge base. People are fictional.",
-  "description": "Fundraiser for Riccarton Rugby Club at Hagley Park on Sunday 14 March, 12 till 7pm. Around 400 people, families and kids welcome. Beer tent for adults, three food trucks, a bouncy castle and a DJ. We will need a couple of marquees.",
+  "description": "Fundraiser for Riccarton Rugby Club at Hagley Park on Sunday 14 March, 12 till 7pm. Around 400 people, families and kids welcome. Beer will be sold from a beer tent for adults, three food trucks, a bouncy castle and a DJ. We will need a couple of marquees.",
   "profile": {
     "name": { "value": "Riccarton RFC Fundraiser", "source": "inferred" },
     "councilSlug": "ccc",
@@ -16,7 +16,7 @@
     "childrenAttending": { "value": true, "source": "stated" },
     "alcohol": {
       "supply": { "value": "sold", "source": "stated" },
-      "area": { "value": "Beer tent, adults only", "source": "stated" }
+      "area": { "value": "beer tent for adults", "source": "stated" }
     },
     "food": {
       "stalls": { "value": 3, "source": "stated" },
