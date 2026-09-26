@@ -155,7 +155,7 @@ export function SitePlan({ eventId, layout, council, requirements }: Props) {
                   <span className="block text-sm text-muted-foreground">
                     {c.basis === "council" && c.source
                       ? <a href={c.source.url} target="_blank" rel="noreferrer" className="underline underline-offset-2 hover:text-foreground">Council requirement · checked {c.source.lastChecked}</a>
-                      : "HostReady check"}
+                      : "EvntX check"}
                   </span>
                 </span>
                 {c.note && <span className="text-sm text-muted-foreground">{c.note}</span>}
