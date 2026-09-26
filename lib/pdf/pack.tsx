@@ -3,20 +3,24 @@ import { Document, Page, Text, View, StyleSheet, renderToBuffer } from "@react-p
 import type { DraftDocument } from "../schemas";
 
 const s = StyleSheet.create({
-  page: { padding: 48, fontSize: 11, lineHeight: 1.5 },
+  page: { padding: 48, paddingBottom: 76, fontSize: 11, lineHeight: 1.5 },
   h1: { fontSize: 22, marginBottom: 12 }, h2: { fontSize: 14, marginTop: 14, marginBottom: 4 },
   small: { fontSize: 9, color: "#555" },
+  source: { marginBottom: 10 },
+  footer: { position: "absolute", bottom: 24, left: 48, right: 48, fontSize: 8, color: "#555" },
 });
 
-const DISCLAIMER = "Prepared by HostReady. The organiser reviews every page and lodges it with the council. This is not legal advice.";
+const DISCLAIMER = "HostReady prepares documents. You review them and lodge them with the council. This is not legal advice.";
 
-export function PackPdf({ eventName, docs, sources }: { eventName: string; docs: DraftDocument[]; sources: string[] }) {
+export type PackSource = { url: string; lastChecked: string | null };
+
+export function PackPdf({ eventName, docs, sources }: { eventName: string; docs: DraftDocument[]; sources: PackSource[] }) {
   return (
     <Document>
       <Page style={s.page}>
         <Text style={s.h1}>{eventName}</Text>
         <Text>Council pack: {docs.length} documents.</Text>
-        <Text style={s.small}>{DISCLAIMER}</Text>
+        <Text style={s.footer} fixed>{DISCLAIMER}</Text>
       </Page>
       {docs.map((d) => (
         <Page key={d.documentType} style={s.page}>
@@ -24,12 +28,18 @@ export function PackPdf({ eventName, docs, sources }: { eventName: string; docs:
           {d.sections.map((sec) => (
             <View key={sec.heading}><Text style={s.h2}>{sec.heading}</Text><Text>{sec.body}</Text></View>
           ))}
-          <Text style={s.small} fixed>{DISCLAIMER}</Text>
+          <Text style={s.footer} fixed>{DISCLAIMER}</Text>
         </Page>
       ))}
       <Page style={s.page}>
         <Text style={s.h1}>Sources</Text>
-        {sources.map((u) => <Text key={u} style={s.small}>{u}</Text>)}
+        {sources.map(({ url, lastChecked }) => (
+          <View key={url} style={s.source} wrap={false}>
+            <Text style={s.small}>{url}</Text>
+            <Text style={s.small}>Source checked: {lastChecked ?? "date not recorded"}</Text>
+          </View>
+        ))}
+        <Text style={s.footer} fixed>{DISCLAIMER}</Text>
       </Page>
     </Document>
   );

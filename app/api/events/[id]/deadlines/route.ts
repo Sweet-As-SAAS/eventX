@@ -11,7 +11,7 @@ export const GET = handler(async (_req, ctx: RouteContext<"/api/events/[id]/dead
   const date = requireProfile(ev).date.value;
   if (!date) throw new HttpError(409, "The event needs a date first");
   const reqs = must(await db().from("requirements").select("*").eq("event_id", id)).map(toRequirement);
-  const deadlines = computeDeadlines(date, reqs);
+  const deadlines = computeDeadlines(date, reqs, ev.council);
 
   // Upsert keeps reminded_14_at / reminded_3_at, so reopening this screen never re-sends a reminder.
   await pruneTypes("deadlines", id, deadlines.map((d) => d.documentType));

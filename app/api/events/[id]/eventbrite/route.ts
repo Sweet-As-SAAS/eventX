@@ -1,9 +1,10 @@
 import { z } from "zod";
+import { cookies } from "next/headers";
 import { db } from "@/lib/supabase/admin";
-import { createEventbriteDraft } from "@/lib/integrations/eventbrite";
-import { withDemoFallback } from "@/lib/ai/demo";
+import { createEventbriteDraft, eventbriteDraftUrl } from "@/lib/integrations/eventbrite";
+import { withDemoFallback, isSeeded } from "@/lib/ai/demo";
 import { Ticket, type EventbriteDraft } from "@/lib/schemas";
-import { MOCK, ok, handler, parseBody, requireOrg, loadEvent, requireProfile, must, HttpError } from "@/lib/api/server";
+import { MOCK, MOCK_FIXED_COOKIE, ok, handler, parseBody, requireOrg, loadEvent, requireProfile, must, HttpError, documentsReadyForTicketing } from "@/lib/api/server";
 
 export const maxDuration = 60;
 
@@ -19,13 +20,38 @@ export const POST = handler(async (req, ctx: RouteContext<"/api/events/[id]/even
   const orgId = await requireOrg();
   const { id } = await ctx.params;
   const { tickets } = await parseBody(req, Body);
-  if (MOCK()) return ok(demoDraft() ?? { id: "mock", url: "https://www.eventbrite.com/organizations/events" });
+  if (MOCK()) {
+    if (id !== "demo" || (await cookies()).get(MOCK_FIXED_COOKIE)?.value !== "1") {
+      throw new HttpError(409, "Every checklist must be green before tickets go on sale");
+    }
+    return ok(demoDraft() ?? { id: "mock", url: "https://www.eventbrite.com/organizations/events" });
+  }
   const ev = await loadEvent(id, orgId);
-  const docs = must(await db().from("documents").select("status").eq("event_id", id));
-  if (!docs.length || docs.some((d: any) => d.status !== "ready" && d.status !== "manual")) {
+  const [documents, lists, requirements] = await Promise.all([
+    db().from("documents").select("document_type, status, content, check_results").eq("event_id", id),
+    db().from("checklists").select("document_type, items").eq("council_id", ev.council_id).eq("verified", true),
+    db().from("requirements").select("document_type").eq("event_id", id),
+  ]);
+  const docs = must(documents);
+  const requiredTypes = new Set(must(requirements).map((r) => r.document_type));
+  const checklists = new Map(must(lists).map((list) => [list.document_type, list.items as { id: string }[]]));
+  if (!documentsReadyForTicketing(requiredTypes, docs, checklists)) {
     throw new HttpError(409, "Every checklist must be green before tickets go on sale");
   }
-  const draft = await withDemoFallback(() => createEventbriteDraft(requireProfile(ev), tickets), demoDraft());
+  const profile = requireProfile(ev);
+  if (!profile.name.value || !profile.peakAttendance.value || profile.peakAttendance.value < 1 ||
+    !profile.date.value || !profile.startTime.value || !profile.endTime.value) {
+    throw new HttpError(409, "Add the event name, date, times and peak attendance before creating an Eventbrite draft");
+  }
+  if (ev.eventbrite_event_id) {
+    if (ev.eventbrite_event_id === "demo") {
+      const cached = isSeeded(ev) ? demoDraft() : null;
+      if (cached) return ok(cached);
+    } else {
+      return ok({ id: ev.eventbrite_event_id, url: eventbriteDraftUrl(ev.eventbrite_event_id) } satisfies EventbriteDraft);
+    }
+  }
+  const draft = await withDemoFallback(() => createEventbriteDraft(profile, tickets), isSeeded(ev) ? demoDraft() : null);
   must(await db().from("events").update({ eventbrite_event_id: draft.id, status: "ticketing" }).eq("id", id));
   return ok(draft);
 });

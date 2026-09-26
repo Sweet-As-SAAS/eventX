@@ -2,6 +2,7 @@
 import type { EventProfile, Ticket } from "../schemas";
 
 const API = "https://www.eventbriteapi.com/v3";
+export const eventbriteDraftUrl = (id: string) => `https://www.eventbrite.com/myevent?eid=${id}`;
 const headers = () => ({ Authorization: `Bearer ${process.env.EVENTBRITE_TOKEN}`, "Content-Type": "application/json" });
 
 const nzFmt = new Intl.DateTimeFormat("en-NZ", { timeZone: "Pacific/Auckland", hourCycle: "h23",
@@ -31,9 +32,11 @@ async function post(path: string, body: unknown) {
 export async function createEventbriteDraft(profile: EventProfile, tickets: Ticket[]) {
   const date = profile.date.value, start = profile.startTime.value, end = profile.endTime.value;
   if (!date || !start || !end) throw new Error("The event needs a date, start time and end time before it can go on Eventbrite");
-  const capacity = profile.peakAttendance.value ?? 100;
+  const name = profile.name.value;
+  const capacity = profile.peakAttendance.value;
+  if (!name || !capacity || capacity < 1) throw new Error("The event needs a name and a peak attendance estimate before it can go on Eventbrite");
   const ev = await post(`/organizations/${process.env.EVENTBRITE_ORG_ID}/events/`, { event: {
-    name: { html: profile.name.value ?? "Event" },
+    name: { html: name },
     start: { timezone: "Pacific/Auckland", utc: nzLocalToUtc(date, start) },
     end: { timezone: "Pacific/Auckland", utc: nzLocalToUtc(date, end) },
     currency: "NZD",
@@ -44,5 +47,5 @@ export async function createEventbriteDraft(profile: EventProfile, tickets: Tick
       ? { name: t.name, free: false, cost: `NZD,${t.priceCents}`, quantity_total: capacity }
       : { name: t.name, free: true, quantity_total: capacity } });
   }
-  return { id: String(ev.id), url: `https://www.eventbrite.com/myevent?eid=${ev.id}` };
+  return { id: String(ev.id), url: eventbriteDraftUrl(String(ev.id)) };
 }

@@ -1,6 +1,6 @@
 {
-  "_about": "PLACEHOLDER demo scenario, not decided yet: do not build anything around its details. Mocked run of the seeded demo event. MOCK=1 routes return these pieces; DEMO_MODE=1 falls back to them for this event only. Every key is validated by tests/contract.test.ts. Checklist items and draft text here are mock data for building screens; the real ones come from lane B's verified knowledge base. People are fictional.",
-  "description": "Fundraiser for Riccarton Rugby Club at Hagley Park on Sunday 14 March, 12 till 7pm. Around 400 people, families and kids welcome. Beer tent for adults, three food trucks, a bouncy castle and a DJ. We will need a couple of marquees.",
+  "_about": "Working stage scenario, still subject to site-plan and product changes; do not build logic or default copy around its details. This seeded MOCK/DEMO_MODE run uses fictional organiser names, contact details, suppliers and arrangements for demonstration only. It is not an actual application or evidence that a special licence has been granted. Every key is validated by tests/contract.test.ts. Council rules and checklists for live events come from verified knowledge, not this fixture.",
+  "description": "Fundraiser for Riccarton Rugby Club at Hagley Park on Sunday 14 March, 12 till 7pm. Around 400 people, families and kids welcome. Beer will be sold from a beer tent for adults, three food trucks, a bouncy castle and a DJ. We will need a couple of marquees.",
   "profile": {
     "name": { "value": "Riccarton RFC Fundraiser", "source": "inferred" },
     "councilSlug": "ccc",
@@ -16,7 +16,7 @@
     "childrenAttending": { "value": true, "source": "stated" },
     "alcohol": {
       "supply": { "value": "sold", "source": "stated" },
-      "area": { "value": "Beer tent, adults only", "source": "stated" }
+      "area": { "value": "beer tent for adults", "source": "stated" }
     },
     "food": {
       "stalls": { "value": 3, "source": "stated" },
@@ -39,10 +39,10 @@
     { "path": "structures.largestMarqueeSqm", "question": "How big is your largest marquee?", "options": ["Under 100 sqm", "Over 100 sqm", "Not sure"] }
   ],
   "classification": {
-    "category": "community",
-    "reasoning": "Run by an incorporated sports club, proceeds go to the club, open to the public.",
-    "howToPresent": "Say in the application that all proceeds go to Riccarton RFC.",
-    "citedChunkIds": []
+    "category": "unclear",
+    "reasoning": "The council source lists community and commercial fee bands for Hagley Park but does not define which applies here. A club fundraiser alone does not establish the organiser's legal status, use of proceeds, or council classification.",
+    "howToPresent": "Explain who runs the event, where proceeds go, and any commercial activity; ask the council to confirm the category before quoting a fee.",
+    "citedChunkIds": ["2db13665-9560-4a2d-a63c-0594b02cba32"]
   },
   "requirements": [
     { "documentType": "event_permit_application", "reason": "Public event on council land", "ruleId": "ccc-permit", "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits", "lastChecked": "2026-09-26" },
@@ -51,7 +51,8 @@
     { "documentType": "waste_management_confirmation", "reason": "Required with every event permit application", "ruleId": "ccc-waste", "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits", "lastChecked": "2026-09-26" },
     { "documentType": "hazard_register", "reason": "Bouncy castles and inflatables are classed as high risk", "ruleId": "ccc-inflatable", "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits", "lastChecked": "2026-09-26" },
     { "documentType": "food_licence_check", "reason": "Food will be sold or served", "ruleId": "ccc-food", "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits", "lastChecked": "2026-09-26" },
-    { "documentType": "special_licence_application", "reason": "Alcohol will be sold", "ruleId": "ccc-special-licence", "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits", "lastChecked": "2026-09-26" }
+    { "documentType": "special_licence_application", "reason": "Alcohol will be sold", "ruleId": "ccc-special-licence", "sourceUrl": "https://ccc.tfaforms.net/177", "lastChecked": "2026-09-26" },
+    { "documentType": "alcohol_management_plan", "reason": "Special licence event expecting more than 150 guests", "ruleId": "ccc-amp", "sourceUrl": "https://ccc.govt.nz/assets/Documents/Consents-and-Licences/business-licences-and-consents/Alcohol/SpecialLicence.pdf", "lastChecked": "2026-09-26" }
   ],
   "documents": [
     { "id": "doc-permit", "documentType": "event_permit_application", "status": "manual", "content": null, "checkResults": null, "checklistSource": null },
@@ -64,12 +65,12 @@
         "documentType": "health_safety_plan",
         "title": "Event health and safety plan",
         "sections": [
-          { "heading": "Event overview", "body": "Riccarton RFC Fundraiser is a family community event at Hagley Park on Sunday 14 March 2027, 12pm to 7pm, with an expected peak of 400 people including children. Beer is sold to adults from a fenced marquee under a special licence." },
-          { "heading": "Key hazards and controls", "body": "Inflatable bouncy castle, anchored to manufacturer specification and supervised at all times by [VOLUNTEER NAME]. Generator for food trucks, fenced and away from public areas. Alcohol served only inside the licensed area with a duty manager present." },
+          { "heading": "Event overview", "body": "DEMO ONLY. Riccarton RFC Fundraiser is a proposed family event at Hagley Park on Sunday 14 March 2027, 12pm to 7pm, with an expected peak of 400 people including children. Beer sales are planned for an adults-only tent, subject to a special licence being granted." },
+          { "heading": "Key hazards and controls", "body": "Inflatable bouncy castle, anchored to manufacturer specification and supervised by Sam Example (fictional demo volunteer). Generator for food trucks, fenced and away from public areas. If licensed, alcohol sales will be confined to the designated tent with a duty manager present." },
           { "heading": "Emergency response", "body": "First aid beside the main entrance. In an evacuation, marshals direct attendees through the north and east exits to [ASSEMBLY POINT]." },
-          { "heading": "Roles and contacts", "body": "Event manager [NAME]. Duty manager [NAME]. First aid provider [PROVIDER]." }
+          { "heading": "Roles and contacts", "body": "Event manager Alex Example; proposed duty manager Taylor Example; first aid provider Demo First Aid Crew. All are fictional demo assignments to verify before lodging." }
         ],
-        "placeholders": ["[VOLUNTEER NAME]", "[ASSEMBLY POINT]", "[NAME]", "[PROVIDER]"],
+        "placeholders": ["[ASSEMBLY POINT]"],
         "citedChunkIds": []
       },
       "checkResults": {
@@ -91,9 +92,9 @@
         "title": "Waste management confirmation",
         "sections": [
           { "heading": "Bins and recycling", "body": "Rubbish and recycling bins at the beer tent, beside each of the three food trucks and at both entrances." },
-          { "heading": "During and after the event", "body": "Volunteers empty bins during the event and walk the site for litter after close at 7pm. All waste leaves Hagley Park the same evening with [WASTE CONTRACTOR]." }
+          { "heading": "During and after the event", "body": "Volunteers empty bins during the event and walk the site for litter after close at 7pm. Demo Waste Services (fictional demo contractor) is assigned to remove the waste that evening." }
         ],
-        "placeholders": ["[WASTE CONTRACTOR]"],
+        "placeholders": [],
         "citedChunkIds": []
       },
       "checkResults": {
@@ -112,18 +113,18 @@
         "documentType": "hazard_register",
         "title": "Hazard register",
         "sections": [
-          { "heading": "Inflatable bouncy castle", "body": "Risk: falls, collisions and the castle lifting in wind. Controls: anchored to manufacturer specification, supervised at all times by [VOLUNTEER NAME], age and number limits posted, deflated if the wind picks up. Residual risk: low." },
+          { "heading": "Inflatable bouncy castle", "body": "Risk: falls, collisions and the castle lifting in wind. Proposed controls: anchored to manufacturer specification, supervised by Sam Example (fictional demo volunteer), age and number limits posted, deflated if the wind picks up. Residual risk: to be confirmed on site." },
           { "heading": "Generator and food truck cooking", "body": "Risk: burns, fire and fuel spills. Controls: generator fenced off from the public, fire extinguisher at each food truck, gas bottles secured upright. Residual risk: low." },
-          { "heading": "Alcohol", "body": "Risk: intoxication and under-18s being served. Controls: sales only inside the fenced beer tent, duty manager [DUTY MANAGER NAME] on site, ID checked at the tent entrance. Residual risk: medium." },
+          { "heading": "Alcohol", "body": "Risk: intoxication and under-18s being served. If a special licence is granted, proposed controls are sales only inside the fenced beer tent, duty manager Taylor Example (fictional demo assignment) on site, and ID checks at the entrance. Residual risk: to be confirmed on site." },
           { "heading": "Crowd and lost children", "body": "Risk: crowding at the busiest time (about 400 people) and children getting separated. Controls: marshals at both entrances, lost child point at the first aid tent. Residual risk: low." }
         ],
-        "placeholders": ["[VOLUNTEER NAME]", "[DUTY MANAGER NAME]"],
+        "placeholders": [],
         "citedChunkIds": []
       },
       "checkResults": {
         "items": [
           { "itemId": "hz-1", "text": "Every hazard has controls", "pass": true, "evidence": "Controls: generator fenced off from the public", "suggestedFix": null },
-          { "itemId": "hz-2", "text": "Inflatable devices covered", "pass": true, "evidence": "Inflatable bouncy castle", "suggestedFix": null },
+          { "itemId": "hz-2", "text": "Inflatable devices covered", "pass": true, "evidence": "Risk: falls, collisions and the castle lifting in wind", "suggestedFix": null },
           { "itemId": "hz-3", "text": "Alcohol risks covered", "pass": true, "evidence": "sales only inside the fenced beer tent", "suggestedFix": null }
         ]
       },
@@ -138,22 +139,57 @@
         "documentType": "special_licence_application",
         "title": "Special licence application",
         "sections": [
-          { "heading": "Applicant", "body": "Riccarton Rugby Football Club, [INCORPORATED SOCIETY NUMBER]. Contact [NAME], [PHONE]." },
-          { "heading": "Event and licensed area", "body": "Riccarton RFC Fundraiser at Hagley Park on Sunday 14 March 2027. Alcohol is sold only inside a fenced beer tent for adults. Licensed hours [LICENSED HOURS, within 12pm to 7pm]." },
-          { "heading": "Duty manager", "body": "A certified duty manager is on site the whole time alcohol is sold: [DUTY MANAGER NAME], certificate [CERTIFICATE NUMBER]." },
-          { "heading": "Host responsibility", "body": "Food from three food trucks is available all day. Water and non-alcoholic drinks are sold at the beer tent. ID is checked at the tent entrance. [TRANSPORT OPTIONS]." }
+          { "heading": "Applicant", "body": "DEMO ONLY — not for lodging. Proposed organiser: Riccarton Rugby Club. Contact: Alex Example, demo-contact@example.invalid. These are fictional details; legal identity and contact details must be verified before lodging." },
+          { "heading": "Event and licensed area", "body": "Riccarton RFC Fundraiser at Hagley Park on Sunday 14 March 2027. Proposed alcohol sales are limited to a fenced adults-only beer tent, 12pm to 7pm, only if a special licence is granted. The exact licensed boundary must match the site plan." },
+          { "heading": "Duty manager", "body": "Proposed duty manager Taylor Example is a fictional demo assignment for the 12pm to 7pm sales period. Manager certification must be verified before a real application is lodged." },
+          { "heading": "Host responsibility", "body": "The plan assigns three food trucks to trade during proposed alcohol sales, with free water and non-alcoholic drinks at the tent. Staff will check ID at the entrance. The fictional demo transport plan provides a marked taxi pickup at the park edge and public-transport information at the exit." }
         ],
-        "placeholders": ["[INCORPORATED SOCIETY NUMBER]", "[NAME]", "[PHONE]", "[LICENSED HOURS, within 12pm to 7pm]", "[DUTY MANAGER NAME]", "[CERTIFICATE NUMBER]", "[TRANSPORT OPTIONS]"],
+        "placeholders": [],
         "citedChunkIds": []
       },
       "checkResults": {
         "items": [
-          { "itemId": "sl-1", "text": "Licensed area described", "pass": true, "evidence": "Alcohol is sold only inside a fenced beer tent for adults.", "suggestedFix": null },
-          { "itemId": "sl-2", "text": "Duty manager arrangements described", "pass": true, "evidence": "A certified duty manager is on site the whole time alcohol is sold", "suggestedFix": null },
-          { "itemId": "sl-3", "text": "Food and non-alcoholic drinks available", "pass": true, "evidence": "Water and non-alcoholic drinks are sold at the beer tent.", "suggestedFix": null }
+          { "itemId": "sl-1", "text": "Licensed area described", "pass": true, "evidence": "Proposed alcohol sales are limited to a fenced adults-only beer tent", "suggestedFix": null },
+          { "itemId": "sl-2", "text": "Duty manager arrangements described", "pass": true, "evidence": "Proposed duty manager Taylor Example is a fictional demo assignment for the 12pm to 7pm sales period", "suggestedFix": null },
+          { "itemId": "sl-3", "text": "Food and non-alcoholic drinks available", "pass": true, "evidence": "free water and non-alcoholic drinks at the tent", "suggestedFix": null }
         ]
       },
       "checklistSource": { "url": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-resources", "lastChecked": "2026-09-26" }
+    },
+    {
+      "id": "doc-amp",
+      "documentType": "alcohol_management_plan",
+      "status": "ready",
+      "content": {
+        "documentType": "alcohol_management_plan",
+        "title": "Alcohol management plan",
+        "sections": [
+          { "heading": "Type of event", "body": "DEMO ONLY. Proposed family fundraiser, about 400 people at peak including children. Beer sales in a fenced adults-only tent are planned only if a special licence is granted. Event manager Alex Example is in charge overall; proposed duty manager Taylor Example is in charge of the tent. Both are fictional demo assignments." },
+          { "heading": "Promoting your event", "body": "Promotion states the event is family-focused, that intoxicated people will be refused service and removed, that no alcohol may be brought in, and that ID is checked at the beer tent." },
+          { "heading": "Intoxication", "body": "If licensed, bar staff and the duty manager will monitor patrons and intervene early. Intoxicated people will be refused entry. The fictional demo welfare point is a quiet tent beside first aid." },
+          { "heading": "Food", "body": "Three food trucks are planned to trade throughout alcohol sales. Alex Example (fictional demo manager) will check that food stays available; if it runs out, alcohol sales stop." },
+          { "heading": "Low and non-alcohol beverages", "body": "Low-alcohol beer, soft drinks and free water are available and promoted at the beer tent at all times." },
+          { "heading": "Minors", "body": "Photo ID (NZ driver licence, passport or 18+ card) is checked for anyone who appears under 25." },
+          { "heading": "Signage", "body": "If granted, the special licence will be displayed at the beer tent with required signage at each point of sale. Alex Example (fictional demo manager) will put up the signs." },
+          { "heading": "Safe transport", "body": "The fictional demo plan marks a taxi pickup at the park edge and gives public-transport information at the tent exit. Staff will offer alternatives to anyone who has been drinking and intends to drive." },
+          { "heading": "Alcohol promotions on the day", "body": "No discounts, drinking games or alcohol prizes." },
+          { "heading": "Staff training", "body": "All bar staff and volunteers are briefed on the licence conditions and this plan before the event." },
+          { "heading": "Incident and noting book", "body": "The duty manager records refusals, removals and incidents in an incident book kept at the tent." },
+          { "heading": "Security", "body": "The fictional demo plan assigns two staff from Demo Event Security, 11am to 8pm, with Alex Example as liaison. A real provider, staffing level and qualifications must be confirmed before lodging." },
+          { "heading": "Environment", "body": "Seating and shade around the tent, a family focus, and toilets available throughout." },
+          { "heading": "Debriefing", "body": "Staff and contractors debrief after the event to note improvements." }
+        ],
+        "placeholders": [],
+        "citedChunkIds": []
+      },
+      "checkResults": {
+        "items": [
+          { "itemId": "chain-of-command", "text": "Documents who is in charge of the event and each area of responsibility", "pass": true, "evidence": "Event manager Alex Example is in charge overall; proposed duty manager Taylor Example is in charge of the tent", "suggestedFix": null },
+          { "itemId": "food", "text": "Names who keeps food available while alcohol is sold", "pass": true, "evidence": "Alex Example (fictional demo manager) will check that food stays available", "suggestedFix": null },
+          { "itemId": "minors", "text": "Sets ID checks for anyone appearing under 25", "pass": true, "evidence": "Photo ID (NZ driver licence, passport or 18+ card) is checked for anyone who appears under 25.", "suggestedFix": null }
+        ]
+      },
+      "checklistSource": { "url": "https://ccc.govt.nz/assets/Documents/Consents-and-Licences/business-licences-and-consents/Alcohol/Info-AlcoholManagementPlan.pdf", "lastChecked": "2026-09-26" }
     }
   ],
   "fixedDocument": {
@@ -162,14 +198,14 @@
     "status": "ready",
     "content": {
       "documentType": "health_safety_plan",
-      "title": "Event health and safety plan",
+        "title": "Event health and safety plan",
       "sections": [
-        { "heading": "Event overview", "body": "Riccarton RFC Fundraiser is a family community event at Hagley Park on Sunday 14 March 2027, 12pm to 7pm, with an expected peak of 400 people including children. Beer is sold to adults from a fenced marquee under a special licence." },
-        { "heading": "Key hazards and controls", "body": "Inflatable bouncy castle, anchored to manufacturer specification and supervised at all times by [VOLUNTEER NAME]. Generator for food trucks, fenced and away from public areas. Alcohol served only inside the licensed area with a duty manager present." },
-        { "heading": "Emergency response", "body": "First aid beside the main entrance. In an evacuation, marshals direct attendees through the north and east exits to the assembly point on the open lawn north of the main gate, marked on the site plan." },
-        { "heading": "Roles and contacts", "body": "Event manager [NAME]. Duty manager [NAME]. First aid provider [PROVIDER]." }
+          { "heading": "Event overview", "body": "DEMO ONLY. Riccarton RFC Fundraiser is a proposed family event at Hagley Park on Sunday 14 March 2027, 12pm to 7pm, with an expected peak of 400 people including children. Beer sales are planned for an adults-only tent, subject to a special licence being granted." },
+          { "heading": "Key hazards and controls", "body": "Inflatable bouncy castle, anchored to manufacturer specification and supervised by Sam Example (fictional demo volunteer). Generator for food trucks, fenced and away from public areas. If licensed, alcohol sales will be confined to the designated tent with a duty manager present." },
+          { "heading": "Emergency response", "body": "First aid beside the main entrance. In an evacuation, marshals direct attendees through the north and east exits to the assembly point on the open lawn north of the main gate. This point must be marked on the site plan before lodging." },
+          { "heading": "Roles and contacts", "body": "Event manager Alex Example; proposed duty manager Taylor Example; first aid provider Demo First Aid Crew. All are fictional demo assignments to verify before lodging." }
       ],
-      "placeholders": ["[VOLUNTEER NAME]", "[NAME]", "[PROVIDER]"],
+        "placeholders": [],
       "citedChunkIds": []
     },
     "checkResults": {
@@ -177,14 +213,17 @@
         { "itemId": "hs-1", "text": "Event details and times", "pass": true, "evidence": "Sunday 14 March 2027, 12pm to 7pm", "suggestedFix": null },
         { "itemId": "hs-2", "text": "Hazards specific to this event", "pass": true, "evidence": "Inflatable bouncy castle, anchored to manufacturer specification", "suggestedFix": null },
         { "itemId": "hs-3", "text": "First aid location", "pass": true, "evidence": "First aid beside the main entrance", "suggestedFix": null },
-        { "itemId": "hs-4", "text": "Emergency assembly point named", "pass": true, "evidence": "the assembly point on the open lawn north of the main gate, marked on the site plan", "suggestedFix": null }
+          { "itemId": "hs-4", "text": "Emergency assembly point named", "pass": true, "evidence": "the assembly point on the open lawn north of the main gate", "suggestedFix": null }
       ]
     },
     "checklistSource": { "url": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-resources", "lastChecked": "2026-09-26" }
   },
   "deadlines": [
-    { "documentType": "event_permit_application", "label": "Lodge event permit application with site plan and health and safety plan", "legalMinimum": "2027-02-07", "recommended": "2027-01-03", "basis": "CCC processing starts at five weeks for a low impact event. We aim for ten weeks.", "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-permits" },
-    { "documentType": "special_licence_application", "label": "Lodge special licence application", "legalMinimum": "2027-02-15", "recommended": "2027-01-29", "basis": "At least 20 working days before the event. 20 Dec to 15 Jan does not count. We aim two weeks earlier.", "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-resources" }
+    {"documentType": "event_permit_application", "label": "Lodge event permit application with site plan and health and safety plan", "legalMinimum": "2027-02-07", "recommended": "2027-01-03", "basis": "CCC processing starts at five weeks for a low impact event. We aim for ten weeks.", "sourceUrl": "https://ccc.tfaforms.net/177"},
+    {"documentType": "special_licence_application", "label": "Lodge special licence application", "legalMinimum": "2027-02-15", "recommended": "2027-01-29", "basis": "At least 20 working days before the event. 20 Dec to 15 Jan does not count. We aim two weeks earlier.", "sourceUrl": "https://ccc.tfaforms.net/177"},
+    {"documentType": "alcohol_management_plan", "label": "Attach alcohol management plan to special licence application", "legalMinimum": "2027-02-15", "recommended": "2027-01-29", "basis": "The alcohol management plan is an attachment to the special licence application, so it shares that lodgement date.", "sourceUrl": "https://ccc.govt.nz/assets/Documents/Consents-and-Licences/business-licences-and-consents/Alcohol/SpecialLicence.pdf"},
+    {"documentType": "site_plan", "label": "Provide site plan to CCC", "legalMinimum": "2027-01-31", "recommended": "2027-01-31", "basis": "CCC's conditions for events on public land require this plan at least six weeks before the event.", "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/conditions-for-events-on-public-land"},
+    {"documentType": "health_safety_plan", "label": "Provide health and safety plan to CCC", "legalMinimum": "2027-01-31", "recommended": "2027-01-31", "basis": "CCC's conditions for events on public land require this plan at least six weeks before the event.", "sourceUrl": "https://ccc.govt.nz/news-and-events/events/running-an-event/conditions-for-events-on-public-land"}
   ],
   "licences": [
     { "id": "lic-club", "type": "Club licence", "holderName": "Riccarton RFC", "expiresOn": "2028-03-01" },
