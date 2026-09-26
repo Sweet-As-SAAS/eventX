@@ -228,5 +228,6 @@
   "licences": [
     { "id": "lic-club", "type": "Club licence", "holderName": "Riccarton RFC", "expiresOn": "2028-03-01" },
     { "id": "lic-dm", "type": "Duty manager certificate", "holderName": "Alex Morgan", "expiresOn": "2027-01-20" }
-  ]
+  ],
+  "siteBasemap": { "url": "/site-plan/demo-venue.png", "attribution": "© OpenStreetMap contributors" }
 }
