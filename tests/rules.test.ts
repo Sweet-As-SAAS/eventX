@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import fixture from "../fixtures/demo-event.json";
-import { EventProfile, Requirement, type DocumentType } from "../lib/schemas";
+import { CouncilSlug, EventProfile, Requirement, type DocumentType } from "../lib/schemas";
 import { requiredDocuments, staticRules } from "../lib/rules";
 import { applyAnswers } from "../lib/ai/profile";
 
@@ -63,8 +63,21 @@ describe("rules engine", () => {
     expect(requiredDocuments(p, unverified)).toEqual([]);
   });
 
-  it("CCC rules never apply to a Waimakariri event", () => {
-    const ids = requiredDocuments({ ...withFields(publicLand), councilSlug: "waimakariri" }, staticRules).map((r) => r.ruleId);
-    expect(ids.filter((id) => id.startsWith("ccc-"))).toEqual([]);
+  it("an unverified rule never fires even when its trigger holds", () => {
+    const rule = staticRules.find((r) => r.outcome.documentType === "special_licence_application")!;
+    const p = withFields({ "alcohol.supply": "sold" });
+    expect(requiredDocuments(p, [rule]).map((r) => r.ruleId)).toEqual([rule.id]);
+    expect(requiredDocuments(p, [{ ...rule, verified: false }])).toEqual([]);
+  });
+
+  it("every event resolves to ccc, and every static rule is CCC and every verified one has a source", () => {
+    expect(CouncilSlug.options).toEqual(["ccc"]);
+    expect(base.councilSlug).toBe("ccc");
+    expect(EventProfile.safeParse({ ...base, councilSlug: "other" }).success).toBe(false);
+    for (const r of staticRules) {
+      expect(r.council).toBe("ccc");
+      if (r.verified) expect(r.sourceUrl).toMatch(/^https:\/\//);
+    }
+    expect(fixture.requirements.every((r) => r.ruleId.startsWith("ccc-"))).toBe(true);
   });
 });

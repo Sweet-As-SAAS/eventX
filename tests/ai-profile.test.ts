@@ -26,12 +26,11 @@ describe("profile safety checks", () => {
     expect(missingPaths(profile).some((path) => path.endsWith(".value"))).toBe(false);
   });
 
-  it("asks about an unknown read by a verified Waimakariri rule", () => {
+  it("asks about an unknown only when a verified rule reads it", () => {
     const profile = EventProfile.parse(structuredClone(fixture.profile));
-    profile.councilSlug = "waimakariri";
     profile.alcohol.supply = { value: null, source: null };
     profile.missing = missingPaths(profile);
-    const rule: Rule = { id: "waimakariri-test", council: "waimakariri", verified: true,
+    const rule: Rule = { id: "ccc-test", council: "ccc", verified: true,
       condition: { path: "alcohol.supply", eq: "sold" },
       outcome: { documentType: "special_licence_application", reason: "Test requirement" },
       sourceUrl: "https://example.org", sourceQuote: "Test quote", lastChecked: null };
