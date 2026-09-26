@@ -158,6 +158,14 @@ export type ProfileResponse = z.infer<typeof ProfileResponse>;
 export const DocumentStatus = z.enum(["pending", "drafted", "needs_fix", "ready", "manual"]);
 export type DocumentStatus = z.infer<typeof DocumentStatus>;
 
+/** A photo or PDF the organiser added with their description. */
+const Box = z.object({ left: z.number(), top: z.number(), width: z.number(), height: z.number() }); // percent of the picture
+/** The AI's look at a site plan picture: one issue, a suggested fix, and where on the picture it sits now and would move to. */
+export const SiteReview = z.object({ issue: z.string(), detail: z.string(), fix: z.string(), from: Box, to: Box, toLabel: z.string() });
+export type SiteReview = z.infer<typeof SiteReview>;
+export const Attachment = z.object({ name: z.string(), type: z.string(), url: z.string(), review: SiteReview.nullable().default(null) });
+export type Attachment = z.infer<typeof Attachment>;
+
 export const EventDocument = z.object({
   id: z.string(),
   documentType: DocumentType,

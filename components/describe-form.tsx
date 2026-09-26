@@ -2,11 +2,13 @@
 import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api/client";
-import { ArrowUp, Mic } from "./icons";
+import { ArrowUp, Cross, Mic, Paperclip } from "./icons";
 import { useFail, useToast } from "./toast";
 import { Button, Spinner, cx } from "./ui";
 
 const MAX = 2000;
+const ACCEPT = "image/png,image/jpeg,image/webp,image/heic,application/pdf";
+const MAX_FILES = 8, MAX_BYTES = 10 * 1024 * 1024;
 // Examples for the typing placeholder. The first one previews the demo event (team decision, 27 Sep 2026).
 const EXAMPLES = [
   "Music festival at Hagley Park, 500 people, a bar and food trucks…",
@@ -48,6 +50,8 @@ export function DescribeForm({ initial = "", autoFocus = false, pill = false }: 
   const [focus, setFocus] = useState(false);
   const canSpeak = useSyncExternalStore(noop, speechSupported, () => false);
   const [listening, setListening] = useState(false);
+  const [files, setFiles] = useState<File[]>([]);
+  const picker = useRef<HTMLInputElement>(null);
   const rec = useRef<{ stop(): void } | null>(null);
   const placeholder = useTypingPlaceholder(!focus && !text);
   const count = <span className="tabular-nums">{text.length.toLocaleString("en-NZ")} of {MAX.toLocaleString("en-NZ")} characters</span>;
@@ -69,12 +73,44 @@ export function DescribeForm({ initial = "", autoFocus = false, pill = false }: 
     setListening(true);
   }
 
+  function addFiles(list: FileList | null) {
+    const picked = Array.from(list ?? []);
+    const big = picked.filter((f) => f.size > MAX_BYTES);
+    if (big.length) toast(`${big.map((f) => f.name).join(", ")} ${big.length === 1 ? "is" : "are"} over 10 MB.`, "error");
+    setFiles((fs) => [...fs, ...picked.filter((f) => f.size <= MAX_BYTES && !fs.some((x) => x.name === f.name))].slice(0, MAX_FILES));
+    if (picker.current) picker.current.value = "";
+  }
+
+  // Paperclip and the chosen files. Photos and PDFs (a site plan, a map, a menu) go up with the event.
+  const attach = (
+    <>
+      <input ref={picker} type="file" multiple accept={ACCEPT} className="sr-only" tabIndex={-1} aria-hidden onChange={(e) => addFiles(e.target.files)} />
+      <button type="button" onClick={() => picker.current?.click()} aria-label="Add photos or PDFs" title="Add photos or PDFs (site plan, map, menu)"
+        className="press grid size-11 shrink-0 place-items-center rounded-full text-neutral-600 hover:bg-neutral-100 hover:text-foreground">
+        <Paperclip width={20} height={20} />
+      </button>
+    </>
+  );
+  const chips = files.length > 0 && (
+    <ul aria-label="Attached files" className="flex flex-wrap gap-2">
+      {files.map((f) => (
+        <li key={f.name} className="flex min-h-9 items-center gap-1.5 rounded-full border border-neutral-200 bg-background pl-3 pr-1 text-sm text-foreground">
+          <Paperclip width={14} height={14} className="text-neutral-500" />
+          <span className="max-w-52 truncate">{f.name}</span>
+          <button type="button" onClick={() => setFiles((fs) => fs.filter((x) => x !== f))} aria-label={`Remove ${f.name}`}
+            className="press grid size-7 place-items-center rounded-full text-neutral-500 hover:bg-neutral-100 hover:text-foreground"><Cross width={14} height={14} /></button>
+        </li>
+      ))}
+    </ul>
+  );
+
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     rec.current?.stop();
     setBusy(true);
     try {
       const { id } = await api.createEvent({ council: "ccc", description: text.trim().slice(0, MAX) });
+      for (const f of files) await api.attach(id, f);
       router.push(`/events/${id}/profile?new=1`);
     } catch (err) {
       fail(err);
@@ -87,8 +123,9 @@ export function DescribeForm({ initial = "", autoFocus = false, pill = false }: 
   if (pill) {
     return (
       <form onSubmit={submit}>
-        <div className="flex items-center gap-2 rounded-full border border-neutral-200 bg-background py-2 pl-7 pr-2 shadow-[0_10px_30px_-14px_rgb(20_23_36/0.22)] transition-[border-color,box-shadow] duration-150 focus-within:border-primary focus-within:ring-4 focus-within:ring-brand-100">
+        <div className="flex items-center gap-2 rounded-full border border-neutral-200 bg-background py-2 pl-3 pr-2 shadow-[0_10px_30px_-14px_rgb(20_23_36/0.22)] transition-[border-color,box-shadow] duration-150 focus-within:border-primary focus-within:ring-4 focus-within:ring-brand-100">
           <label htmlFor={`${uid}-text`} className="sr-only">Describe your event</label>
+          {attach}
           <input id={`${uid}-text`} required minLength={10} maxLength={MAX} value={text} autoComplete="off" aria-describedby={`${uid}-count`}
             onChange={(e) => setText(e.target.value)} placeholder="Tell us about it in one sentence…"
             className="min-h-12 min-w-0 flex-1 bg-transparent text-lg text-foreground placeholder:text-neutral-500 focus:outline-none" />
@@ -97,6 +134,7 @@ export function DescribeForm({ initial = "", autoFocus = false, pill = false }: 
             {busy ? <Spinner /> : <ArrowUp width={20} height={20} strokeWidth={2.25} />}
           </button>
         </div>
+        {chips && <div className="mt-3 px-3">{chips}</div>}
         <p id={`${uid}-count`} className={cx("mt-2 px-7 text-sm text-muted-foreground", text.length < MAX * 0.8 && "sr-only")}>{count}</p>
       </form>
     );
@@ -113,7 +151,9 @@ export function DescribeForm({ initial = "", autoFocus = false, pill = false }: 
           placeholder={placeholder} className={cx(field, "resize-y py-3 leading-relaxed")} />
         <p id={`${uid}-count`} className="mt-1.5 text-right text-sm text-muted-foreground">{count}</p>
       </div>
+      {chips}
       <div className="flex items-center gap-2">
+        {attach}
         {canSpeak && (
           <button type="button" onClick={listen} aria-pressed={listening} aria-label={listening ? "Stop listening" : "Say it instead"} title={listening ? "Stop listening" : "Say it instead"}
             className={cx("press grid size-11 place-items-center rounded-lg", listening ? "bg-destructive-soft text-destructive" : "text-neutral-600 hover:bg-neutral-100 hover:text-foreground")}>

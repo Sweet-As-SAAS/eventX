@@ -3,6 +3,7 @@ import { use, useEffect, useState } from "react";
 import { api } from "@/lib/api/client";
 import type { EventDetail, SiteLayout } from "@/lib/schemas";
 import { SitePlan } from "@/components/site-plan";
+import { SitePhoto } from "@/components/site-photo";
 import { crowdKit } from "@/lib/siteplan";
 import { useFail } from "@/components/toast";
 import { ButtonLink, Skeleton, Title } from "@/components/ui";
@@ -25,6 +26,7 @@ export default function SitePlanPage({ params }: PageProps<"/events/[id]/site-pl
       <Title sub="Everything your event has is already on it. Move things to where they'll be on the day, and the checks update as you go.">
         Site plan
       </Title>
+      <SitePhoto eventId={id} />
       {data === undefined && <Skeleton className="aspect-[8/5] w-full lg:w-2/3" />}
       {data === null && (
         <div className="space-y-4">

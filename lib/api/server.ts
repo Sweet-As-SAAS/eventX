@@ -205,7 +205,9 @@ export const setMockChanges = (id: string, change: Partial<EventDocument> | null
 /** The saved MOCK site plan (null: the default layout). */
 export const mockSitePlan: { plan: SitePlan | null } = { plan: null };
 /** A new MOCK event starts clean: no edits, ticks or saved plan from the last run. */
-export const resetMock = () => { mockChanges.clear(); mockSitePlan.plan = null; };
+/** MOCK uploads per event (photos and PDFs added with the description). */
+export const mockUploads = new Map<string, { name: string; type: string; data: Buffer }[]>();
+export const resetMock = () => { mockChanges.clear(); mockSitePlan.plan = null; mockUploads.clear(); };
 
 /** MOCK lookup for the document routes. */
 export function mockDocument(id: string) {

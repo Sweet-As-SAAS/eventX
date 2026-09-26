@@ -2,7 +2,7 @@
 // Responses are parsed against lib/schemas.ts, so a contract drift fails loudly in dev instead of rendering garbage.
 import { z } from "zod";
 import {
-  Classification, Deadline, EventbriteDraft, EventDetail, EventDocument, EventSummary, Licence,
+  Attachment, Classification, Deadline, EventbriteDraft, EventDetail, EventDocument, EventSummary, Licence,
   ProfileResponse, Requirement, SiteLayout, type CouncilSlug, type SitePlan, type Ticket,
 } from "../schemas";
 
@@ -21,7 +21,20 @@ async function call<T extends z.ZodType>(schema: T, path: string, body?: unknown
 
 const Id = z.object({ id: z.string() });
 
+/** Multipart upload; same error handling as call(). */
+async function upload(path: string, file: File) {
+  const body = new FormData();
+  body.append("file", file);
+  const res = await fetch(path, { method: "POST", body });
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok) throw new ApiError(res.status, json.error ?? res.statusText);
+  return Attachment.parse(json);
+}
+
 export const api = {
+  /** Photos and PDFs added with the description. */
+  attachments: (id: string) => call(z.array(Attachment), `/api/events/${id}/attachments`),
+  attach: (id: string, file: File) => upload(`/api/events/${id}/attachments`, file),
   listEvents: () => call(z.array(EventSummary), "/api/events"),
   /** Every event is Christchurch City Council; `council` defaults to "ccc" on the server. */
   createEvent: (body: { council?: CouncilSlug; description: string }) => call(Id, "/api/events", body),
