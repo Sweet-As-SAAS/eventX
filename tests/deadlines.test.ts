@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import fixture from "../fixtures/demo-event.json";
-import { computeDeadlines, workingDaysBefore, isWorkingDay, nzToday } from "../lib/deadlines";
+import { addDays, computeDeadlines, workingDaysBefore, isWorkingDay, nzToday } from "../lib/deadlines";
 import { Requirement } from "../lib/schemas";
 
 describe("deadline engine", () => {
@@ -25,6 +25,30 @@ describe("deadline engine", () => {
 
   it("fixture deadlines match the engine", () => {
     expect(computeDeadlines(fixture.profile.date.value, fixture.requirements.map((r) => Requirement.parse(r)))).toEqual(fixture.deadlines);
+  });
+
+  it("uses the permit form for the licence date, and gives its alcohol plan the same date", () => {
+    const deadlines = computeDeadlines(fixture.profile.date.value, fixture.requirements.map((r) => Requirement.parse(r)));
+    const licence = deadlines.find((d) => d.documentType === "special_licence_application")!;
+    const alcoholPlan = deadlines.find((d) => d.documentType === "alcohol_management_plan")!;
+    expect(licence.sourceUrl).toBe("https://ccc.tfaforms.net/177");
+    expect([alcoholPlan.legalMinimum, alcoholPlan.recommended]).toEqual([licence.legalMinimum, licence.recommended]);
+    expect(deadlines.filter((d) => ["site_plan", "health_safety_plan"].includes(d.documentType))
+      .map((d) => d.legalMinimum)).toEqual(["2027-01-31", "2027-01-31"]);
+  });
+
+  it("uses 30, 60 or 120 calendar days for an assessed CCC road-closure tier", () => {
+    const traffic = Requirement.parse({ documentType: "traffic_management_plan", reason: "Road impact", ruleId: "ccc-traffic",
+      sourceUrl: "https://ccc.govt.nz/", lastChecked: "2026-09-26" });
+    for (const [impact, days] of [["small", 30], ["medium", 60], ["large", 120]] as const) {
+      const [deadline] = computeDeadlines("2027-07-01", [traffic], "ccc", impact);
+      expect(deadline.legalMinimum).toBe(addDays("2027-07-01", -days));
+      expect(deadline.recommended).toBe(addDays("2027-07-01", -Math.max(days, 84)));
+      expect(deadline.sourceUrl).toContain("Road-closure-for-events-3-tier.pdf");
+    }
+    const [unknown] = computeDeadlines("2027-07-01", [traffic]);
+    expect(unknown.legalMinimum).toBeNull();
+    expect(unknown.recommended).toBe(addDays("2027-07-01", -120));
   });
 
   it("does not show CCC permit timing or unverified traffic timing for Waimakariri", () => {
