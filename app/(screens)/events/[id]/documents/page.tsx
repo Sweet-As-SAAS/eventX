@@ -3,6 +3,8 @@ import { use, useEffect, useRef, useState } from "react";
 import { api } from "@/lib/api/client";
 import type { EventDocument, EventProfile, Requirement } from "@/lib/schemas";
 import { keyFacts } from "@/components/profile-fields";
+import { namedPeople } from "@/components/people";
+import { fillPeople } from "@/lib/people";
 import { DOC_LABEL, STATUS_LABEL } from "@/components/format";
 import { Alert, Check, Doc, Download, Refresh, Wand } from "@/components/icons";
 import { CHANGED } from "@/components/sidebar";
@@ -265,7 +267,8 @@ function DocumentDetail({ doc, profile, req, failed, retry, busyItem, sweeping, 
                 <p className="text-base font-semibold text-foreground">{it.text}</p>
                 {it.pass && justFixed === it.itemId && it.evidence && <p className="text-sm text-muted-foreground">Now says: &ldquo;{it.evidence}&rdquo;</p>}
                 {!it.pass && <CouncilQuote quote={doc.checklistSource?.quotes.find((q) => q.itemId === it.itemId)?.quote} />}
-                {!it.pass && <FixItem key={it.suggestedFix ?? ""} fix={it.suggestedFix} busy={busyItem === it.itemId} disabled={!!busyItem || sweeping} onFix={(text) => onFix(it.itemId, text)} />}
+                {!it.pass && <FixItem key={it.suggestedFix ?? ""} item={it.text} people={profile ? namedPeople(profile) : []}
+                  fix={it.suggestedFix && profile ? fillPeople(it.suggestedFix, profile.people) : it.suggestedFix} busy={busyItem === it.itemId} disabled={!!busyItem || sweeping} onFix={(text) => onFix(it.itemId, text)} />}
               </div>
             </li>
           ))}
@@ -283,8 +286,8 @@ function DocumentDetail({ doc, profile, req, failed, retry, busyItem, sweeping, 
           {gaps > 0 && <span className="text-base text-warning">{gaps} {gaps === 1 ? "gap" : "gaps"} for you to fill before lodging</span>}
         </summary>
         <div className="mt-4 max-w-prose space-y-6 border-l-2 border-neutral-200 pl-5">
-          {doc.content.sections.map((s) => (
-            <div key={s.heading}>
+          {doc.content.sections.map((s, i) => (
+            <div key={i}>
               <h4 className="text-base font-semibold text-foreground">{s.heading}</h4>
               <p className="mt-1 text-base leading-relaxed text-neutral-800"><Gaps text={s.body} /></p>
             </div>
@@ -304,9 +307,23 @@ const CouncilQuote = ({ quote }: { quote?: string }) => quote ? (
 
 /** One red checklist item. If the AI can write it, one click. If it needs a name or detail, the suggested
  *  sentence is the template: swap the [bracketed] bits and the rest is already written. */
-function FixItem({ fix, busy, disabled, onFix }: { fix: string | null; busy: boolean; disabled: boolean; onFix: (text?: string) => void }) {
+function FixItem({ item, people, fix, busy, disabled, onFix }: {
+  item: string; people: { label: string; value: string }[]; fix: string | null; busy: boolean; disabled: boolean; onFix: (text?: string) => void;
+}) {
   const [text, setText] = useState(fix ? template(fix) : "");
   const box = useRef<HTMLTextAreaElement>(null);
+  // "Attaches food and drinks menus": HostReady holds no files, so the organiser attaches it when lodging.
+  if (/^attach/i.test(item)) {
+    return (
+      <div className="space-y-3">
+        <p className="max-w-prose text-base text-neutral-800">You attach this yourself when you lodge. HostReady can&apos;t attach files, so we note it in the draft for you.</p>
+        <Button variant="secondary" busy={busy} disabled={disabled}
+          onClick={() => onFix(`The organiser will attach this when lodging: ${item.replace(/^attaches\s*/i, "")}.`)}>
+          {!busy && <Check />} {busy ? "Updating the draft" : "I'll attach it when I lodge"}
+        </Button>
+      </div>
+    );
+  }
   if (!needsYou(fix)) {
     return (
       <div className="space-y-3">
@@ -337,6 +354,17 @@ function FixItem({ fix, busy, disabled, onFix }: { fix: string | null; busy: boo
       <p className="text-sm text-neutral-700" aria-live="polite">
         {left.length ? <>Still to fill: <Gaps text={[...new Set(left)].join(" ")} /></> : "All filled in."}
       </p>
+      {left.length > 0 && people.length > 0 && (
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-sm text-neutral-700">Use someone you named:</span>
+          {people.map((p) => (
+            <button key={p.label} type="button" disabled={disabled} onClick={() => { setText((t) => t.replace(/\[[^\]]+\]/, p.value)); jump(); }}
+              className="press min-h-9 rounded-full border border-neutral-200 px-3 text-sm font-medium text-foreground hover:border-brand-300 hover:bg-brand-50">
+              {p.value} <span className="text-muted-foreground">({p.label})</span>
+            </button>
+          ))}
+        </div>
+      )}
       <Button type="submit" busy={busy} disabled={disabled || left.length > 0 || !text.trim()}>
         {!busy && <Wand />} {busy ? "Updating the draft" : "Add to draft"}
       </Button>

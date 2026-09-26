@@ -4,6 +4,7 @@ import { db } from "@/lib/supabase/admin";
 import { applyFix, checkDocument } from "@/lib/ai/check";
 import { withDemoFallback, isSeeded } from "@/lib/ai/demo";
 import { CheckResult, DraftDocument } from "@/lib/schemas";
+import { fillPeople } from "@/lib/people";
 import { MOCK, MOCK_FIXED_COOKIE, ok, fixture, handler, parseBody, requireOrg, loadDocument, loadChecklist, must, toEventDocument, mockDocument, checkedStatus, HttpError } from "@/lib/api/server";
 
 export const maxDuration = 60;
@@ -40,7 +41,11 @@ export const POST = handler(async (req, ctx: RouteContext<"/api/documents/[id]/f
   // The cached demo fix ignores the organiser's words, so it only stands in for the one-click fix.
   const fixed = !text && isSeeded(event) && row.document_type === fixture.fixedDocument.documentType ? fixture.fixedDocument : null;
   const { content, result } = await withDemoFallback(async () => {
-    const content = await applyFix(DraftDocument.parse(row.content), instruction, text);
+    const applied = await applyFix(DraftDocument.parse(row.content), instruction, text);
+    const people = event.profile?.people;
+    const sections = people ? applied.sections.map((s) => ({ ...s, body: fillPeople(s.body, people) })) : applied.sections;
+    const content = DraftDocument.parse({ ...applied, sections,
+      placeholders: [...new Set(sections.flatMap((s) => s.body.match(/\[[^\[\]\n]+\]/g) ?? []))] });
     return { content, result: await checkDocument(content, checklist.items) };
   }, fixed && { content: DraftDocument.parse(fixed.content), result: CheckResult.parse(fixed.checkResults) });
 

@@ -13,14 +13,29 @@ export const MODEL_STRONG = process.env.OPENAI_MODEL_STRONG ?? "gpt-4o";
 // Reasoning models (o-series, gpt-5*) reject temperature 0, so only pin it for the others.
 const pinnedTemperature = (model: string) => (/^(o\d|gpt-5)/.test(model) ? {} : { temperature: 0 });
 
-/** One structured call. Always returns data that matches the schema, or throws. */
+// Our largest output (a full draft) is a few thousand tokens. A model stuck repeating itself hits this cap fast.
+const MAX_OUTPUT_TOKENS = 8000;
+
+/** One structured call. Always returns data that matches the schema, or throws. Retries once if the output ran away. */
 export async function structured<T extends z.ZodType>(opts: {
+  schema: T; name: string; system: string; user: string; model?: string;
+}): Promise<z.infer<T>> {
+  try {
+    return await structuredOnce(opts);
+  } catch (e) {
+    if (!(e instanceof Error && /length limit/i.test(e.message))) throw e;
+    return structuredOnce(opts);
+  }
+}
+
+async function structuredOnce<T extends z.ZodType>(opts: {
   schema: T; name: string; system: string; user: string; model?: string;
 }): Promise<z.infer<T>> {
   const model = opts.model ?? MODEL_FAST;
   const res = await openai().chat.completions.parse({
     model,
     ...pinnedTemperature(model),
+    max_completion_tokens: MAX_OUTPUT_TOKENS,
     messages: [
       { role: "system", content: opts.system },
       { role: "user", content: opts.user },

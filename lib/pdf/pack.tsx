@@ -46,6 +46,8 @@ function EventDetails({ event }: { event: PackEvent }) {
   const gap = (v: string | number | null | undefined, what: string) => (v === null || v === undefined || v === "" ? `[${what}]` : String(v));
   const rows: [string, string][] = [
     ["Event name", event.name],
+    ["Organiser", gap(p?.people.organiser.value, "ORGANISER NAME")],
+    ["Contact", gap(p?.people.contact.value, "PHONE AND EMAIL")],
     ["Date", p?.date.value && /^\d{4}-\d{2}-\d{2}$/.test(p.date.value)
       ? new Date(`${p.date.value}T00:00:00Z`).toLocaleDateString("en-NZ", { timeZone: "UTC", weekday: "long", day: "numeric", month: "long", year: "numeric" })
       : "[EVENT DATE]"],
@@ -73,21 +75,21 @@ function numbered(body: string): string[] | null {
 
 /** The council's risk assessment is a table: one row per activity, one column per template heading. */
 function RiskTable({ doc }: { doc: DraftDocument }) {
-  const cols = doc.sections.map((sec) => ({ heading: sec.heading, cells: numbered(sec.body) }));
+  const cols = doc.sections.map((sec, i) => ({ key: i, heading: sec.heading, body: sec.body, cells: numbered(sec.body) }));
   const table = cols.filter((c) => c.cells);
   const notes = cols.filter((c) => !c.cells);
   const rows = Math.max(0, ...table.map((c) => c.cells!.length));
   return (
     <>
       <View style={{ borderWidth: 1, borderColor: "#999", borderRightWidth: 0 }}>
-        <View style={s.row} fixed>{table.map((c) => <Text key={c.heading} style={s.th}>{c.heading}</Text>)}</View>
+        <View style={s.row} fixed>{table.map((c) => <Text key={c.key} style={s.th}>{c.heading}</Text>)}</View>
         {Array.from({ length: rows }, (_, r) => (
           <View key={r} style={r === rows - 1 ? [s.row, { borderBottomWidth: 0 }] : s.row} wrap={false}>
-            {table.map((c) => <Text key={c.heading} style={s.td}><Gaps text={c.cells![r] ?? ""} /></Text>)}
+            {table.map((c) => <Text key={c.key} style={s.td}><Gaps text={c.cells![r] ?? ""} /></Text>)}
           </View>
         ))}
       </View>
-      {notes.map((c) => <View key={c.heading}><Text style={s.h2}>{c.heading}</Text><Text><Gaps text={doc.sections.find((x) => x.heading === c.heading)!.body} /></Text></View>)}
+      {notes.map((c) => <View key={c.key}><Text style={s.h2}>{c.heading}</Text><Text><Gaps text={c.body} /></Text></View>)}
     </>
   );
 }
@@ -103,8 +105,8 @@ function DocPages({ event, item }: { event: PackEvent; item: PackDoc }) {
       {event.council && <Text style={s.council}>{event.council}</Text>}
       <Text style={s.h1}>{doc.title}</Text>
       <EventDetails event={event} />
-      {table ? <RiskTable doc={doc} /> : doc.sections.map((sec) => (
-        <View key={sec.heading}>
+      {table ? <RiskTable doc={doc} /> : doc.sections.map((sec, i) => (
+        <View key={i}>
           <Text style={s.h2} minPresenceAhead={40}>{sec.heading}</Text>
           <Text><Gaps text={sec.body} /></Text>
         </View>

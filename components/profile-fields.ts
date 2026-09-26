@@ -118,6 +118,7 @@ export function keyFacts(p: EventProfile): Fact[] {
   const s = p.structures;
 
   add("Event", p.name.value, guess(p.name));
+  add("Organiser", [p.people.organiser.value, p.people.contact.value].filter(Boolean).join(", "), false);
   add("When", [p.date.value && fmtDate(p.date.value), p.startTime.value && p.endTime.value && `${fmtTime(p.startTime.value)} to ${fmtTime(p.endTime.value)}`].filter(Boolean).join(", "), guess(p.date, p.startTime));
   add("Where", p.venue.name.value && `${p.venue.name.value}${p.venue.councilLand.value ? ", on council land" : ""}`, guess(p.venue.name, p.venue.councilLand));
   add("People", p.peakAttendance.value != null && `About ${p.peakAttendance.value.toLocaleString("en-NZ")}${p.childrenAttending.value ? ", children welcome" : ""}`, guess(p.peakAttendance, p.childrenAttending));
