@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { db } from "@/lib/supabase/admin";
 import { CouncilSlug, type EventSummary } from "@/lib/schemas";
-import { MOCK, MOCK_FIXED_COOKIE, ok, fixture, handler, parseBody, requireOrg, must, HttpError } from "@/lib/api/server";
+import { MOCK, MOCK_FIXED_COOKIE, MOCK_PAST, resetMock, ok, fixture, handler, parseBody, requireOrg, must, HttpError } from "@/lib/api/server";
 
 /** Dashboard list, newest first. */
 export const GET = handler(async () => {
@@ -9,7 +9,8 @@ export const GET = handler(async () => {
   if (MOCK()) {
     const demo: EventSummary = { id: "demo", name: fixture.profile.name.value, council: CouncilSlug.parse(fixture.profile.councilSlug),
       date: fixture.profile.date.value, status: "draft", eventbriteEventId: null, createdAt: "2026-09-26T09:00:00Z" };
-    return ok([demo]);
+    const past = [...MOCK_PAST].reverse().map((e): EventSummary => ({ ...e, council: demo.council, status: "published", eventbriteEventId: null, createdAt: `${e.date}T09:00:00Z` }));
+    return ok([demo, ...past]);
   }
   const rows = must(await db().from("events").select("id, profile, status, eventbrite_event_id, created_at, councils(slug)")
     .eq("org_id", orgId).order("created_at", { ascending: false }));
@@ -17,13 +18,15 @@ export const GET = handler(async () => {
     date: e.profile?.date?.value ?? null, status: e.status, eventbriteEventId: e.eventbrite_event_id, createdAt: e.created_at })));
 });
 
-const Body = z.object({ council: CouncilSlug, description: z.string().trim().min(10).max(2000) });
+// Christchurch City Council is the only council, so the client may leave it out.
+const Body = z.object({ council: CouncilSlug.default("ccc"), description: z.string().trim().min(10).max(2000) });
 
 /** Step 0: save the description. The profile is built by POST /api/events/:id/profile. */
 export const POST = handler(async (req) => {
   const orgId = await requireOrg();
   const body = await parseBody(req, Body);
   if (MOCK()) {
+    resetMock();
     const response = ok({ id: "demo" });
     response.cookies.delete(MOCK_FIXED_COOKIE);
     return response;

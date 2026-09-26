@@ -28,6 +28,15 @@ describe("NZ time to UTC", () => {
   it("handles the day daylight saving starts (27 Sep 2026, 2am jumps to 3am)", () => {
     expect(nzLocalToUtc("2026-09-27", "01:00")).toBe("2026-09-26T13:00:00Z");
     expect(nzLocalToUtc("2026-09-27", "10:00")).toBe("2026-09-26T21:00:00Z");
+    expect(nzLocalToUtc("2026-09-26", "23:00")).toBe("2026-09-26T11:00:00Z"); // the evening before is still NZST
+  });
+  it("handles the day daylight saving ends (4 Apr 2027, 3am falls back to 2am)", () => {
+    expect(nzLocalToUtc("2027-04-03", "12:00")).toBe("2027-04-02T23:00:00Z");
+    expect(nzLocalToUtc("2027-04-04", "12:00")).toBe("2027-04-04T00:00:00Z");
+  });
+  it("gives the fixture event its NZDT start and end", () => {
+    expect(nzLocalToUtc(fixture.profile.date.value, fixture.profile.startTime.value!)).toBe("2027-03-13T23:00:00Z");
+    expect(nzLocalToUtc(fixture.profile.date.value, fixture.profile.endTime.value!)).toBe("2027-03-14T08:00:00Z");
   });
 });
 

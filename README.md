@@ -1,10 +1,10 @@
-# HostReady
+# EvntX
 
-**Describe your event once, and HostReady produces your council permit paperwork, safety plan, site plan and liquor licence application, ready to lodge.**
+**Describe your event once, and EvntX produces your council permit paperwork, safety plan, site plan and liquor licence application, ready to lodge.**
 
-New Zealand event organisers, mostly volunteers, face long, inconsistent, deadline-driven council paperwork. HostReady reads a plain-English event description, works out exactly which documents the council needs and why (deterministic rules with a source for every one), drafts them to the council's own templates, checks each draft against the council checklist, counts every deadline in working days, emails reminders, exports one PDF pack, and hands the approved event to Eventbrite as a draft.
+New Zealand event organisers, mostly volunteers, face long, inconsistent, deadline-driven council paperwork. EvntX reads a plain-English event description, works out exactly which documents the council needs and why (deterministic rules with a source for every one), drafts them to the council's own templates, checks each draft against the council checklist, counts every deadline in working days, emails reminders, exports one PDF pack, and hands the approved event to Eventbrite as a draft.
 
-Built at Saasthon 2026 (University of Canterbury) for Christchurch City Council, with Waimakariri District Council as the second council.
+Built at Saasthon 2026 (University of Canterbury) for Christchurch City Council, the only council it supports.
 
 ## Quick start
 
@@ -81,6 +81,6 @@ Coding agents: [AGENTS.md](AGENTS.md) is loaded automatically by Codex and (thro
 
 - Tested: rules engine, answer merging, deadline engine, NZ timezone conversion including the day daylight saving starts, and fixture/schema contract (35 tests). Every route smoke-tested in MOCK mode, PDF export included.
 - Not yet run against live services: Supabase, OpenAI, Eventbrite, Resend. The code paths typecheck. Each lane brief has the gate that proves its part live.
-- Waimakariri rules and seed URLs, host responsibility and alcohol management plan rules, Canterbury holiday dates: see the TODOs in the lane briefs.
+- Host responsibility and alcohol management plan rules, Canterbury holiday dates: see the TODOs in the lane briefs.
 
-HostReady prepares documents. The organiser reviews them and lodges them with the council. This is not legal advice.
+EvntX prepares documents. The organiser reviews them and lodges them with the council. This is not legal advice.

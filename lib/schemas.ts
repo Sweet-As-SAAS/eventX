@@ -1,11 +1,12 @@
-// HostReady shared contract. Every AI output, API response and fixture parses against these.
+// EvntX shared contract. Every AI output, API response and fixture parses against these.
 // Owner: lane A. FROZEN after the kickoff review: change only after a message in the team channel,
 // and update fixtures/demo-event.json in the same commit (tests/contract.test.ts enforces it).
 // OpenAI structured outputs need every key present, so optional values are .nullable(), never .optional().
 // Browser-safe: this file must never import server code.
 import { z } from "zod";
 
-export const CouncilSlug = z.enum(["ccc", "waimakariri"]);
+// Christchurch City Council is the only council (audit decision, 26 Sep 2026). Kept as an enum so adding one later is data.
+export const CouncilSlug = z.enum(["ccc"]);
 export type CouncilSlug = z.infer<typeof CouncilSlug>;
 
 export const FieldSource = z.enum(["stated", "inferred", "answered"]);
@@ -14,6 +15,19 @@ const f = <T extends z.ZodType>(t: T) =>
   z.object({ value: t.nullable(), source: FieldSource.nullable() });
 
 // ---------- AI outputs ----------
+
+/** Who's doing what. The organiser types these on the Questions page; drafts use them instead of [NAME] gaps. */
+export const People = z.object({
+  organiser: f(z.string()), // the applicant, in charge overall
+  contact: f(z.string()), // the organiser's phone and email
+  dutyManager: f(z.string()),
+  security: f(z.string()),
+  foodProvider: f(z.string()),
+  wasteCollector: f(z.string()),
+});
+export type People = z.infer<typeof People>;
+const unknown = { value: null, source: null };
+const NO_PEOPLE: People = { organiser: unknown, contact: unknown, dutyManager: unknown, security: unknown, foodProvider: unknown, wasteCollector: unknown };
 
 export const EventProfile = z.object({
   name: f(z.string()),
@@ -42,6 +56,7 @@ export const EventProfile = z.object({
   roadOrFootpathImpact: f(z.boolean()),
   vehicleAccess: f(z.boolean()),
   missing: z.array(z.string()).describe("Dot paths of fields the description did not settle"),
+  people: People.default(NO_PEOPLE),
 });
 export type EventProfile = z.infer<typeof EventProfile>;
 
@@ -76,7 +91,7 @@ export const DocumentType = z.enum([
 ]);
 export type DocumentType = z.infer<typeof DocumentType>;
 
-/** Types HostReady drafts with AI (PRD F6). Every other required document is "manual". */
+/** Types EvntX drafts with AI (PRD F6). Every other required document is "manual". */
 export const DRAFTED_TYPES: ReadonlySet<DocumentType> = new Set<DocumentType>([
   "health_safety_plan",
   "hazard_register",
@@ -103,6 +118,8 @@ export const CheckResult = z.object({
       pass: z.boolean(),
       evidence: z.string().describe("Quote from the draft, or empty if missing"),
       suggestedFix: z.string().nullable(),
+      /** Other ready-to-insert options for a failing item, so the organiser picks or writes their own. */
+      alternatives: z.array(z.string()).default([]),
     }),
   ),
 });
@@ -136,10 +153,18 @@ export type ProfileResponse = z.infer<typeof ProfileResponse>;
 
 /**
  * pending: waiting to be drafted · drafted: drafted, not checked · needs_fix: a checklist item failed
- * ready: every checklist item passes · manual: HostReady does not draft it (official form, site plan screen, food licence)
+ * ready: every checklist item passes · manual: EvntX does not draft it (official form, site plan screen, food licence)
  */
 export const DocumentStatus = z.enum(["pending", "drafted", "needs_fix", "ready", "manual"]);
 export type DocumentStatus = z.infer<typeof DocumentStatus>;
+
+/** A photo or PDF the organiser added with their description. */
+const Box = z.object({ left: z.number(), top: z.number(), width: z.number(), height: z.number() }); // percent of the picture
+/** The AI's look at a site plan picture: one issue, a suggested fix, and where on the picture it sits now and would move to. */
+export const SiteReview = z.object({ issue: z.string(), detail: z.string(), fix: z.string(), from: Box, to: Box, toLabel: z.string() });
+export type SiteReview = z.infer<typeof SiteReview>;
+export const Attachment = z.object({ name: z.string(), type: z.string(), url: z.string(), review: SiteReview.nullable().default(null) });
+export type Attachment = z.infer<typeof Attachment>;
 
 export const EventDocument = z.object({
   id: z.string(),
@@ -147,7 +172,14 @@ export const EventDocument = z.object({
   status: DocumentStatus,
   content: DraftDocument.nullable(),
   checkResults: CheckResult.nullable(),
-  checklistSource: z.object({ url: z.string(), lastChecked: z.string().nullable() }).nullable(),
+  /** The organiser ticked "I've read this draft and checked it". Cleared whenever the draft's text changes. */
+  reviewed: z.boolean().default(false),
+  checklistSource: z.object({
+    url: z.string(),
+    lastChecked: z.string().nullable(),
+    /** The council's own wording behind each checklist item, so the screen can say why it's asked. */
+    quotes: z.array(z.object({ itemId: z.string(), quote: z.string() })).default([]),
+  }).nullable(),
 });
 export type EventDocument = z.infer<typeof EventDocument>;
 
@@ -191,7 +223,7 @@ export type EventbriteDraft = z.infer<typeof EventbriteDraft>;
 
 // ---------- Site plan (drawn by the organiser on an 800×500 canvas; laid out and checked by lib/siteplan) ----------
 
-export const SiteItemKind = z.enum(["licensed", "marquee", "food", "inflatable", "ride", "stage", "generator", "firstaid", "exit", "assembly"]);
+export const SiteItemKind = z.enum(["licensed", "marquee", "food", "inflatable", "ride", "stage", "generator", "firstaid", "toilet", "bin", "exit", "assembly"]);
 export type SiteItemKind = z.infer<typeof SiteItemKind>;
 
 export const SiteItem = z.object({

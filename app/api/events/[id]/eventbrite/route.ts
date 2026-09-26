@@ -4,7 +4,7 @@ import { db } from "@/lib/supabase/admin";
 import { createEventbriteDraft, eventbriteDraftUrl } from "@/lib/integrations/eventbrite";
 import { withDemoFallback, isSeeded } from "@/lib/ai/demo";
 import { Ticket, type EventbriteDraft } from "@/lib/schemas";
-import { MOCK, MOCK_FIXED_COOKIE, ok, handler, parseBody, requireOrg, loadEvent, requireProfile, must, HttpError, documentsReadyForTicketing } from "@/lib/api/server";
+import { MOCK, MOCK_FIXED_COOKIE, fixture, withMockChanges, ok, handler, parseBody, requireOrg, loadEvent, requireProfile, must, HttpError, documentsReadyForTicketing } from "@/lib/api/server";
 
 export const maxDuration = 60;
 
@@ -15,6 +15,8 @@ const Body = z.object({
 const demoDraft = (): EventbriteDraft | null =>
   process.env.EVENTBRITE_DEMO_DRAFT_URL ? { id: "demo", url: process.env.EVENTBRITE_DEMO_DRAFT_URL } : null;
 
+const UNREAD = "Read each document and tick it as checked before tickets go on sale";
+
 /** Creates an Eventbrite DRAFT. Locked until every document is ready or manual: no tickets before the paperwork is in order. */
 export const POST = handler(async (req, ctx: RouteContext<"/api/events/[id]/eventbrite">) => {
   const orgId = await requireOrg();
@@ -24,11 +26,12 @@ export const POST = handler(async (req, ctx: RouteContext<"/api/events/[id]/even
     if (id !== "demo" || (await cookies()).get(MOCK_FIXED_COOKIE)?.value !== "1") {
       throw new HttpError(409, "Every checklist must be green before tickets go on sale");
     }
+    if (fixture.documents.some((d) => d.status !== "manual" && !withMockChanges(d).reviewed)) throw new HttpError(409, UNREAD);
     return ok(demoDraft() ?? { id: "mock", url: "https://www.eventbrite.com/organizations/events" });
   }
   const ev = await loadEvent(id, orgId);
   const [documents, lists, requirements] = await Promise.all([
-    db().from("documents").select("document_type, status, content, check_results").eq("event_id", id),
+    db().from("documents").select("document_type, status, content, check_results, reviewed_at").eq("event_id", id),
     db().from("checklists").select("document_type, items").eq("council_id", ev.council_id).eq("verified", true),
     db().from("requirements").select("document_type").eq("event_id", id),
   ]);
@@ -38,6 +41,7 @@ export const POST = handler(async (req, ctx: RouteContext<"/api/events/[id]/even
   if (!documentsReadyForTicketing(requiredTypes, docs, checklists)) {
     throw new HttpError(409, "Every checklist must be green before tickets go on sale");
   }
+  if (docs.some((d) => requiredTypes.has(d.document_type) && d.status !== "manual" && !d.reviewed_at)) throw new HttpError(409, UNREAD);
   const profile = requireProfile(ev);
   if (!profile.name.value || !profile.peakAttendance.value || profile.peakAttendance.value < 1 ||
     !profile.date.value || !profile.startTime.value || !profile.endTime.value) {

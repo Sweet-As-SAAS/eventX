@@ -4,14 +4,15 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { api } from "@/lib/api/client";
 import type { Classification, EventDetail, EventProfile, FollowUpQuestion } from "@/lib/schemas";
-import { COUNCIL_LABEL, fmtTime, questionsLabel } from "@/components/format";
+import { COUNCIL_LABEL, questionsLabel } from "@/components/format";
 import { field, findPhrases, keyFacts } from "@/components/profile-fields";
 import { MarkedText } from "@/components/marked-text";
+import { Calendar, Food, Glass, IdCard, People, Pin, Tent } from "@/components/icons";
+import { peopleToAsk } from "@/components/people";
 import { useFail } from "@/components/toast";
-import { Button, Skeleton, Spinner, cx } from "@/components/ui";
-import { Pencil, Pin } from "@/components/icons";
+import { Button, Skeleton, Spinner } from "@/components/ui";
 
-// Step 1, Details: your event as we understood it, every part editable, then the quick questions (their own page).
+// Step 1, Details: a short summary of the event as we understood it, one edit form, then the quick questions (their own page).
 // ?new=1 means fresh from Describe: read the event (AI) first.
 type Kind = "text" | "number" | "date" | "time" | "bool" | "alcohol";
 type Input = { path: string; label: string; kind: Kind };
@@ -34,7 +35,6 @@ const GROUPS: Record<string, Input[]> = {
     { path: "roadOrFootpathImpact", label: "Roads or footpaths affected", kind: "bool" },
   ],
 };
-const FACTS = ["People", "Alcohol", "Food", "Setup"];
 
 export default function ProfilePage({ params, searchParams }: PageProps<"/events/[id]/profile">) {
   const { id } = use(params);
@@ -47,9 +47,11 @@ export default function ProfilePage({ params, searchParams }: PageProps<"/events
   const [profile, setProfile] = useState<EventProfile | null>(null);
   const [questions, setQuestions] = useState<FollowUpQuestion[] | null>(null);
   const [cls, setCls] = useState<Classification | null>(null);
-  const [editing, setEditing] = useState<string | null>(null);
+  const [clsFailed, setClsFailed] = useState(false);
+  const [editing, setEditing] = useState<string | null>(null); // "all" while the edit form is open
   const [saving, setSaving] = useState(false);
   const [leaving, setLeaving] = useState(false);
+  const [typed, setTyped] = useState(false); // "See what you typed" open
   const started = useRef(false); // dev mode runs effects twice; never pay for two AI calls
 
   useEffect(() => {
@@ -60,8 +62,9 @@ export default function ProfilePage({ params, searchParams }: PageProps<"/events
         const detail = await api.getEvent(id);
         setEv(detail);
         setCls(detail.classification);
-        if (!detail.classification) api.classify(id).then(setCls).catch(() => {});
+        if (!detail.classification) api.classify(id).then(setCls).catch(() => setClsFailed(true)); // optional: the flow goes on without it
         const r = detail.profile && !fresh ? await api.getProfile(id) : await api.buildProfile(id);
+        if (!detail.classification || fresh) api.classify(id).then(setCls).catch(() => {});
         setProfile(r.profile);
         setQuestions(r.questions);
         if (fresh) router.replace(pathname, { scroll: false });
@@ -81,7 +84,7 @@ export default function ProfilePage({ params, searchParams }: PageProps<"/events
   }
 
   async function confirm() {
-    if (questions?.length) return router.push(`/events/${id}/questions`);
+    if (questions?.length || (profile && peopleToAsk(profile).length)) return router.push(`/events/${id}/questions`);
     setLeaving(true);
     try { await api.requirements(id); router.push(`/events/${id}/documents`); } // keeps existing drafts
     catch (e) { fail(e); setLeaving(false); }
@@ -98,111 +101,141 @@ export default function ProfilePage({ params, searchParams }: PageProps<"/events
   }
 
   const p = profile;
-  const edit = (key: string) => ({ editing: editing === key, open: () => setEditing(key), form: <EditForm inputs={GROUPS[key]} profile={p} busy={saving} onSave={save} onCancel={() => setEditing(null)} /> });
-  const d = p.date.value && /^\d{4}-\d{2}-\d{2}$/.test(p.date.value) ? new Date(`${p.date.value}T00:00:00Z`) : null;
-  const fmt = (o: Intl.DateTimeFormatOptions) => d?.toLocaleDateString("en-NZ", { timeZone: "UTC", ...o });
-  const when = [fmt({ weekday: "long", day: "numeric", month: "long", year: "numeric" })?.replace(",", ""),
-    p.startTime.value && p.endTime.value && `${fmtTime(p.startTime.value)} to ${fmtTime(p.endTime.value)}`].filter(Boolean).join(", ");
   const facts = keyFacts(p);
+  const fact = (label: string) => facts.find((f) => f.label === label);
   const land = p.venue.councilLand.value;
+  const venue = p.venue.name.value;
   const n = questions?.length ?? 0;
-
-  const name = edit("name"), whenE = edit("when"), whereE = edit("where"), landE = edit("land");
+  const rows: { label: string; icon: typeof Calendar; value?: string; sub?: string }[] = [
+    { label: "When", icon: Calendar, ...fact("When") },
+    { label: "People", icon: People, ...fact("People") },
+    { label: "Where", icon: Pin, value: venue ?? undefined,
+      sub: `${COUNCIL_LABEL[ev.council]}${land === true ? " land" : land === false ? ", not council land" : ""}` },
+    { label: "Alcohol", icon: Glass, ...fact("Alcohol") },
+    { label: "Food", icon: Food, ...fact("Food") },
+    { label: "Setup", icon: Tent, ...fact("Setup") },
+    { label: "Organiser", icon: IdCard, value: p.people.organiser.value ?? undefined, sub: p.people.contact.value ?? undefined },
+  ];
 
   return (
-    <div className="step-in max-w-[1100px] pb-4">
-      <p className="text-sm font-semibold uppercase tracking-[0.04em] text-primary">Step 1 of 4 · Check it looks right</p>
-      {name.editing ? <div className="mt-3 max-w-md">{name.form}</div> : (
-        <div className="mt-2 flex items-center gap-3">
-          <h1 className="text-5xl font-semibold leading-[1.05] tracking-[-0.025em] text-foreground sm:text-[3.25rem]">{p.name.value ?? "Your event"}</h1>
-          <EditButton label="Edit the event name" onClick={name.open} />
-        </div>
-      )}
+    <div className="step-in max-w-[1120px] pb-4">
+      <p className="text-[13px] font-semibold uppercase tracking-[0.04em] text-primary">Step 1 of 4 · Check it looks right</p>
+      <h1 className="mt-2 text-4xl font-semibold tracking-[-0.025em] text-foreground sm:text-5xl">{p.name.value ?? "Your event"}</h1>
+      <ClassChip cls={cls} failed={clsFailed} />
 
-      <div className="mt-7 flex flex-wrap items-start gap-x-16 gap-y-6">
-        {whenE.editing ? <div className="w-full max-w-md">{whenE.form}</div> : (
-          <div className="flex items-center gap-4">
-            <span className="grid w-14 shrink-0 overflow-hidden rounded-lg border border-neutral-200 bg-background text-center shadow-sm">
-              <span className="bg-primary text-sm font-semibold leading-6 text-primary-foreground">{fmt({ month: "short" }) ?? "Date"}</span>
-              <span className="text-2xl font-medium leading-9 text-foreground">{fmt({ day: "numeric" }) ?? "?"}</span>
-            </span>
-            <span>
-              <span className="block text-[15px] text-neutral-600">When</span>
-              <span className="block text-lg font-semibold text-foreground">{when || "Not set yet"}</span>
-            </span>
-            <EditButton label="Edit when" onClick={whenE.open} className="ml-6" />
+      {editing ? (
+        <div className="mt-8 max-w-3xl"><EditForm inputs={Object.values(GROUPS).flat()} profile={p} busy={saving} onSave={save} onCancel={() => setEditing(null)} /></div>
+      ) : (
+        <>
+          <div className="mt-9 grid gap-10 lg:grid-cols-[1fr_360px] lg:gap-14">
+            <dl className="grid content-start gap-x-10 gap-y-8 sm:grid-cols-2">
+              {rows.map(({ label, icon: Icon, value, sub }) => (
+                <div key={label} className="flex gap-4">
+                  <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-neutral-50 text-primary"><Icon width={20} height={20} /></span>
+                  <div className="min-w-0">
+                    <dt className="text-[15px] text-neutral-600">{label}</dt>
+                    <dd className="mt-0.5 text-lg font-semibold leading-snug text-foreground">
+                      {value ?? <span className="font-normal text-neutral-500">Not set yet</span>}
+                    </dd>
+                    {sub && <dd className="mt-1 text-[15px] text-neutral-600">{sub}</dd>}
+                  </div>
+                </div>
+              ))}
+            </dl>
+            <VenueMap eventId={id} venue={venue} />
           </div>
-        )}
-        {whereE.editing ? <div className="w-full max-w-md">{whereE.form}</div> : (
-          <div className="flex items-center gap-4">
-            <span className="grid size-14 shrink-0 place-items-center rounded-xl bg-brand-50 text-primary"><Pin width={22} height={22} /></span>
-            <span>
-              <span className="block text-[15px] text-neutral-600">Where</span>
-              <span className="block text-lg font-semibold text-foreground">{p.venue.name.value ?? "Not set yet"}</span>
-            </span>
-            <EditButton label="Edit where" onClick={whereE.open} className="ml-6" />
+
+          <WhyNote cls={cls} failed={clsFailed} />
+
+          <div className="mt-10 flex flex-wrap items-center gap-3 border-t border-border pt-8">
+            <Button onClick={confirm} busy={leaving} disabled={!questions} className="min-h-12 px-7 text-[17px]">Looks right</Button>
+            <Button variant="secondary" onClick={() => setEditing("all")} className="min-h-12 border-neutral-800 px-5 text-[17px]">Edit details</Button>
+            <p className="text-[15px] text-neutral-600" aria-live="polite">
+              {leaving ? "Working out which documents the council needs…" : !questions ? "" : n ? `Next, ${questionsLabel(n)}.` : peopleToAsk(p).length ? "Next, who's doing what." : "Next, your documents."}
+            </p>
+            <button onClick={() => setTyped((t) => !t)} aria-expanded={typed}
+              className="press ml-auto inline-flex min-h-11 items-center rounded-lg px-2 text-[15px] font-semibold text-primary hover:underline">
+              {typed ? "Hide what you typed" : "See what you typed"}
+            </button>
           </div>
-        )}
-      </div>
-
-      {landE.editing ? <div className="mt-6 max-w-md">{landE.form}</div> : (
-        <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-[15px]">
-          {cls && cls.category !== "unclear" && <span className="rounded-full border border-neutral-300 px-3 py-1 font-medium text-foreground">Likely a {cls.category} event</span>}
-          <span className="text-neutral-600">
-            {COUNCIL_LABEL[ev.council]}{land === true ? " land" : land === false ? ", not council land" : ""}{p.venue.councilLand.source === "inferred" && " (our guess)"}
-          </span>
-          <button onClick={landE.open} className="font-semibold text-primary hover:underline">Change</button>
-        </div>
+          {typed && (
+            <section aria-label="What you typed" className="arrive mt-4 max-w-[720px] rounded-2xl bg-neutral-50 px-6 py-5">
+              <p className="text-lg leading-[1.7] text-foreground"><MarkedText text={ev.description} phrases={findPhrases(ev.description, p)} /></p>
+              <p className="mt-3 flex flex-wrap items-center gap-x-5 text-[15px] text-neutral-600">
+                Highlights show what we used.
+                <Link href={`/new?from=${id}`} className="inline-flex min-h-11 items-center font-semibold text-primary hover:underline">Change description</Link>
+              </p>
+            </section>
+          )}
+        </>
       )}
-
-      <dl className="mt-12 grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
-        {FACTS.map((label) => {
-          const f = facts.find((x) => x.label === label);
-          const e = edit(label);
-          return (
-            <div key={label} className="border-t border-neutral-800 pt-5">
-              <div className="flex items-center justify-between gap-2">
-                <dt className={cx("text-[15px]", f?.guess ? "text-warning" : "text-neutral-600")}>{label}{f?.guess && " · our guess"}</dt>
-                {!e.editing && <EditButton label={`Edit ${label.toLowerCase()}`} onClick={e.open} />}
-              </div>
-              <dd className="mt-2">{e.editing ? e.form : <span className="text-[22px] leading-snug text-foreground">{f?.value ?? "Not set yet"}</span>}</dd>
-            </div>
-          );
-        })}
-      </dl>
-
-      <section aria-labelledby="told" className="mt-9 grid gap-4 border-t border-border pt-8 sm:grid-cols-[190px_1fr]">
-        <h2 id="told" className="pt-1 text-sm font-semibold uppercase tracking-[0.04em] text-neutral-600">What you told us</h2>
-        <div>
-          <p className="max-w-[650px] text-lg leading-[1.75] text-foreground"><MarkedText text={ev.description} phrases={findPhrases(ev.description, p)} /></p>
-          <p className="mt-4 flex flex-wrap gap-x-5 text-[15px] text-neutral-600">
-            Highlights show what we used.
-            <Link href={`/new?from=${id}`} className="font-semibold text-primary hover:underline">Change description</Link>
-          </p>
-        </div>
-      </section>
-
-      <div className="mt-10 flex flex-wrap items-center gap-5">
-        <Button onClick={confirm} busy={leaving} disabled={!questions} className="min-h-12 px-7 text-[17px]">Looks right</Button>
-        <p className="text-base text-neutral-600">{!questions ? "" : n ? `Next, ${questionsLabel(n)}.` : "Next, your documents."}</p>
-      </div>
     </div>
   );
 }
 
-function EditButton({ label, onClick, className }: { label: string; onClick: () => void; className?: string }) {
+const clsTitle = (c: Classification) => c.category === "unclear" ? "Community or commercial: not clear yet" : `Likely a ${c.category} event`;
+
+/** F14 headline: the "likely" call as a chip under the event name. */
+function ClassChip({ cls, failed }: { cls: Classification | null; failed: boolean }) {
+  const text = cls ? clsTitle(cls) : failed ? "Community or commercial: ask the council" : null;
   return (
-    <button onClick={onClick} aria-label={label} title={label}
-      className={cx("press grid size-9 shrink-0 place-items-center rounded-lg text-neutral-600 hover:bg-neutral-100 hover:text-foreground", className)}>
-      <Pencil width={17} height={17} />
-    </button>
+    <p aria-live="polite" className="mt-4 inline-flex min-h-8 items-center gap-2 rounded-full border border-neutral-300 bg-background px-3.5 text-sm font-semibold text-foreground">
+      {text ?? <><Spinner /> Checking community or commercial…</>}
+    </p>
+  );
+}
+
+/** F14 reasoning: why we think so, how to put it to the council, and that we hold no verified fee. */
+function WhyNote({ cls, failed }: { cls: Classification | null; failed: boolean }) {
+  if (!cls && !failed) return null;
+  return (
+    <section aria-labelledby="why" className="mt-12 grid gap-x-10 gap-y-3 rounded-2xl bg-neutral-50 px-6 py-6 sm:grid-cols-[220px_1fr] sm:px-8">
+      <h2 id="why" className="text-lg font-semibold text-foreground">
+        {!cls ? "Community or commercial" : cls.category === "unclear" ? "Why it's not clear yet" : `Why we think it's ${cls.category}`}
+      </h2>
+      <div className="max-w-[640px] space-y-3 text-base leading-relaxed text-neutral-700">
+        <p>{cls ? cls.reasoning : "We couldn't work it out from your description. Ask the council when you apply."}</p>
+        {cls?.howToPresent && <p><span className="font-semibold text-foreground">When you apply: </span>{cls.howToPresent}</p>}
+        <p><span className="font-semibold text-foreground">Council fee: </span>varies, check with the council. They make the final call on community or commercial.</p>
+      </div>
+    </section>
+  );
+}
+
+/** The venue at a glance: the real map where we have one (Hagley Park), otherwise a drawn stand-in. */
+function VenueMap({ eventId, venue }: { eventId: string; venue: string | null }) {
+  const [basemap, setBasemap] = useState<string | null>(null);
+  useEffect(() => { api.sitePlan(eventId).then((l) => setBasemap(l.basemap?.url ?? null)).catch(() => {}); }, [eventId]);
+  const maps = venue && `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${venue}, Christchurch`)}`;
+  return (
+    <figure className="self-start">
+      <div className="relative aspect-[36/22] overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-50">
+        {basemap
+          // eslint-disable-next-line @next/next/no-img-element
+          ? <img src={basemap} alt={`Map of ${venue ?? "the venue"}`} className="size-full object-cover" />
+          : (
+            <svg viewBox="0 0 360 220" className="size-full" aria-hidden>
+              <path d="M0 55h360M0 205h360M36 0v220M305 0v220" stroke="var(--background)" strokeWidth="10" />
+              <rect x="70" y="30" width="200" height="110" rx="14" fill="#d9ecd0" />
+              <path d="M0 160c60-25 110 25 180 5s120-30 180-10v25c-60-20-110-10-180 10S60 165 0 190Z" fill="var(--brand-100)" />
+            </svg>
+          )}
+        <span className="absolute left-1/2 top-[40%] -translate-x-1/2 -translate-y-full text-primary drop-shadow-sm" aria-hidden>
+          <svg width="30" height="38" viewBox="0 0 30 38"><path d="M15 37S2 23.5 2 14a13 13 0 0 1 26 0c0 9.5-13 23-13 23Z" fill="currentColor" /><circle cx="15" cy="14" r="5" fill="var(--background)" /></svg>
+        </span>
+      </div>
+      <figcaption className="mt-3 flex items-baseline justify-between gap-3">
+        <span className="font-semibold text-foreground">{venue ?? "Venue not set yet"}</span>
+        {maps && <a href={maps} target="_blank" rel="noreferrer" className="text-[15px] font-semibold text-primary hover:underline">Open in Google Maps</a>}
+      </figcaption>
+    </figure>
   );
 }
 
 const ALCOHOL_OPTIONS = [["sold", "Sold"], ["free", "Given away"], ["byo", "BYO"], ["none", "No alcohol"]];
-const box = "block min-h-10 w-full rounded-lg border border-neutral-300 bg-background px-3 text-base text-foreground focus:border-primary focus:outline-none focus:ring-4 focus:ring-brand-100";
+const box = "block min-h-11 w-full rounded-lg border border-neutral-300 bg-background px-3 text-base text-foreground focus:border-primary focus:outline-none focus:ring-4 focus:ring-brand-100";
 
-/** Small inline form for one part of the event. Empty means "not set". */
+/** One form for every detail. Empty means "not set". */
 function EditForm({ inputs, profile, busy, onSave, onCancel }: {
   inputs: Input[]; profile: EventProfile; busy: boolean;
   onSave: (edits: { path: string; value: string | number | boolean | null }[]) => void; onCancel: () => void;
@@ -210,19 +243,21 @@ function EditForm({ inputs, profile, busy, onSave, onCancel }: {
   function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = new FormData(e.currentTarget);
-    onSave(inputs.map(({ path, kind }) => {
+    // Only what changed, so untouched fields keep their "our guess" or "stated" source.
+    const edits = inputs.map(({ path, kind }) => {
       if (kind === "bool") return { path, value: form.get(path) === "on" };
       const raw = String(form.get(path) ?? "").trim();
       return { path, value: raw === "" ? null : kind === "number" ? Number(raw) : raw };
-    }));
+    }).filter(({ path, value }) => value !== (field(profile, path).value ?? (typeof value === "boolean" ? false : null)));
+    if (edits.length) onSave(edits); else onCancel();
   }
   return (
-    <form onSubmit={submit} className="arrive space-y-3 rounded-xl border border-neutral-200 bg-background p-4 shadow-sm">
+    <form onSubmit={submit} className="arrive grid gap-x-5 gap-y-3 rounded-xl border border-neutral-200 bg-background p-5 sm:grid-cols-2">
       {inputs.map(({ path, label, kind }, i) => {
         const v = field(profile, path).value as string | number | boolean | null;
         if (kind === "bool") {
           return (
-            <label key={path} className="flex min-h-9 items-center gap-2.5 text-base text-foreground">
+            <label key={path} className="flex min-h-11 items-center gap-2.5 text-base text-foreground">
               <input type="checkbox" name={path} defaultChecked={v === true} className="size-4 accent-[var(--primary)]" /> {label}
             </label>
           );
@@ -242,7 +277,7 @@ function EditForm({ inputs, profile, busy, onSave, onCancel }: {
           </label>
         );
       })}
-      <div className="flex items-center gap-2 pt-1">
+      <div className="col-span-full flex items-center gap-2 pt-2">
         <Button type="submit" busy={busy} className="min-h-10 px-4 text-[15px]">Save</Button>
         <Button type="button" variant="ghost" onClick={onCancel} className="min-h-10 px-3 text-[15px] !text-neutral-700 hover:!bg-neutral-50">Cancel</Button>
       </div>

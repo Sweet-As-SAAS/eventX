@@ -1,6 +1,6 @@
 @import "tailwindcss";
 /* Generated brand tokens. Regenerate, don't hand-edit:
-   python ../.claude/skills/saas-brand-system/scripts/generate_tokens.py --primary "#2447D9" --name "HostReady" --ui-font "Inter"
+   python ../.claude/skills/saas-brand-system/scripts/generate_tokens.py --primary "#2447D9" --name "EvntX" --ui-font "Inter"
      --display-font "Bricolage Grotesque" --radius 0.625 --success "#157347" --destructive "#C0271D" --warning "#9A5B00"
      --neutral-tint 0.3 --out design-tokens */
 @import "../design-tokens/tokens.css";
@@ -34,6 +34,7 @@
   --color-success-soft: var(--success-soft);
   --color-destructive-soft: var(--destructive-soft);
   --color-warning-soft: var(--warning-soft);
+  --font-logo: var(--font-logo-face), var(--font-ui);
   --ease-out: var(--ease-out);
   --ease-in-out: var(--ease-in-out);
 }

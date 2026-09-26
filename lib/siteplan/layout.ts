@@ -6,6 +6,23 @@ import type { EventProfile, SiteItem, SiteItemKind, SitePlan } from "../schemas"
 export const SITE_CANVAS = { w: 800, h: 500, edge: 20 } as const;
 const { w: W, h: H, edge: EDGE } = SITE_CANVAS;
 
+/**
+ * What the crowd needs, scaled to peak attendance. EvntX rules of thumb, not council rules:
+ * a toilet per 100 people when alcohol is sold (per 150 otherwise), a bin per 100, a second first aid post past 2,000.
+ */
+export function crowdKit(p: EventProfile) {
+  const n = p.peakAttendance.value ?? 0;
+  const perToilet = p.alcohol.supply.value === "sold" ? 100 : 150;
+  return {
+    people: n,
+    toilets: Math.min(Math.max(Math.ceil(n / perToilet), 2), 20),
+    bins: Math.min(Math.max(Math.ceil(n / 100), 2), 10),
+    firstAid: n > 2000 ? 2 : 1,
+    // The licensed area grows with the crowd: 190 x 120 suits about 500 people.
+    licensedScale: Math.min(Math.max(Math.sqrt((n || 500) / 500), 0.75), 1.4),
+  };
+}
+
 export function defaultLayout(p: EventProfile): SiteItem[] {
   const els: Omit<SiteItem, "x" | "y" | "placed">[] = [];
   const add = (kind: SiteItemKind, label: string, w: number, h: number, n = 1) =>

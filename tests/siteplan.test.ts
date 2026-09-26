@@ -68,7 +68,8 @@ describe("SitePlan schema", () => {
   });
 
   it("rejects an item with no placed flag", () => {
-    const { placed: _, ...rest } = item();
+    const rest: Partial<SiteItem> = { ...item() };
+    delete rest.placed;
     expect(SitePlan.safeParse({ items: [rest] }).success).toBe(false);
   });
 
@@ -206,7 +207,6 @@ describe("siteChecks", () => {
     ["the demo fixture", base],
     ["CCC, alcohol sold", profile({ "alcohol.supply": "sold" }, "ccc")],
     ["CCC, no alcohol", profile({ "alcohol.supply": "none" }, "ccc")],
-    ["Waimakariri, alcohol sold", profile({ "alcohol.supply": "sold" }, "waimakariri")],
     ["everything, CCC", profile(everything)],
     ["a bare event", profile(bare)],
   ])("default layout for %s: only the assembly point is red, and placing it turns everything green", (_, p) => {
@@ -236,9 +236,9 @@ describe("siteChecks", () => {
     expect(siteChecks(items, { council: "ccc", requirements: [] }).map((c) => c.id)).toEqual(["exits", "firstaid", "assembly"]);
   });
 
-  it("labels the licensed area a HostReady check where the council has no verified fact", () => {
+  it("labels the licensed area an EvntX check where the council has no verified fact", () => {
     const requirements = [{ documentType: "special_licence_application" as const }];
-    const licensed = siteChecks([], { council: "waimakariri", requirements })[0];
+    const licensed = siteChecks([], { council: "ccc", requirements }, [])[0]; // CCC is the only council: no facts stands in
     expect(licensed).toMatchObject({ id: "licensed", pass: false, basis: "hostready", source: null });
   });
 

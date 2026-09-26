@@ -35,11 +35,11 @@ export default function LoginPage() {
     <div className="mx-auto max-w-md px-4 py-6 sm:px-6">
       <Wordmark />
       <div className="mt-16 space-y-8">
-        <Title sub="Your events and licences are saved to your club, ready for next year.">Sign in</Title>
+        <Title sub="Your events and licences are saved to your team, ready for next year.">Sign in</Title>
         <form action={sendLink} className="space-y-3">
           <label htmlFor="email" className="block text-base font-semibold text-foreground">Email</label>
-          <input id="email" name="email" type="email" required autoComplete="email" placeholder="you@club.co.nz"
-            className="block min-h-12 w-full rounded-lg border border-neutral-300 bg-background px-4 text-lg text-foreground placeholder:text-neutral-400 focus:border-primary focus:outline-none focus:ring-4 focus:ring-brand-100" />
+          <input id="email" name="email" type="email" required autoComplete="email" placeholder="you@example.com"
+            className="block min-h-12 w-full rounded-lg border border-neutral-300 bg-background px-4 text-lg text-foreground placeholder:text-neutral-500 focus:border-primary focus:outline-none focus:ring-4 focus:ring-brand-100" />
           <Button type="submit" busy={busy === "email"} disabled={!!busy} className="min-h-12 w-full">Email me a sign-in link</Button>
         </form>
         <div className="flex items-center gap-4 text-sm text-muted-foreground" aria-hidden>

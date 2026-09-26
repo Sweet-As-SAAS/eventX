@@ -4,7 +4,7 @@ import type { CheckResult } from "../lib/schemas";
 
 const checklist = [{ id: "first" }, { id: "second" }];
 const result = (ids: string[], failed: string[] = []): CheckResult => ({
-  items: ids.map((itemId) => ({ itemId, text: itemId, pass: !failed.includes(itemId), evidence: "evidence", suggestedFix: null })),
+  items: ids.map((itemId) => ({ itemId, text: itemId, pass: !failed.includes(itemId), evidence: "evidence", suggestedFix: null, alternatives: [] })),
 });
 
 describe("document checks", () => {

@@ -6,10 +6,10 @@ import { nzToday } from "@/lib/deadlines";
 import type { Licence } from "@/lib/schemas";
 import { DescribeForm } from "./describe-form";
 import { useEvents } from "./event-status";
-import { daysBetween } from "./format";
+import { daysBetween, fmtDay } from "./format";
 import { Skeleton, cx } from "./ui";
 
-const chip = "press inline-flex min-h-10 items-center rounded-full px-4 text-[15px]";
+const chip = "press inline-flex min-h-11 items-center rounded-full px-4 text-[15px]";
 
 export function Home({ name }: { name: string | null }) {
   const events = useEvents();
@@ -20,6 +20,7 @@ export function Home({ name }: { name: string | null }) {
   }, []);
 
   const upcoming = events?.filter((e) => !e.date || e.date >= today) ?? [];
+  const past = events?.filter((e) => e.date && e.date < today).slice(0, 5) ?? [];
   const first = name?.split(/\s+/)[0];
 
   return (
@@ -50,6 +51,16 @@ export function Home({ name }: { name: string | null }) {
         })}
         {(!events || !licences) && <li aria-hidden className="flex gap-2.5"><Skeleton className="h-10 w-52 !rounded-full" /><Skeleton className="h-10 w-44 !rounded-full" /></li>}
       </ul>
+      {past.length > 0 && (
+        <nav aria-label="Past events" className="mt-10 flex max-w-5xl flex-wrap items-center justify-center gap-x-5 gap-y-1 text-[15px]">
+          <span className="text-neutral-600">Past events</span>
+          {past.map((e) => (
+            <Link key={e.id} href={`/events/${e.id}/deadlines`} className="inline-flex min-h-11 items-center text-neutral-700 hover:text-foreground hover:underline">
+              {e.name ?? "Untitled event"}<span className="ml-1.5 text-neutral-500">{e.date && fmtDay(e.date).replace(",", "")}</span>
+            </Link>
+          ))}
+        </nav>
+      )}
     </div>
   );
 }

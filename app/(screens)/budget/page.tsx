@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useMemo, useSyncExternalStore } from "react";
 import { Plus, Trash } from "@/components/icons";
 import { Button, Title } from "@/components/ui";
 
@@ -10,6 +10,7 @@ const KEY = "hostready-budget";
 const START: Line[] = [
   { id: "permit", label: "Council event permit", amount: "", council: true },
   { id: "licence", label: "Special licence", amount: "", council: true },
+  { id: "stage", label: "Stage and sound hire", amount: "" },
   { id: "marquee", label: "Marquee hire", amount: "" },
   { id: "toilets", label: "Toilets", amount: "" },
   { id: "firstaid", label: "First aid", amount: "" },
@@ -17,15 +18,23 @@ const START: Line[] = [
 ];
 const nzd = (n: number) => n.toLocaleString("en-NZ", { style: "currency", currency: "NZD", maximumFractionDigits: 0 });
 
-export default function BudgetPage() {
-  const [lines, setLines] = useState<Line[]>(START);
-  const [ready, setReady] = useState(false);
+// localStorage as an external store: the server renders START, the browser its saved copy. `mem` covers blocked storage.
+const subs = new Set<() => void>();
+let mem: string | null = null;
+const read = () => { try { return localStorage.getItem(KEY) ?? mem; } catch { return mem; } };
+const subscribe = (f: () => void) => { subs.add(f); return () => { subs.delete(f); }; };
+function parse(raw: string | null): Line[] {
+  try { return raw ? JSON.parse(raw) : START; } catch { return START; }
+}
+function setLines(f: (ls: Line[]) => Line[]) {
+  mem = JSON.stringify(f(parse(read())));
+  try { localStorage.setItem(KEY, mem); } catch {}
+  subs.forEach((s) => s());
+}
 
-  useEffect(() => {
-    try { const saved = localStorage.getItem(KEY); if (saved) setLines(JSON.parse(saved)); } catch {}
-    setReady(true);
-  }, []);
-  useEffect(() => { if (ready) try { localStorage.setItem(KEY, JSON.stringify(lines)); } catch {} }, [lines, ready]);
+export default function BudgetPage() {
+  const raw = useSyncExternalStore(subscribe, read, () => null);
+  const lines = useMemo(() => parse(raw), [raw]);
 
   const set = (id: string, patch: Partial<Line>) => setLines((ls) => ls.map((l) => (l.id === id ? { ...l, ...patch } : l)));
   const total = lines.reduce((s, l) => s + (Number(l.amount) || 0), 0);
@@ -39,7 +48,7 @@ export default function BudgetPage() {
           <li key={l.id} className="flex items-center gap-3 border-b border-border py-2">
             <div className="min-w-0 flex-1">
               <input value={l.label} onChange={(e) => set(l.id, { label: e.target.value })} aria-label="Item"
-                className="w-full rounded-lg bg-transparent px-2 py-2 text-base font-medium text-foreground hover:bg-neutral-50 focus:bg-neutral-50 focus:outline-none" />
+                className="min-h-11 w-full rounded-lg bg-transparent px-2 py-2 text-base font-medium text-foreground hover:bg-neutral-50 focus:bg-neutral-50 focus:outline-none" />
               {l.council && <p className="px-2 text-sm text-muted-foreground">Fee varies, check with council</p>}
             </div>
             <label className="flex items-center gap-1 rounded-lg bg-neutral-50 px-3 focus-within:ring-2 focus-within:ring-primary">
@@ -48,7 +57,7 @@ export default function BudgetPage() {
                 placeholder="0" aria-label={`${l.label} cost`} className="min-h-11 w-24 bg-transparent text-right text-base tabular-nums focus:outline-none" />
             </label>
             <button onClick={() => setLines((ls) => ls.filter((x) => x.id !== l.id))} aria-label={`Remove ${l.label}`}
-              className="press grid size-10 place-items-center rounded-lg text-neutral-400 hover:bg-neutral-100 hover:text-destructive"><Trash /></button>
+              className="press grid size-11 place-items-center rounded-lg text-neutral-600 hover:bg-neutral-100 hover:text-destructive"><Trash /></button>
           </li>
         ))}
       </ul>

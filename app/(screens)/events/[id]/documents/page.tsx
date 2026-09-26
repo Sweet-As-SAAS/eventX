@@ -1,21 +1,25 @@
 "use client";
 import { use, useEffect, useRef, useState } from "react";
 import { api } from "@/lib/api/client";
-import type { EventDocument, EventProfile, Requirement } from "@/lib/schemas";
-import { keyFacts } from "@/components/profile-fields";
+import type { Classification, EventDocument, EventProfile, Requirement } from "@/lib/schemas";
+import { eventPermit } from "@/lib/forms/event-permit";
+import { namedPeople } from "@/components/people";
+import { fillPeople } from "@/lib/people";
 import { DOC_LABEL, STATUS_LABEL } from "@/components/format";
-import { Alert, Check, Doc, Refresh, Wand } from "@/components/icons";
+import { Alert, Check, Doc, Download, External, Pencil, Refresh } from "@/components/icons";
 import { CHANGED } from "@/components/sidebar";
 import { useFail, useToast } from "@/components/toast";
-import { Button, ButtonLink, Pill, Skeleton, SourceLine, Spinner, Title, cx } from "@/components/ui";
+import { Button, ButtonA, ButtonLink, Pill, Skeleton, SourceLine, Spinner, Title, cx } from "@/components/ui";
 
 // Screen 3, Documents. Every pending document drafts and checks in parallel; each row flips as it lands.
-// Open expands the document in place; Fix it applies the suggested fix straight away.
-const ACT = "press inline-flex min-h-10 min-w-[88px] shrink-0 items-center justify-center gap-2 rounded-lg px-4 text-[15px] font-semibold disabled:cursor-wait";
+// Nothing is fixed behind the organiser's back: each red item shows what's wrong and they choose or write the wording.
+// A draft only counts once they've read it and ticked it.
+const ACT = "press inline-flex min-h-11 min-w-[88px] shrink-0 items-center justify-center gap-2 rounded-lg px-4 text-[15px] font-semibold disabled:cursor-wait";
 const ACT_PRIMARY = cx(ACT, "bg-primary text-primary-foreground hover:bg-brand-600");
 const ACT_SECONDARY = cx(ACT, "border border-neutral-200 bg-background text-foreground hover:border-neutral-300 hover:bg-neutral-50");
-/** A fix that still has a [PLACEHOLDER] (or no fix at all) needs facts only the organiser has. */
-const needsYou = (fix: string | null) => !fix || /\[[^\]]+\]/.test(fix);
+/** The sentence to fill in. Checkers sometimes wrap it: "Specify who, e.g., '[NAME] will run it.'" -> "[NAME] will run it." */
+const template = (fix: string) => fix.match(/['"‘“]([^'"’”]*\[[^\]]+\][^'"’”]*)['"’”]/)?.[1] ?? fix;
+const toRead = (d: EventDocument) => d.status === "ready" && !d.reviewed;
 
 export default function DocumentsPage({ params }: PageProps<"/events/[id]/documents">) {
   const { id } = use(params);
@@ -24,14 +28,21 @@ export default function DocumentsPage({ params }: PageProps<"/events/[id]/docume
   const [docs, setDocs] = useState<EventDocument[] | null>(null);
   const [reqs, setReqs] = useState<Requirement[]>([]);
   const [profile, setProfile] = useState<EventProfile | null>(null);
+  const [cls, setCls] = useState<Classification | null>(null);
+  const [description, setDescription] = useState<string | null>(null);
   const [open, setOpen] = useState<string | null>(null);
   const [failed, setFailed] = useState<Set<string>>(new Set());
-  const [fixing, setFixing] = useState<string | null>(null);
+  const [busy, setBusy] = useState<Record<string, string>>({}); // document id -> what's in flight (a checklist item, "edit" or "review")
   const [justFixed, setJustFixed] = useState<string | null>(null);
   const [flashDoc, setFlashDoc] = useState<string | null>(null);
   const started = useRef(false);
 
   const replace = (d: EventDocument) => { setDocs((ds) => ds?.map((x) => (x.id === d.id ? d : x)) ?? null); return d; };
+  const busyOn = (docId: string, what: string | null) => setBusy((b) => {
+    const n = { ...b };
+    if (what) n[docId] = what; else delete n[docId];
+    return n;
+  });
 
   function work(d: EventDocument) {
     setFailed((f) => { const n = new Set(f); n.delete(d.id); return n; });
@@ -51,40 +62,79 @@ export default function DocumentsPage({ params }: PageProps<"/events/[id]/docume
         setDocs(list);
         setReqs(ev.requirements);
         setProfile(ev.profile);
+        setCls(ev.classification);
+        setDescription(ev.description);
         list.filter((d) => d.status === "pending" || d.status === "drafted").forEach(work);
       })
       .catch(fail);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  async function fix(doc: EventDocument, itemId: string, text?: string) {
-    setFixing(itemId);
+  async function fix(doc: EventDocument, itemId: string, text: string) {
+    busyOn(doc.id, itemId);
     try {
       const d = replace(await api.fix(doc.id, itemId, text));
       setJustFixed(itemId);
-      setFlashDoc(d.id);
       dispatchEvent(new Event(CHANGED));
       const passed = d.checkResults?.items.find((i) => i.itemId === itemId)?.pass;
       if (!passed) toast("Added to the draft, but the council checklist still wants more for this item.", "error");
-      else toast(d.status === "ready" ? `Fixed. ${DOC_LABEL[d.documentType]} is ready.` : "Fixed.");
+      else toast(d.status === "ready" ? "Added. Now read the draft and tick it off." : "Added to the draft.");
     } catch (e) {
       fail(e);
     } finally {
-      setFixing(null);
+      busyOn(doc.id, null);
     }
   }
 
-  const count = (s: EventDocument["status"]) => docs?.filter((d) => d.status === s).length ?? 0;
-  const ready = count("ready"), toFix = count("needs_fix"), working = count("pending") + count("drafted");
+  async function saveEdit(doc: EventDocument, sections: { heading: string; body: string }[]) {
+    busyOn(doc.id, "edit");
+    try {
+      replace(await api.editDocument(doc.id, sections));
+      const d = replace(await api.check(doc.id)); // your words, checked against the council checklist again
+      dispatchEvent(new Event(CHANGED));
+      toast(d.status === "ready" ? "Saved and re-checked. Tick it off when you're happy." : "Saved. The council checklist wants something more, see the red items.");
+      return true;
+    } catch (e) {
+      fail(e);
+      return false;
+    } finally {
+      busyOn(doc.id, null);
+    }
+  }
+
+  async function review(doc: EventDocument, reviewed: boolean) {
+    busyOn(doc.id, "review");
+    try {
+      const d = replace(await api.review(doc.id, reviewed));
+      dispatchEvent(new Event(CHANGED));
+      if (!reviewed) return;
+      setFlashDoc(d.id);
+      // Straight on to the next draft that still needs reading.
+      const next = docs?.find((x) => x.id !== d.id && toRead(x));
+      setOpen(next?.id ?? null);
+      toast(next ? `${DOC_LABEL[d.documentType]} checked. Next: ${DOC_LABEL[next.documentType]}.` : "Every draft is read and checked.");
+    } catch (e) {
+      fail(e);
+    } finally {
+      busyOn(doc.id, null);
+    }
+  }
+
+  const count = (f: (d: EventDocument) => boolean) => docs?.filter(f).length ?? 0;
+  const checked = count((d) => d.status === "ready" && d.reviewed);
+  const unread = count(toRead);
+  const toFix = count((d) => d.status === "needs_fix");
+  const working = count((d) => d.status === "pending" || d.status === "drafted");
   const toggle = (docId: string) => setOpen((o) => (o === docId ? null : docId));
 
   return (
     <div className="space-y-6">
-      <Title sub="Everything the council and licensing team will ask for, drafted from your event details."
+      <Title sub="Everything the council and licensing team will ask for, drafted from your event details. Read each one, change anything that isn't right, and tick it off."
         aside={docs && <>
-          {ready > 0 && <Pill tone="ok">{ready} ready</Pill>}
+          {checked > 0 && <Pill tone="ok">{checked} checked</Pill>}
+          {unread > 0 && <Pill tone="quiet">{unread} to read</Pill>}
           {toFix > 0 && <Pill tone="warn">{toFix} to fix</Pill>}
-          {working > 0 && <Pill tone="quiet">{working} drafting</Pill>}
+          {working > 0 && <Pill tone="quiet">{working} in progress</Pill>}
         </>}>
         Documents
       </Title>
@@ -96,38 +146,46 @@ export default function DocumentsPage({ params }: PageProps<"/events/[id]/docume
               const gap = d.checkResults?.items.find((i) => !i.pass);
               const isFailed = failed.has(d.id);
               const isOpen = open === d.id;
+              const reds = d.checkResults?.items.filter((i) => !i.pass).length ?? 0;
               const sub = isFailed ? "Didn't finish drafting."
-                : d.status === "needs_fix" && gap ? gap.suggestedFix ?? gap.text
+                : d.status === "needs_fix" && gap ? `${reds} ${reds === 1 ? "thing" : "things"} to fix: ${gap.text}`
+                : toRead(d) ? "Passes the council checklist. Read it through and tick it off."
+                : d.status === "ready" ? "You've read and checked this one."
+                : d.documentType === "waste_management_confirmation" ? "Goes into the waste section of your event permit form."
                 : req?.reason ?? (d.status === "manual" ? "You lodge this one yourself." : "");
               return (
-                <li key={d.id} className={cx("border-b border-border last:border-b-0", d.status === "needs_fix" && "bg-warning-soft/40", flashDoc === d.id && d.status === "ready" && "flash-pass")}>
+                <li key={d.id} className={cx("border-b border-border last:border-b-0", d.status === "needs_fix" && "bg-warning-soft/40", flashDoc === d.id && d.reviewed && "flash-pass")}>
                   <div className="flex flex-wrap items-center gap-x-4 gap-y-3 px-5 py-4 sm:flex-nowrap">
-                    <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-brand-50 text-primary"><Doc /></span>
-                    <div className="min-w-0 flex-1">
+                    <span className={cx("grid size-10 shrink-0 place-items-center rounded-xl", d.reviewed ? "bg-success text-success-foreground" : "bg-brand-50 text-primary")}>
+                      {d.reviewed ? <Check width={18} height={18} strokeWidth={3} /> : <Doc />}
+                    </span>
+                    <div className="min-w-0 flex-1 basis-[calc(100%-3.5rem)] sm:basis-0">
                       <p className="text-[17px] font-semibold text-foreground">{d.content?.title ?? DOC_LABEL[d.documentType]}</p>
                       <p className="line-clamp-2 text-[15px] text-neutral-600 sm:line-clamp-1">{sub}</p>
+                      {req && <SourceLine url={req.sourceUrl} checked={req.lastChecked} className="mt-0.5" />}
                     </div>
                     <div className="ml-14 flex items-center gap-3 sm:ml-0">
                       {isFailed ? <Pill tone="warn">Didn&apos;t finish</Pill>
-                        : <Pill tone={d.status === "ready" ? "ok" : d.status === "needs_fix" ? "warn" : "quiet"}>{d.status === "drafted" ? "Checking" : STATUS_LABEL[d.status]}</Pill>}
+                        : toRead(d) ? <Pill tone="quiet">To read</Pill>
+                        : d.status === "ready" ? <Pill tone="ok">Checked by you</Pill>
+                        : <Pill tone={d.status === "needs_fix" ? "warn" : "quiet"}>
+                            {(d.status === "pending" || d.status === "drafted") && <span className="mr-1.5 inline-flex"><Spinner /></span>}
+                            {d.status === "drafted" ? "Checking" : STATUS_LABEL[d.status]}
+                          </Pill>}
                       {isFailed ? (
                         <button className={ACT_SECONDARY} onClick={() => work(d)}><Refresh width={16} height={16} /> Try again</button>
-                      ) : d.status === "needs_fix" ? (
-                        <button className={ACT_PRIMARY} disabled={!!fixing} aria-expanded={isOpen}
-                          onClick={() => (gap && !needsYou(gap.suggestedFix) && !isOpen ? fix(d, gap.itemId) : toggle(d.id))}>
-                          {fixing && fixing === gap?.itemId ? <><Spinner /> Fixing</> : "Fix it"}
-                        </button>
                       ) : (
-                        <button className={ACT_SECONDARY} aria-expanded={isOpen} onClick={() => toggle(d.id)}>
-                          {isOpen ? "Close" : d.status === "pending" || d.status === "drafted" ? "Continue" : "Open"}
+                        <button className={d.status === "needs_fix" || toRead(d) ? ACT_PRIMARY : ACT_SECONDARY} aria-expanded={isOpen} onClick={() => toggle(d.id)}>
+                          {isOpen ? "Close" : d.status === "needs_fix" ? "Fix it" : toRead(d) ? "Read it" : "Open"}
                         </button>
                       )}
                     </div>
                   </div>
                   {isOpen && (
                     <div className="arrive border-t border-border bg-background px-5 py-7 sm:pl-[76px] sm:pr-10">
-                      <DocumentDetail doc={d} profile={profile} req={req} failed={isFailed} retry={() => work(d)}
-                        fixing={fixing} justFixed={justFixed} onFix={(itemId, text) => fix(d, itemId, text)} />
+                      <DocumentDetail doc={d} profile={profile} req={req} permit={profile && d.documentType === "event_permit_application"
+                        ? eventPermit(profile, cls, docs.find((x) => x.documentType === "waste_management_confirmation")?.content?.sections.map((s) => s.body).join("\n\n") ?? null, description) : null} failed={isFailed} retry={() => work(d)} busy={busy[d.id] ?? null} justFixed={justFixed}
+                        onFix={(itemId, text) => fix(d, itemId, text)} onSave={(sections) => saveEdit(d, sections)} onReview={(r) => review(d, r)} />
                     </div>
                   )}
                 </li>
@@ -144,29 +202,37 @@ export default function DocumentsPage({ params }: PageProps<"/events/[id]/docume
 
       {docs && (
         <div className="flex flex-wrap items-center gap-6 pt-2">
-          <ButtonLink href={`/events/${id}/site-plan`} className="min-h-12 px-7 text-[17px]">Continue to site plan</ButtonLink>
+          <ButtonLink href={`/events/${id}/site-plan`} variant={toFix || unread ? "secondary" : "primary"} className="min-h-12 px-7 text-[17px]">Continue to site plan</ButtonLink>
           <ButtonLink href={`/events/${id}/profile`} variant="ghost" className="!text-neutral-700 hover:!bg-neutral-50">Back</ButtonLink>
+          <p className="basis-full text-base text-neutral-600" aria-live="polite">
+            {working ? `Drafting ${working} ${working === 1 ? "document" : "documents"} to the council templates. Each one appears here when it's done.`
+              : toFix ? "Fix the red items, then read each draft and tick it off. Eventbrite unlocks when they're all checked."
+              : unread ? `${unread} ${unread === 1 ? "draft" : "drafts"} still to read and tick off before Eventbrite unlocks.`
+              : "Every draft is read and checked by you."}
+          </p>
         </div>
       )}
     </div>
   );
 }
 
-function DocumentDetail({ doc, profile, req, failed, retry, fixing, justFixed, onFix }: {
-  doc: EventDocument; profile: EventProfile | null; req?: Requirement; failed: boolean; retry: () => void;
-  fixing: string | null; justFixed: string | null; onFix: (itemId: string, text?: string) => void;
+function DocumentDetail({ doc, profile, req, permit, failed, retry, busy, justFixed, onFix, onSave, onReview }: {
+  doc: EventDocument; profile: EventProfile | null; req?: Requirement; permit: ReturnType<typeof eventPermit> | null; failed: boolean; retry: () => void; busy: string | null; justFixed: string | null;
+  onFix: (itemId: string, text: string) => void; onSave: (sections: { heading: string; body: string }[]) => Promise<boolean>; onReview: (reviewed: boolean) => void;
 }) {
+  const [editing, setEditing] = useState(false);
+
   if (doc.status === "manual") {
     return (
       <div className="space-y-4">
         <p className="max-w-prose text-lg text-neutral-700">
           {doc.documentType === "event_permit_application"
-            ? "It's the council's own form, so you lodge it. We've gathered your answers below to copy straight in."
-            : <>You handle this one. HostReady doesn&apos;t draft it.</>}
+            ? "The council takes this one as an online form. We open it with your answers already filled in: check them, fill the gaps, add the uploads and submit."
+            : <>You handle this one. EvntX doesn&apos;t draft it.</>}
         </p>
         {req && <p className="max-w-prose text-base text-neutral-700"><span className="font-semibold text-foreground">Why the council needs it: </span>{req.reason.replace(/\.?$/, ".")}</p>}
         {req && <SourceLine url={req.sourceUrl} checked={req.lastChecked} />}
-        {doc.documentType === "event_permit_application" && profile && <PermitAnswers profile={profile} />}
+        {permit && <PermitForm permit={permit} />}
       </div>
     );
   }
@@ -187,14 +253,14 @@ function DocumentDetail({ doc, profile, req, failed, retry, fixing, justFixed, o
           <Spinner /> {doc.content ? "Checking it against the council checklist…" : "Drafting it to the council template…"}
         </p>
         <div className="space-y-3">{Array.from({ length: 4 }, (_, i) => <Skeleton key={i} className="h-12" />)}</div>
-        <div className="space-y-2 pt-4"><Skeleton className="h-5 w-1/3" /><Skeleton className="h-4" /><Skeleton className="h-4" /><Skeleton className="h-4 w-4/5" /></div>
       </div>
     );
   }
 
-  const items = doc.checkResults.items;
+  const items = [...doc.checkResults.items].sort((a, b) => Number(a.pass) - Number(b.pass)); // what needs you first
   const pass = items.filter((i) => i.pass).length;
   const gaps = doc.content.placeholders.length;
+  const people = profile ? namedPeople(profile) : [];
 
   return (
     <article className="arrive space-y-10">
@@ -203,64 +269,183 @@ function DocumentDetail({ doc, profile, req, failed, retry, fixing, justFixed, o
           <h3 id="checklist" className="text-lg font-semibold text-foreground">Council checklist</h3>
           <p className="text-base font-medium tabular-nums text-neutral-700">{pass} of {items.length} pass</p>
         </div>
-        {doc.checklistSource && <SourceLine url={doc.checklistSource.url} checked={doc.checklistSource.lastChecked} className="mt-1" />}
+        <SourceLine url={doc.checklistSource?.url ?? ""} checked={doc.checklistSource?.lastChecked ?? null} className="mt-1" />
         <ul className="mt-4 border-t border-border">
           {items.map((it) => (
-            <li key={it.itemId} className={cx("flex gap-3 border-b border-border px-1", it.pass ? "py-3" : "py-4", !it.pass && "bg-destructive-soft/60", it.pass && justFixed === it.itemId && "flash-pass")}>
+            <li key={it.itemId} className={cx("flex gap-3 border-b border-border px-1", it.pass ? "py-3" : "py-5", !it.pass && "bg-destructive-soft/60", it.pass && justFixed === it.itemId && "flash-pass")}>
               <span className={cx("mt-0.5 grid size-6 shrink-0 place-items-center rounded-full", it.pass ? "bg-success text-success-foreground" : "bg-destructive text-destructive-foreground")}>
                 {it.pass
                   ? <Check width={14} height={14} strokeWidth={3} className={justFixed === it.itemId ? "tick-draw" : undefined} />
                   : <Alert width={14} height={14} strokeWidth={2.5} />}
               </span>
-              <div className="min-w-0 flex-1 space-y-2">
+              <div className="min-w-0 flex-1 space-y-3">
                 <p className="text-base font-semibold text-foreground">{it.text}</p>
                 {it.pass && justFixed === it.itemId && it.evidence && <p className="text-sm text-muted-foreground">Now says: &ldquo;{it.evidence}&rdquo;</p>}
-                {!it.pass && <FixItem fix={it.suggestedFix} busy={fixing === it.itemId} disabled={!!fixing} onFix={(text) => onFix(it.itemId, text)} />}
+                {!it.pass && <CouncilQuote quote={doc.checklistSource?.quotes.find((q) => q.itemId === it.itemId)?.quote} />}
+                {!it.pass && <FixItem key={`${it.itemId}${it.suggestedFix ?? ""}`} item={it.text} people={people}
+                  suggestions={[it.suggestedFix, ...it.alternatives].filter((s): s is string => !!s).map((s) => template(profile ? fillPeople(s, profile.people) : s))}
+                  busy={busy === it.itemId} disabled={!!busy} onFix={(text) => onFix(it.itemId, text)} />}
               </div>
             </li>
           ))}
         </ul>
       </section>
 
-      <details className="group">
-        <summary className="press flex min-h-11 cursor-pointer list-none flex-wrap items-center justify-between gap-2 rounded-lg">
-          <span className="text-lg font-semibold text-primary"><span className="group-open:hidden">Read the draft</span><span className="hidden group-open:inline">Hide the draft</span></span>
-          {gaps > 0 && <span className="text-base text-warning">{gaps} {gaps === 1 ? "gap" : "gaps"} for you to fill before lodging</span>}
-        </summary>
-        <div className="mt-4 max-w-prose space-y-6 border-l-2 border-neutral-200 pl-5">
-          {doc.content.sections.map((s) => (
-            <div key={s.heading}>
-              <h4 className="text-base font-semibold text-foreground">{s.heading}</h4>
-              <p className="mt-1 text-base leading-relaxed text-neutral-800"><Gaps text={s.body} /></p>
+      <section aria-labelledby="draft">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h3 id="draft" className="text-lg font-semibold text-foreground">The draft</h3>
+          {!editing && (
+            <div className="flex flex-wrap items-center gap-2">
+              <Button variant="secondary" disabled={!!busy} onClick={() => setEditing(true)}><Pencil width={16} height={16} /> Edit the wording</Button>
+              <ButtonA href={`${api.documentPdfUrl(doc.id)}?view=1`} target="_blank" rel="noreferrer" variant="secondary">
+                {doc.documentType === "special_licence_application" || doc.documentType === "hazard_register" ? "View the council form" : "View PDF"}
+              </ButtonA>
+              <ButtonA href={api.documentPdfUrl(doc.id)} download variant="secondary"><Download /> Download</ButtonA>
             </div>
-          ))}
+          )}
         </div>
-      </details>
+        <p className="mt-1 max-w-prose text-[15px] text-neutral-600">
+          Written from your answers to the council&apos;s template. You know your event best: change anything that isn&apos;t right before you tick it off.
+          {gaps > 0 && <span className="text-warning"> {gaps} highlighted {gaps === 1 ? "gap" : "gaps"} to fill.</span>}
+        </p>
+        {editing
+          ? <DraftEditor sections={doc.content.sections} busy={busy === "edit"} onCancel={() => setEditing(false)}
+              onSave={async (s) => { if (await onSave(s)) setEditing(false); }} />
+          : (
+            <div className="mt-5 max-w-prose space-y-6 border-l-2 border-neutral-200 pl-5">
+              {doc.content.sections.map((s, i) => (
+                <div key={i}>
+                  <h4 className="text-base font-semibold text-foreground">{s.heading}</h4>
+                  <p className="mt-1 whitespace-pre-line text-base leading-relaxed text-neutral-800"><Gaps text={s.body} /></p>
+                </div>
+              ))}
+            </div>
+          )}
+      </section>
+
+      <ReviewTick doc={doc} busy={busy === "review"} disabled={editing || (!!busy && busy !== "review")} onReview={onReview} />
     </article>
   );
 }
 
-/** One red checklist item: the suggested fix, plus a box for facts only the organiser has (names, providers, menus). */
-function FixItem({ fix, busy, disabled, onFix }: { fix: string | null; busy: boolean; disabled: boolean; onFix: (text?: string) => void }) {
-  const [text, setText] = useState("");
-  const ask = needsYou(fix);
-  const wantsName = !!fix && /\[[^\]]*NAME[^\]]*\]/i.test(fix); // "volunteers" or "the club" won't pass; the council wants it named
-  const typed = text.trim();
+/** Every section's wording, editable. Headings stay the council's. */
+function DraftEditor({ sections, busy, onSave, onCancel }: {
+  sections: { heading: string; body: string }[]; busy: boolean; onSave: (s: { heading: string; body: string }[]) => void; onCancel: () => void;
+}) {
+  const [bodies, setBodies] = useState(sections.map((s) => s.body));
+  const changed = bodies.some((b, i) => b !== sections[i].body);
   return (
-    <form className="space-y-3" onSubmit={(e) => { e.preventDefault(); onFix(typed || undefined); }}>
-      <p className="text-base text-destructive">Missing from the draft.</p>
-      {fix && <p className="text-base text-neutral-800"><span className="font-semibold">Suggested fix: </span><Gaps text={fix} /></p>}
-      <label className="block max-w-prose">
-        <span className="mb-1 block text-sm font-medium text-neutral-700">
-          {wantsName ? "The council wants this named. Type the actual person or company, not a group like \"volunteers\"."
-            : ask ? "Only you know this. Add the details and we'll write them into the draft." : "Or say it in your own words (optional)"}
+    <form className="arrive mt-5 max-w-prose space-y-5" onSubmit={(e) => { e.preventDefault(); onSave(sections.map((s, i) => ({ heading: s.heading, body: bodies[i] }))); }}>
+      {sections.map((s, i) => (
+        <label key={i} className="block">
+          <span className="mb-1 block text-base font-semibold text-foreground">{s.heading}</span>
+          <textarea value={bodies[i]} onChange={(e) => setBodies((b) => b.map((x, j) => (j === i ? e.target.value : x)))} maxLength={8000}
+            rows={Math.min(14, Math.ceil(bodies[i].length / 75) + 2)}
+            className="block w-full rounded-lg border border-neutral-300 bg-background px-3 py-2 text-base leading-relaxed text-foreground focus:border-primary focus:outline-none focus:ring-4 focus:ring-brand-100" />
+        </label>
+      ))}
+      <div className="flex flex-wrap items-center gap-3">
+        <Button type="submit" busy={busy} disabled={!changed}>{busy ? "Saving and re-checking" : "Save changes"}</Button>
+        <Button type="button" variant="ghost" onClick={onCancel} disabled={busy} className="!text-neutral-700 hover:!bg-neutral-50">Cancel</Button>
+        <span className="text-sm text-neutral-600">We&apos;ll check your wording against the council checklist again.</span>
+      </div>
+    </form>
+  );
+}
+
+/** The organiser's sign-off. Only a draft with nothing red can be ticked; any change to the wording clears it. */
+function ReviewTick({ doc, busy, disabled, onReview }: { doc: EventDocument; busy: boolean; disabled: boolean; onReview: (r: boolean) => void }) {
+  const red = doc.status !== "ready";
+  return (
+    <div className={cx("rounded-2xl border px-5 py-4", doc.reviewed ? "border-success bg-success-soft" : "border-neutral-300 bg-neutral-50")}>
+      <label className={cx("flex items-start gap-3", red ? "cursor-not-allowed" : "cursor-pointer")}>
+        <input type="checkbox" checked={doc.reviewed} disabled={red || disabled || busy} onChange={(e) => onReview(e.target.checked)}
+          className="mt-0.5 size-5 shrink-0 accent-[var(--primary)]" />
+        <span>
+          <span className="block text-base font-semibold text-foreground">
+            {busy && <span className="mr-2 inline-flex align-middle"><Spinner /></span>}
+            I&apos;ve read this draft and checked it&apos;s right for my event
+          </span>
+          <span className="mt-0.5 block text-[15px] text-neutral-600">
+            {red ? "Fix the red checklist items above first." : doc.reviewed ? "Done. If you change the wording, you'll tick it again." : "The council holds you to what it says, so give it a proper read."}
+          </span>
         </span>
-        <textarea value={text} onChange={(e) => setText(e.target.value)} rows={2} maxLength={1500} disabled={disabled}
-          placeholder={wantsName ? "A person's or company's name" : "Names, providers or arrangements, in your words"}
-          className="block w-full rounded-lg border border-neutral-300 bg-background px-3 py-2 text-base text-foreground placeholder:text-neutral-400 focus:border-primary focus:outline-none focus:ring-4 focus:ring-brand-100" />
       </label>
-      <Button type="submit" busy={busy} disabled={disabled || (ask && !typed)}>
-        {!busy && <Wand />} {busy ? "Updating the draft" : typed ? "Add to draft" : "Apply fix"}
+    </div>
+  );
+}
+
+/** Why the item is asked, in the council's own words from its form or guide. */
+const CouncilQuote = ({ quote }: { quote?: string }) => quote ? (
+  <p className="max-w-prose border-l-2 border-neutral-300 pl-3 text-[15px] text-neutral-700">
+    <span className="font-medium text-foreground">The council asks: </span>&ldquo;{quote}&rdquo;
+  </p>
+) : null;
+
+/** One red checklist item: what's wrong, a few ways to word it, and the organiser's own wording wins. Nothing is added until they say so. */
+function FixItem({ item, people, suggestions, busy, disabled, onFix }: {
+  item: string; people: { label: string; value: string }[]; suggestions: string[]; busy: boolean; disabled: boolean; onFix: (text: string) => void;
+}) {
+  const [text, setText] = useState("");
+  const [picked, setPicked] = useState<number | null>(null);
+  const box = useRef<HTMLTextAreaElement>(null);
+  // "Attaches food and drinks menus": EvntX holds no files, so the organiser attaches it when lodging.
+  if (/^attach/i.test(item)) {
+    return (
+      <div className="space-y-3">
+        <p className="max-w-prose text-base text-neutral-800">You attach this yourself when you lodge. EvntX can&apos;t attach files, so we note it in the draft for you.</p>
+        <Button variant="secondary" busy={busy} disabled={disabled}
+          onClick={() => onFix(`The organiser will attach this when lodging: ${item.replace(/^attaches\s*/i, "")}.`)}>
+          {!busy && <Check />} {busy ? "Updating the draft" : "I'll attach it when I lodge"}
+        </Button>
+      </div>
+    );
+  }
+  const left = text.match(/\[[^\]]+\]/g) ?? [];
+  // Select the next [bracket] so typing replaces it. After the click has placed the caret, hence the timeout.
+  const jump = () => setTimeout(() => {
+    const el = box.current, m = el && /\[[^\]]+\]/.exec(el.value);
+    if (el && m) { el.focus(); el.setSelectionRange(m.index, m.index + m[0].length); }
+  });
+  const pick = (i: number) => { setPicked(i); setText(suggestions[i]); jump(); };
+  return (
+    <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); onFix(text.trim()); }}>
+      <p className="text-base text-destructive">The draft doesn&apos;t cover this yet, so the council would send it back.</p>
+      {suggestions.length > 0 && (
+        <fieldset className="space-y-2">
+          <legend className="mb-2 text-sm font-semibold text-foreground">Pick one to start from, or write your own below</legend>
+          {suggestions.map((s, i) => (
+            <label key={i} className={cx("flex cursor-pointer gap-3 rounded-xl border bg-background px-4 py-3 text-[15px] leading-relaxed",
+              picked === i ? "border-primary ring-1 ring-primary" : "border-neutral-200 hover:border-neutral-300")}>
+              <input type="radio" name={`fix-${item}`} checked={picked === i} onChange={() => pick(i)} disabled={disabled} className="mt-1 size-4 shrink-0 accent-[var(--primary)]" />
+              <span className="text-neutral-800"><Gaps text={s} /></span>
+            </label>
+          ))}
+        </fieldset>
+      )}
+      <label className="block max-w-prose">
+        <span className="mb-1 block text-sm font-semibold text-foreground">What the draft should say</span>
+        <textarea ref={box} value={text} onChange={(e) => { setText(e.target.value); setPicked(null); }} onFocus={() => left.length && jump()}
+          rows={Math.max(3, Math.min(6, Math.ceil(text.length / 70) + 1))} maxLength={1500} disabled={disabled}
+          placeholder="Your own words, or pick a suggestion above and change it"
+          className="block w-full rounded-lg border border-neutral-300 bg-background px-3 py-2 text-base text-foreground placeholder:text-neutral-500 focus:border-primary focus:outline-none focus:ring-4 focus:ring-brand-100" />
+      </label>
+      {left.length > 0 && (
+        <p className="text-sm text-neutral-700" aria-live="polite">Still to fill: <Gaps text={[...new Set(left)].join(" ")} /></p>
+      )}
+      {left.length > 0 && people.length > 0 && (
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-sm text-neutral-700">Use someone you named:</span>
+          {people.map((p) => (
+            <button key={p.label} type="button" disabled={disabled} onClick={() => { setText((t) => t.replace(/\[[^\]]+\]/, p.value)); jump(); }}
+              className="press min-h-9 rounded-full border border-neutral-200 px-3 text-sm font-medium text-foreground hover:border-brand-300 hover:bg-brand-50">
+              {p.value} <span className="text-muted-foreground">({p.label})</span>
+            </button>
+          ))}
+        </div>
+      )}
+      <Button type="submit" busy={busy} disabled={disabled || left.length > 0 || !text.trim()}>
+        {busy ? "Adding to the draft" : "Add to the draft"}
       </Button>
     </form>
   );
@@ -275,30 +460,43 @@ function Gaps({ text }: { text: string }) {
   );
 }
 
-/** The permit is the council's own form, so we hand over every answer we already know, ready to copy across. */
-function PermitAnswers({ profile }: { profile: EventProfile }) {
+/** The council's online permit form, opened with our answers, plus every answer in its order to check or copy. */
+function PermitForm({ permit }: { permit: ReturnType<typeof eventPermit> }) {
   const toast = useToast();
-  const facts = keyFacts(profile);
-  const copy = () => navigator.clipboard.writeText(facts.map((f) => `${f.label}: ${f.value}`).join("\n"))
-    .then(() => toast("Copied. Paste them into the council form."), () => toast("Couldn't copy. Select the text instead.", "error"));
+  const rows = permit.sections.flatMap((s) => s.rows);
+  const filled = rows.filter((r) => r.value).length;
+  const copy = (v: string) => navigator.clipboard.writeText(v).then(() => toast("Copied."), () => toast("Couldn't copy. Select the text instead.", "error"));
   return (
-    <section aria-labelledby="answers" className="pt-2">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h3 id="answers" className="text-lg font-semibold text-foreground">Your answers for the permit form</h3>
-        <Button variant="secondary" onClick={copy}>Copy all</Button>
+    <section aria-labelledby="permit" className="space-y-6 pt-2">
+      <div className="flex flex-wrap items-center gap-4 rounded-2xl border border-brand-200 bg-brand-50 px-5 py-4">
+        <div className="min-w-0 flex-1">
+          <h3 id="permit" className="text-lg font-semibold text-foreground">CCC&apos;s event permit form, filled in</h3>
+          <p className="text-[15px] text-neutral-700">{filled} of {rows.length} answers ready. Opens the council&apos;s own form in a new tab.</p>
+        </div>
+        <ButtonA href={permit.url} target="_blank" rel="noreferrer"><External /> Open the council form</ButtonA>
       </div>
-      <p className="mt-1 text-base text-muted-foreground">Everything we know so far. A dot means we guessed, so check those.</p>
-      <dl className="mt-4 border-t border-border">
-        {facts.map((f) => (
-          <div key={f.label} className="flex gap-6 border-b border-border py-3">
-            <dt className="w-20 shrink-0 text-base text-muted-foreground">{f.label}</dt>
-            <dd className="flex flex-1 items-start justify-between gap-3 text-base font-medium text-foreground">
-              {f.value}
-              {f.guess && <span className="mt-2 size-2 shrink-0 rounded-full bg-warning" aria-label="Our guess" />}
-            </dd>
-          </div>
-        ))}
-      </dl>
+      <div>
+        <h4 className="text-base font-semibold text-foreground">Upload these with it</h4>
+        <ul className="mt-1 list-disc pl-5 text-[15px] text-neutral-700">
+          <li>Health and safety management plan (from this list)</li>
+          <li>Detailed site map (your site plan: Download plan)</li>
+          <li>Public liability insurance (yours, if the council asks for it)</li>
+        </ul>
+      </div>
+      {permit.sections.map((s) => (
+        <div key={s.title}>
+          <h4 className="text-base font-semibold text-foreground">{s.title}</h4>
+          <dl className="mt-2 border-t border-border">
+            {s.rows.map((r) => (
+              <div key={r.label} className="grid gap-x-6 gap-y-1 border-b border-border py-2.5 sm:grid-cols-[260px_1fr_auto] sm:items-start">
+                <dt className="text-[15px] text-neutral-600">{r.label}</dt>
+                <dd className={cx("whitespace-pre-line text-[15px]", r.value ? "font-medium text-foreground" : "text-warning")}>{r.value ?? "For you to fill in"}</dd>
+                {r.value && <button onClick={() => copy(r.value!)} className="press justify-self-start text-sm font-semibold text-primary hover:underline">Copy</button>}
+              </div>
+            ))}
+          </dl>
+        </div>
+      ))}
     </section>
   );
 }

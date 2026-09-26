@@ -7,6 +7,7 @@ const base = (p: P) => ({
   strokeWidth: 1.75, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, "aria-hidden": true, ...p,
 });
 
+export const Paperclip = (p: P) => <svg {...base(p)}><path d="m21 11-8.6 8.6a5.5 5.5 0 0 1-7.8-7.8l8.6-8.6a3.7 3.7 0 0 1 5.2 5.2l-8.6 8.6a1.8 1.8 0 0 1-2.6-2.6L15 7" /></svg>;
 export const Check = (p: P) => <svg {...base(p)}><path d="M20 6 9 17l-5-5" /></svg>;
 export const Cross = (p: P) => <svg {...base(p)}><path d="M18 6 6 18M6 6l12 12" /></svg>;
 export const Alert = (p: P) => <svg {...base(p)}><circle cx="12" cy="12" r="9" /><path d="M12 8v4.5M12 16h.01" /></svg>;

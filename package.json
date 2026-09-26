@@ -16,7 +16,9 @@
     "ingest:extract": "tsx scripts/ingest/extract.ts",
     "ingest:load": "tsx --env-file=.env.local scripts/ingest/load.ts",
     "ingest:normalise": "tsx --env-file=.env.local scripts/ingest/normalise.ts",
-    "ingest:publish": "tsx --env-file=.env.local scripts/ingest/publish.ts"
+    "ingest:publish": "tsx --env-file=.env.local scripts/ingest/publish.ts",
+    "lint": "eslint .",
+    "e2e": "playwright test"
   },
   "dependencies": {
     "@react-pdf/renderer": "^4.9.0",
@@ -24,17 +26,21 @@
     "@supabase/supabase-js": "^2.117.2",
     "next": "16.3.6",
     "openai": "^7.23.0",
+    "pdf-lib": "^1.17.1",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "resend": "^6.29.0",
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^22.20.4",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "cheerio": "^1.2.0",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.3.6",
     "mammoth": "^1.12.3",
     "pdf-parse": "^2.4.5",
     "tailwindcss": "^4",

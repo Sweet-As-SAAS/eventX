@@ -7,7 +7,7 @@
 import fixture from "../../fixtures/demo-event.json";
 import { db } from "../../lib/supabase/admin";
 
-const ORG_NAME = "[TEST] HostReady seed org";
+const ORG_NAME = "[TEST] EvntX seed org";
 const FICTIONAL_HOLDERS = ["Sample Sports Club Inc", "Jordan Example"]; // brief: fictional names only
 const sb = db();
 

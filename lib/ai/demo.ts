@@ -1,5 +1,5 @@
 // DEMO_MODE safety net. For the seeded demo event only: if a live call is slow or fails, serve the cached answer.
-// Any other event (a judge's own, or the demo event switched to another council) always runs live, so we never show the cached data by mistake.
+// Any other event (a judge's own, or a changed description) always runs live, so we never show the cached data by mistake.
 import fixture from "../../fixtures/demo-event.json";
 
 export const isSeeded = (ev: { description: string; council: string }) =>

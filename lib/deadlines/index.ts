@@ -48,7 +48,6 @@ const PERMIT_FORM = "https://ccc.tfaforms.net/177";
 const CONDITIONS_SRC = "https://ccc.govt.nz/news-and-events/events/running-an-event/conditions-for-events-on-public-land";
 const TRAFFIC_SRC = "https://ccc.govt.nz/assets/Documents/Transport/Working-on-our-roads/TMP/Road-closure-for-events-3-tier.pdf";
 const AMP_SRC = "https://ccc.govt.nz/assets/Documents/Consents-and-Licences/business-licences-and-consents/Alcohol/SpecialLicence.pdf";
-const WAIMAKARIRI_LIQUOR_SRC = "https://www.waimakariri.govt.nz/council/news-and-information/2025/10/secure-your-special-alcohol-licence-for-the-festive-season";
 
 /** CCC's assessed road-closure tiers. The event profile lacks road hierarchy and business-impact fields, so do not guess a tier. */
 export type TrafficImpact = "small" | "medium" | "large";
@@ -105,7 +104,7 @@ export function computeDeadlines(
       legalMinimum: legal,
       recommended,
       basis: "At least 20 working days before the event. 20 Dec to 15 Jan does not count. We aim two weeks earlier.",
-      sourceUrl: council === "ccc" ? PERMIT_FORM : WAIMAKARIRI_LIQUOR_SRC,
+      sourceUrl: PERMIT_FORM,
     });
     if (council === "ccc" && types.has("alcohol_management_plan")) out.push({
       documentType: "alcohol_management_plan",

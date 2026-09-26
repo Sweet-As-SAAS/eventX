@@ -1,12 +1,23 @@
 import { DraftDocument, type DocumentType, type EventProfile } from "../schemas";
-import { structured, MODEL_STRONG, fence } from "./client";
+import { structured, fence } from "./client";
 import { DRAFT_SYSTEM, DRAFT_REVIEW_SYSTEM } from "./prompts";
 import { retrieve, chunksToText } from "./retrieve";
+import { fillPeople } from "../people";
 
 export interface TemplateAndChecklist {
   sections: string[];
   checklist: { id: string; text: string }[];
 }
+
+/** Names the organiser gave us: the event, the venue and their people. Anything else becomes a [PLACEHOLDER]. */
+export const allowedNames = (p: EventProfile) =>
+  [p.name.value, p.venue.name.value, p.people.organiser.value, p.people.dutyManager.value, p.people.security.value,
+    p.people.foodProvider.value, p.people.wasteCollector.value,
+    p.people.contact.value?.split(/[,;]/)[0].trim()].filter((v): v is string => !!v && !/[@\d]/.test(v)); // the contact's name, not their number
+
+/** "The menus are attached." -> "The menus will be attached to the application." HostReady holds no files. */
+export const honestAttachments = (text: string) =>
+  text.replace(/\b(?:is|are|has been|have been)\s+(?:also\s+)?attached\b/giu, "will be attached to the application");
 
 /** Event-specific claims the profile cannot support, even when a council source is cited. */
 export function unsupportedDraftFacts(draft: DraftDocument, profile: EventProfile, sourceText = ""): string[] {
@@ -15,6 +26,10 @@ export function unsupportedDraftFacts(draft: DraftDocument, profile: EventProfil
   if (/\b(?:no existing|no current|not currently|not already)\b[^.\n]{0,90}\blicen[cs](?:e|ed)\b|\blicen[cs]e\s+(?:is|was)\s+not\s+(?:currently\s+)?held/iu.test(body)) {
     issues.push("Existing licence status is unknown; remove any claim that the venue has no licence.");
   }
+  // HostReady holds no files, so a draft can never say something is already attached.
+  if (/\b(?:is|are|has been|have been)\s+(?:also\s+)?attached\b|\battached\s+(?:is|are)\b/iu.test(body)) {
+    issues.push("Nothing is attached yet; replace claims that a file is attached with a descriptive [ATTACH ...] placeholder.");
+  }
   if (/\b(?:supervised|restricted)\s+designation\b/iu.test(body)) {
     issues.push("The alcohol-area legal designation is unknown; use [ALCOHOL AREA DESIGNATION].");
   }
@@ -22,10 +37,11 @@ export function unsupportedDraftFacts(draft: DraftDocument, profile: EventProfil
   if (firstWord && !["Event", "Fundraiser", "Community"].includes(firstWord)) {
     const escaped = firstWord.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const properName = new RegExp(`\\b${escaped}(?:\\s+[\\p{Lu}][\\p{L}\\p{N}-]*){1,5}`, "gu");
-    const allowed = [profile.name.value, profile.venue.name.value].filter(Boolean);
+    const allowed = allowedNames(profile);
     for (const match of body.matchAll(properName)) {
       const phrase = match[0];
-      if (!allowed.some((name) => phrase === name || name?.startsWith(`${phrase} `)) && !sourceText.includes(phrase)) {
+      // "Hagley Park" is fine when the venue is "Hagley Park, Christchurch": a prefix that ends at a word boundary.
+      if (!allowed.some((name) => name.startsWith(phrase) && !/[\p{L}\p{N}]/u.test(name[phrase.length] ?? "")) && !sourceText.includes(phrase)) {
         issues.push(`Unsupported event-specific name: "${phrase}". Use the exact profile name or a placeholder.`);
       }
     }
@@ -37,7 +53,7 @@ export function unsupportedDraftFacts(draft: DraftDocument, profile: EventProfil
 export async function draftDocument(profile: EventProfile, type: DocumentType, t: TemplateAndChecklist) {
   const chunks = await retrieve(profile.councilSlug, `${type.replaceAll("_", " ")} requirements template`);
   const draft = await structured({
-    schema: DraftDocument, name: "draft_document", model: MODEL_STRONG, system: DRAFT_SYSTEM,
+    schema: DraftDocument, name: "draft_document", model: "strong", system: DRAFT_SYSTEM,
     user: [
       `Document type: ${type}`,
       `Event profile:\n${JSON.stringify(profile)}`,
@@ -51,10 +67,10 @@ export async function draftDocument(profile: EventProfile, type: DocumentType, t
   for (let attempt = 0; attempt < 2; attempt++) {
     const issues = unsupportedDraftFacts(reviewed, profile, sourceText);
     reviewed = await structured({
-      schema: DraftDocument, name: "reviewed_draft_document", model: MODEL_STRONG, system: DRAFT_REVIEW_SYSTEM,
+      schema: DraftDocument, name: "reviewed_draft_document", model: "strong", system: DRAFT_REVIEW_SYSTEM,
       user: [
         `Event profile:\n${JSON.stringify(profile)}`,
-        `Allowed event-specific proper names: ${JSON.stringify([profile.name.value, profile.venue.name.value].filter(Boolean))}`,
+        `Allowed event-specific proper names: ${JSON.stringify(allowedNames(profile))}`,
         `Template sections:\n${t.sections.join("\n")}`,
         `Checklist:\n${t.checklist.map((c) => `- (${c.id}) ${c.text}`).join("\n")}`,
         fence("council", chunksToText(chunks)),
@@ -64,10 +80,13 @@ export async function draftDocument(profile: EventProfile, type: DocumentType, t
     });
     if (!unsupportedDraftFacts(reviewed, profile, sourceText).length) break;
   }
-  if (unsupportedDraftFacts(reviewed, profile, sourceText).length) throw new Error("Draft still contains unsupported event facts");
+  // Nothing is attached yet: turn "menus are attached" into a true statement rather than failing the whole draft.
+  reviewed = { ...reviewed, sections: reviewed.sections.map((s) => ({ ...s, body: honestAttachments(s.body) })) };
+  const left = unsupportedDraftFacts(reviewed, profile, sourceText);
+  if (left.length) throw new Error(`Draft still contains unsupported event facts: ${left.join(" ")}`);
   const allowedIds = new Set(chunks.map((c) => c.id));
   if (reviewed.citedChunkIds.some((id) => !allowedIds.has(id))) throw new Error("Draft cited a chunk outside its council references");
-  const placeholders = [...new Set(reviewed.sections.flatMap((section) =>
-    section.body.match(/\[[^\[\]\n]+\]/g) ?? []))];
-  return DraftDocument.parse({ ...reviewed, documentType: type, placeholders });
+  const sections = reviewed.sections.map((s) => ({ ...s, body: fillPeople(s.body, profile.people) }));
+  const placeholders = [...new Set(sections.flatMap((section) => section.body.match(/\[[^\[\]\n]+\]/g) ?? []))];
+  return DraftDocument.parse({ ...reviewed, sections, documentType: type, placeholders });
 }

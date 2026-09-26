@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import fixture from "../fixtures/demo-event.json";
 import { DraftDocument, EventProfile } from "../lib/schemas";
-import { unsupportedDraftFacts } from "../lib/ai/draft";
+import { honestAttachments, unsupportedDraftFacts } from "../lib/ai/draft";
 
 describe("draft source guard", () => {
   const profile = EventProfile.parse(structuredClone(fixture.profile));
@@ -16,6 +16,27 @@ describe("draft source guard", () => {
     expect(unsupportedDraftFacts(draftWith("Harbour Gathering is the event."), profile)).toEqual([]);
     expect(unsupportedDraftFacts(draftWith("Harbour Events Limited issued the guidance."), profile,
       "Council source: Harbour Events Limited issued the guidance.")).toEqual([]);
+  });
+
+  it("allows a profile name cut at a word boundary", () => {
+    const venue = structuredClone(profile);
+    venue.venue.name = { value: "Harbour Green, Lyttelton", source: "stated" };
+    expect(unsupportedDraftFacts(draftWith("Held at Harbour Green."), venue)).toEqual([]);
+    expect(unsupportedDraftFacts(draftWith("Held at Harbour Gree."), venue)).toHaveLength(1);
+  });
+
+  it("allows the people the organiser named, and nobody else", () => {
+    const named = structuredClone(profile);
+    named.people.dutyManager = { value: "Harbour Rivers", source: "answered" };
+    expect(unsupportedDraftFacts(draftWith("Harbour Rivers is the duty manager."), named)).toEqual([]);
+    expect(unsupportedDraftFacts(draftWith("Harbour Rivers is the duty manager."), profile)).toHaveLength(1);
+  });
+
+  it("flags claims that a file is already attached", () => {
+    expect(unsupportedDraftFacts(draftWith("Food and drinks menus are attached."), profile)).toHaveLength(1);
+    expect(unsupportedDraftFacts(draftWith("Food and drinks menus: [ATTACH MENUS]."), profile)).toEqual([]);
+    expect(unsupportedDraftFacts(draftWith("The site plan will be attached when lodging."), profile)).toEqual([]);
+    expect(honestAttachments("Food and drinks menus are attached.")).toBe("Food and drinks menus will be attached to the application.");
   });
 
   it("flags unknown licence status and legal alcohol designation", () => {

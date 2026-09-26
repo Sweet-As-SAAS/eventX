@@ -6,7 +6,7 @@ import { EventProfile, type ProfileResponse } from "@/lib/schemas";
 import { MOCK, ok, fixture, handler, parseBody, requireOrg, loadEvent, loadRules, requireProfile, must, HttpError } from "@/lib/api/server";
 
 const Body = z.object({
-  edits: z.array(z.object({ path: z.string().regex(/^[a-zA-Z.]+$/), value: z.union([z.string(), z.number(), z.boolean(), z.null()]) })).min(1).max(12),
+  edits: z.array(z.object({ path: z.string().regex(/^[a-zA-Z.]+$/), value: z.union([z.string(), z.number(), z.boolean(), z.null()]) })).min(1).max(30),
 });
 
 /** Organiser corrections from the Details page. Deterministic, no AI; the schema rejects wrong types. */

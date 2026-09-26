@@ -2,7 +2,7 @@
 // Responses are parsed against lib/schemas.ts, so a contract drift fails loudly in dev instead of rendering garbage.
 import { z } from "zod";
 import {
-  Classification, Deadline, EventbriteDraft, EventDetail, EventDocument, EventSummary, Licence,
+  Attachment, Classification, Deadline, EventbriteDraft, EventDetail, EventDocument, EventSummary, Licence,
   ProfileResponse, Requirement, SiteLayout, type CouncilSlug, type SitePlan, type Ticket,
 } from "../schemas";
 
@@ -21,9 +21,23 @@ async function call<T extends z.ZodType>(schema: T, path: string, body?: unknown
 
 const Id = z.object({ id: z.string() });
 
+/** Multipart upload; same error handling as call(). */
+async function upload(path: string, file: File) {
+  const body = new FormData();
+  body.append("file", file);
+  const res = await fetch(path, { method: "POST", body });
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok) throw new ApiError(res.status, json.error ?? res.statusText);
+  return Attachment.parse(json);
+}
+
 export const api = {
+  /** Photos and PDFs added with the description. */
+  attachments: (id: string) => call(z.array(Attachment), `/api/events/${id}/attachments`),
+  attach: (id: string, file: File) => upload(`/api/events/${id}/attachments`, file),
   listEvents: () => call(z.array(EventSummary), "/api/events"),
-  createEvent: (body: { council: CouncilSlug; description: string }) => call(Id, "/api/events", body),
+  /** Every event is Christchurch City Council; `council` defaults to "ccc" on the server. */
+  createEvent: (body: { council?: CouncilSlug; description: string }) => call(Id, "/api/events", body),
   getEvent: (id: string) => call(EventDetail, `/api/events/${id}`),
 
   /** Steps 1 and 2: AI profile plus follow-up questions. Takes a few seconds. */
@@ -41,6 +55,10 @@ export const api = {
   check: (documentId: string) => call(EventDocument, `/api/documents/${documentId}/check`, {}),
   /** Applies the suggested fix for one checklist item and re-checks. `text` is the organiser's own answer for facts we can't invent. */
   fix: (documentId: string, itemId: string, text?: string) => call(EventDocument, `/api/documents/${documentId}/fix`, { itemId, text }),
+  /** Save the organiser's own edits to a draft (clears the tick; run check afterwards). */
+  editDocument: (documentId: string, sections: { heading: string; body: string }[]) => call(EventDocument, `/api/documents/${documentId}/edit`, { sections }),
+  /** "I've read this draft and checked it." */
+  review: (documentId: string, reviewed: boolean) => call(EventDocument, `/api/documents/${documentId}/review`, { reviewed }),
 
   /** Site plan layout: the saved plan merged with what the profile implies, plus the venue's map picture (or null). Check it with siteChecks from lib/siteplan. */
   sitePlan: (id: string) => call(SiteLayout, `/api/events/${id}/site-plan`),
@@ -50,6 +68,8 @@ export const api = {
   deadlines: (id: string) => call(z.array(Deadline), `/api/events/${id}/deadlines`),
   /** Use as an <a href download>, not fetch. */
   exportUrl: (id: string) => `/api/events/${id}/export`,
+  /** One drafted document as its own council-format PDF. Also an <a href download>. */
+  documentPdfUrl: (documentId: string) => `/api/documents/${documentId}/export`,
   /** 409 until every document is ready or manual. */
   eventbrite: (id: string, tickets?: Ticket[]) => call(EventbriteDraft, `/api/events/${id}/eventbrite`, { tickets }),
 

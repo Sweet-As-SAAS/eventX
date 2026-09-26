@@ -1,7 +1,7 @@
 "use client";
 import { use, useEffect, useState } from "react";
 import { api } from "@/lib/api/client";
-import type { CouncilSlug, EventSummary } from "@/lib/schemas";
+import type { EventSummary } from "@/lib/schemas";
 import { DescribeForm } from "@/components/describe-form";
 import { fmtDate } from "@/components/format";
 import { useFail } from "@/components/toast";
@@ -10,10 +10,10 @@ import { useFail } from "@/components/toast";
 export default function DescribePage({ searchParams }: PageProps<"/new">) {
   const { from } = use(searchParams);
   const fail = useFail();
-  const [initial, setInitial] = useState<{ description: string; council: CouncilSlug } | null>(null);
+  const [initial, setInitial] = useState<{ from: string; description: string } | null>(null);
   const [past, setPast] = useState<EventSummary[]>([]);
 
-  const prefill = (id: string) => api.getEvent(id).then((ev) => setInitial({ description: ev.description, council: ev.council })).catch(fail);
+  const prefill = (id: string) => api.getEvent(id).then((ev) => setInitial({ from: id, description: ev.description })).catch(fail);
 
   useEffect(() => {
     api.listEvents().then(setPast).catch(() => {}); // optional shortcut, stays quiet if it fails
@@ -25,10 +25,11 @@ export default function DescribePage({ searchParams }: PageProps<"/new">) {
     <div className="mx-auto max-w-2xl px-4 py-14 sm:px-6 sm:py-24">
       <h1 className="step-in text-4xl font-medium leading-tight text-foreground sm:text-5xl">What&apos;s your event?</h1>
       <p className="mt-3 text-lg text-muted-foreground">
-        Tell us like you&apos;d tell a friend: what, where, when, how many people, and anything like alcohol, food, marquees or rides.
+        Tell us like you&apos;d tell a friend: what, where in Christchurch, when, how many people, and anything like alcohol, food, marquees or rides.
       </p>
       <div className="mt-8">
-        <DescribeForm initial={initial} autoFocus />
+        {/* key remounts the form with the past description */}
+        <DescribeForm key={initial?.from ?? "blank"} initial={initial?.description} autoFocus />
       </div>
       <p className="mt-4 text-sm text-muted-foreground">Nothing is sent to the council. You lodge it yourself.</p>
 

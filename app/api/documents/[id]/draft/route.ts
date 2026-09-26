@@ -2,7 +2,7 @@ import { db } from "@/lib/supabase/admin";
 import { draftDocument } from "@/lib/ai/draft";
 import { withDemoFallback, isSeeded } from "@/lib/ai/demo";
 import { DRAFTED_TYPES, DraftDocument, DocumentType } from "@/lib/schemas";
-import { MOCK, MOCK_FIXED_COOKIE, ok, fixture, handler, requireOrg, loadDocument, loadChecklist, requireProfile, must, toEventDocument, mockDocument, HttpError } from "@/lib/api/server";
+import { MOCK, MOCK_FIXED_COOKIE, ok, fixture, handler, requireOrg, loadDocument, loadChecklist, requireProfile, must, toEventDocument, mockDocument, setMockChanges, HttpError } from "@/lib/api/server";
 
 export const maxDuration = 60;
 
@@ -13,15 +13,16 @@ export const POST = handler(async (_req, ctx: RouteContext<"/api/documents/[id]/
   if (MOCK()) {
     const doc = mockDocument(id);
     if (!DRAFTED_TYPES.has(DocumentType.parse(doc.documentType))) {
-      throw new HttpError(409, `HostReady does not draft ${doc.documentType}`);
+      throw new HttpError(409, `EvntX does not draft ${doc.documentType}`);
     }
+    setMockChanges(id, null);
     const response = ok({ ...doc, status: "drafted", checkResults: null });
     if (id === fixture.fixedDocument.id) response.cookies.delete(MOCK_FIXED_COOKIE);
     return response;
   }
   const { row, event } = await loadDocument(id, orgId);
   const type = DocumentType.parse(row.document_type);
-  if (!DRAFTED_TYPES.has(type)) throw new HttpError(409, `HostReady does not draft ${type}`);
+  if (!DRAFTED_TYPES.has(type)) throw new HttpError(409, `EvntX does not draft ${type}`);
   const profile = requireProfile(event);
 
   const [template, checklist] = await Promise.all([
@@ -36,7 +37,7 @@ export const POST = handler(async (_req, ctx: RouteContext<"/api/documents/[id]/
   const content = await withDemoFallback(() => draftDocument(profile, type, { sections, checklist: checklist.items }),
     cached ? DraftDocument.parse(cached) : null);
 
-  const updated = must(await db().from("documents").update({ content, check_results: null, status: "drafted",
+  const updated = must(await db().from("documents").update({ content, check_results: null, status: "drafted", reviewed_at: null,
     updated_at: new Date().toISOString() }).eq("id", id).select("*").single());
   return ok(toEventDocument(updated, checklist?.source ?? null));
 });

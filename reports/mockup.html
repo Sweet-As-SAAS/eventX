@@ -1,0 +1,143 @@
+<title>Hagley Summer Sounds Walkthrough</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@600;700&display=swap">
+<style>
+:root{
+  --harbour:#2447D9; --ink:#141724; --marker:#D6E0FF;
+  --bg:#FBFBFD; --surface:#FFFFFF; --muted:#555B70; --rule:#E3E6EF; --shot:#EEF0F6;
+  --pass:#157347; --fix:#C0271D; --warn:#9A5B00; --pass-soft:#E2F3E9; --fix-soft:#FBE7E5; --warn-soft:#FAEFD9; --mark-ink:#141724;
+  --sans:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif; --display:"Inter Tight","Inter",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark; --harbour:#8FA6FF; --ink:#E8EAF2; --marker:#2A3A7A; --bg:#10121B; --surface:#171A26; --muted:#A3A8BC;
+  --rule:#2A2E3E; --shot:#1D2130; --pass:#6CCB97; --fix:#F28B82; --warn:#E5B35C; --pass-soft:#16301F; --fix-soft:#3A1916; --warn-soft:#33260F; --mark-ink:#E8EAF2;}}
+:root[data-theme="dark"]{
+  color-scheme:dark; --harbour:#8FA6FF; --ink:#E8EAF2; --marker:#2A3A7A; --bg:#10121B; --surface:#171A26; --muted:#A3A8BC;
+  --rule:#2A2E3E; --shot:#1D2130; --pass:#6CCB97; --fix:#F28B82; --warn:#E5B35C; --pass-soft:#16301F; --fix-soft:#3A1916; --warn-soft:#33260F; --mark-ink:#E8EAF2;}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 var(--sans);padding-inline:20px;padding-block:40px 64px}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:56px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+h1{font-size:clamp(32px,5vw,48px);line-height:1.08}
+h2{font-size:24px}
+h3{font-size:19px}
+p{margin:0}
+a{color:var(--harbour)}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.lede{color:var(--muted);max-width:62ch}
+header{display:flex;flex-direction:column;gap:14px}
+blockquote{margin:0;padding:18px 22px;border-left:3px solid var(--harbour);background:var(--surface);font-size:18px;max-width:70ch}
+mark{background:var(--marker);color:var(--mark-ink);padding:0 3px;border-radius:3px}
+section{display:flex;flex-direction:column;gap:18px}
+.tablebox{overflow-x:auto;border-top:1px solid var(--rule)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:10px 12px 10px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-size:13px;font-weight:600;color:var(--muted)}
+.tag{display:inline-block;font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.stated{background:var(--marker);color:var(--mark-ink)}
+.inferred{background:var(--shot);color:var(--muted)}
+.answered{background:var(--pass-soft);color:var(--pass)}
+.ready{background:var(--pass-soft);color:var(--pass)}
+.needsfix{background:var(--fix-soft);color:var(--fix)}
+.manual{background:var(--shot);color:var(--muted)}
+.unclear{background:var(--warn-soft);color:var(--warn)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:28px}
+.fact{display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--rule);padding-top:12px}
+.steps{display:flex;flex-direction:column;gap:0;border-top:1px solid var(--rule)}
+.step{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;padding-block:32px;border-bottom:1px solid var(--rule)}
+.stephead{display:flex;gap:14px;align-items:baseline;flex-wrap:wrap}
+.num{font-family:var(--display);font-weight:700;color:var(--harbour);font-size:19px;min-width:1.6em}
+.stepbody{display:flex;flex-direction:column;gap:6px;max-width:68ch}
+.stepbody ul{margin:0;padding-left:20px;color:var(--muted)}
+.shots{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,1fr);gap:20px;align-items:start}
+figure{margin:0;display:flex;flex-direction:column;gap:8px}
+figcaption{font-size:13px;color:var(--muted)}
+.frame{background:var(--shot);border:1px solid var(--rule);border-radius:8px;max-height:520px;overflow:auto}
+.frame img{display:block;width:100%;height:auto}
+.frame:focus-visible{outline:2px solid var(--harbour);outline-offset:2px}
+.note{font-size:14px;color:var(--muted);border-top:1px solid var(--rule);padding-top:16px}
+code{font-size:.9em;background:var(--shot);padding:1px 5px;border-radius:4px}
+@media (max-width:640px){.shots{grid-template-columns:minmax(0,1fr)}.frame{max-height:440px}}
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">EvntX · seeded demo event (MOCK=1 and DEMO_MODE=1)</span>
+    <h1>A music festival at Hagley Park, from one paragraph to an Eventbrite draft</h1>
+    <p class="lede">The landing page and every screen of the demo path, at desktop and phone width, captured by the Playwright run on 27 Sep 2026. The data comes from <code>fixtures/demo-event.json</code>. People and arrangements in it are fictional.</p>
+    <blockquote><mark>Hagley Summer Sounds</mark> is a music festival at <mark>Hagley Park</mark> on Sunday <mark>14 March</mark>, 12 till 9pm. Around <mark>500 people</mark>, all ages welcome, with a <mark>kids</mark> zone and a <mark>bouncy castle</mark>. <mark>Live music</mark> from local bands on a main stage, a bar selling <mark>beer</mark> and wine to over 18s, <mark>four food trucks</mark>, and a couple of <mark>marquees</mark> for shade.</blockquote>
+  </header>
+
+  <section aria-labelledby="facts">
+    <h2 id="facts">What HostReady reads from it</h2>
+    <div class="tablebox"><table>
+      <thead><tr><th>Field</th><th>Value</th><th>Source</th></tr></thead>
+      <tbody>
+        <tr><td>Name</td><td>Hagley Summer Sounds</td><td><span class="tag stated">stated</span></td></tr>
+        <tr><td>Date and time</td><td>Sun 14 Mar 2027, 12:00 to 21:00</td><td><span class="tag stated">stated</span></td></tr>
+        <tr><td>Venue</td><td>Hagley Park, council land</td><td><span class="tag stated">stated</span> <span class="tag inferred">inferred</span></td></tr>
+        <tr><td>Crowd</td><td>500 at peak, open to the public, all ages with a kids zone</td><td><span class="tag stated">stated</span> <span class="tag inferred">inferred</span></td></tr>
+        <tr><td>Alcohol</td><td>Beer and wine sold at a bar for over 18s</td><td><span class="tag stated">stated</span></td></tr>
+        <tr><td>Food</td><td>4 food trucks, cooking on site</td><td><span class="tag stated">stated</span> <span class="tag inferred">inferred</span></td></tr>
+        <tr><td>Structures</td><td>Main stage, 2 marquees, bouncy castle, no rides</td><td><span class="tag stated">stated</span> <span class="tag inferred">inferred</span></td></tr>
+        <tr><td>Other</td><td>Live music (amplified), generators, vehicle access, no road or footpath impact</td><td><span class="tag stated">stated</span> <span class="tag inferred">inferred</span> <span class="tag answered">answered</span></td></tr>
+        <tr><td>Still missing</td><td>Size of the largest marquee (asked as the one tap question) and stage height (no CCC rule reads it, so it isn't asked)</td><td>none</td></tr>
+      </tbody>
+    </table></div>
+    <div class="grid2">
+      <div class="fact"><span class="eyebrow">Classification</span><p><span class="tag unclear">unclear</span> CCC's source lists community and commercial fee bands for Hagley Park but doesn't say which applies. A festival with a bar and food trucks could fall in either band. EvntX suggests explaining who runs it, whether it's ticketed and where any profit goes, and asking the council to confirm. Fee: varies, check with council.</p></div>
+      <div class="fact"><span class="eyebrow">Special licence dates, from the engine</span><p>Aim to lodge by <strong>Fri 29 Jan 2027</strong>. Legal minimum <strong>Mon 15 Feb 2027</strong>: 20 working days, with 20 Dec to 15 Jan and the Mondayised Waitangi Day (8 Feb) not counted.</p></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="pack">
+    <h2 id="pack">The pack CCC's rules ask for</h2>
+    <div class="tablebox"><table>
+      <thead><tr><th>Document</th><th>Why</th><th>Status in the mock</th></tr></thead>
+      <tbody>
+        <tr><td>Event permit application</td><td>Public event on council land</td><td><span class="tag manual">You handle this</span></td></tr>
+        <tr><td>Site plan</td><td>Goes with every permit application</td><td><span class="tag manual">You handle this</span></td></tr>
+        <tr><td>Health and safety plan</td><td>Goes with every permit application</td><td><span class="tag needsfix">Needs a fix</span> assembly point not named</td></tr>
+        <tr><td>Waste management confirmation</td><td>Goes with every permit application</td><td><span class="tag ready">Ready</span></td></tr>
+        <tr><td>Hazard register</td><td>Bouncy castles and inflatables are high risk</td><td><span class="tag ready">Ready</span></td></tr>
+        <tr><td>Food licence check</td><td>Food will be sold or served</td><td><span class="tag manual">You handle this</span></td></tr>
+        <tr><td>Special licence application</td><td>Alcohol will be sold</td><td><span class="tag ready">Ready</span></td></tr>
+        <tr><td>Alcohol management plan</td><td>Special licence event with more than 150 guests</td><td><span class="tag ready">Ready</span></td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section aria-labelledby="walk">
+    <h2 id="walk">The walkthrough</h2>
+    <div class="steps" id="steps"></div>
+  </section>
+
+  <p class="note">EvntX prepares documents. You review them and lodge them with the council. This is not legal advice. Screens are from the <code>audit/full-check</code> branch in MOCK mode, so every answer is the fixture's, not a live AI call.</p>
+</div>
+
+<script>
+const STEPS = [
+  ["00-landing", "Landing page", "The public page opens on the same festival paragraph. Hagley Park, the bar, the bouncy castle and the food trucks each link to the CCC rule they trigger.", ["The app preview's event list starts with Hagley Summer Sounds.", "Get started free, or describe an event straight from the hero."]],
+  ["01-describe", "Describe", "The organiser, Jordan, pastes one paragraph and clicks Check my event.", ["No council picker: every event is Christchurch City Council.", "Up to 2,000 characters."]],
+  ["02-details", "Details and classification", "HostReady shows what it understood, tagged stated, inferred or answered, and the likely classification with its reasoning.", ["Main action: Looks right.", "Classification comes back unclear, fee reads varies, check with council."]],
+  ["03-questions", "Questions", "One tap question, because only the marquee size is missing and a CCC rule reads it.", ["Answers save as you tap.", "Then Continue to documents."]],
+  ["04-documents-red", "Documents, one red item", "The pack list with a reason, source and checked date on every row. The health and safety plan needs the assembly point named. Everything else passes.", ["Fix it opens the failed checklist item.", "Manual documents read You handle this."]],
+  ["05-documents-green", "Documents, fixed", "Apply fix already knows the answer (the open lawn north of the main gate, away from the stage). It takes about a second, then red turns green.", ["Every drafted document is now Ready.", "Continue to site plan."]],
+  ["06-site-plan", "Site plan", "Built from the profile: licensed bar, stage, marquees, food trucks, bouncy castle, first aid, exits and assembly point, with live checks.", ["Elements are draggable.", "Continue to deadlines."]],
+  ["07-deadlines", "Deadlines", "The working-day timeline from the engine, with the liquor holiday period shaded and each source linked.", ["Special licence: aim for 29 Jan 2027, legal minimum 15 Feb 2027."]],
+  ["08-deadlines-done", "PDF, reminder and Eventbrite draft", "Download PDF pack, Send me the reminder now, then Create Eventbrite draft, which unlocks only once every document is ready or yours to handle.", ["The draft is never published.", "Open your Eventbrite draft appears after it's created."]],
+  ["09-home", "Home", "Events, licence renewals and certificate expiry, and a way to run it again.", ["Taylor Example's duty manager certificate expires 20 Jan 2027, before the festival."]],
+];
+const box = document.getElementById("steps");
+STEPS.forEach(([file, name, what, bullets], i) => {
+  const el = document.createElement("article");
+  el.className = "step";
+  el.innerHTML = `
+    <div class="stephead"><span class="num">${i}</span><h3>${name}</h3></div>
+    <div class="stepbody"><p>${what}</p><ul>${bullets.map((b) => `<li>${b}</li>`).join("")}</ul></div>
+    <div class="shots">
+      <figure><div class="frame" tabindex="0" aria-label="${name}, desktop screenshot, scrollable"><img src="shots/${file}-desktop.png" alt="${name} screen at desktop width" loading="lazy"></div><figcaption>Desktop, 1280 px</figcaption></figure>
+      <figure><div class="frame" tabindex="0" aria-label="${name}, phone screenshot, scrollable"><img src="shots/${file}-mobile.png" alt="${name} screen at phone width" loading="lazy"></div><figcaption>Phone, 390 px</figcaption></figure>
+    </div>`;
+  box.appendChild(el);
+});
+</script>

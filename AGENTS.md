@@ -8,15 +8,15 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 <!-- END:nextjs-agent-rules -->
 
-# HostReady: shared context for coding agents
+# EvntX: shared context for coding agents
 
-HostReady turns a plain-English event description into a council-ready permit and liquor licence pack for New Zealand organisers, checked against council rules, with every deadline tracked. Weekend hackathon build (Saasthon, University of Canterbury). **Hard deadline: Sunday 27 Sep 2026, 10:00 NZDT. Clocks go forward at 2am Sunday. Deploy freeze 8am.**
+EvntX turns a plain-English event description into a council-ready permit and liquor licence pack for New Zealand organisers, checked against council rules, with every deadline tracked. Weekend hackathon build (Saasthon, University of Canterbury). **Hard deadline: Sunday 27 Sep 2026, 10:00 NZDT. Clocks go forward at 2am Sunday. Deploy freeze 8am.**
 
-Demo flow (the product, whatever the event): an organiser types one paragraph about their event. In under three minutes they get the list of documents the council needs and why, drafts checked against the council checklist (one red item turns green with "Fix"), a working-day timeline, a PDF pack, a reminder email that lands live, and an Eventbrite draft that only unlocks once every check is green. Then the same event switched to Waimakariri gives a different requirement list: "councils are data, not code".
+Demo flow (the product, whatever the event): an organiser types one paragraph about their event. In under three minutes they get the list of documents the council needs and why, drafts checked against the council checklist (one red item turns green with "Fix"), a working-day timeline, a PDF pack, a reminder email that lands live, and an Eventbrite draft that only unlocks once every check is green. Christchurch City Council is the only council; councils stay data, not code.
 
-## Demo scenario: a placeholder, not a spec
+## Demo scenario: Hagley Summer Sounds
 
-The specific demo event (who, where, what) is **not decided yet**. `fixtures/demo-event.json` holds a placeholder so MOCK mode and tests have data. Never build logic, copy, UI text, prompts, tests or defaults around that event's details (its venue, club, crowd size, alcohol, rides, dates or document ids). Build for any event any organiser could describe; read the demo event only through the fixture. To change the scenario: edit `description` and `profile` in the fixture, run `npm run fixture` (recomputes questions, requirements and deadlines with the real engines and lists which documents to add or remove), update `documents` and `fixedDocument` (exactly one `needs_fix` document, repaired by `fixedDocument`), then `npm test`.
+The demo event is decided (27 Sep 2026): **Hagley Summer Sounds**, an all-ages music festival at Hagley Park on Sun 14 Mar 2027, about 500 people, with a bar, four food trucks, a kids zone with a bouncy castle, a main stage and marquees. It lives in `fixtures/demo-event.json`. The landing hero and the first Describe hint deliberately preview it (`app/page.tsx`, `components/describe-form.tsx`); the landing page reads the fixture, so it follows any change. Everywhere else, never build logic, prompts, tests or defaults around its details (venue, crowd size, alcohol, dates or document ids): build for any event any organiser could describe, and read the demo event only through the fixture. To change the scenario: edit `description` and `profile` in the fixture, run `npm run fixture` (recomputes questions, requirements and deadlines with the real engines and lists which documents to add or remove), update `documents` and `fixedDocument` (exactly one `needs_fix` document, repaired by `fixedDocument`), then `npm test`.
 
 Read next: `docs/TRD.md` (architecture, API, data), `docs/PRD.md` (product), and your lane brief in `docs/lanes/`.
 
@@ -47,7 +47,7 @@ npm run ingest:crawl -- ccc    # lane B pipeline: crawl → extract → load →
 9. **AI routes export `maxDuration = 60`** and wrap live calls in `withDemoFallback(live, isSeeded(ev) ? cached : null)`.
 10. **`lib/` uses relative imports** (so Vitest runs without config). `app/` may use `@/`.
 11. Screens call `lib/api/client.ts` only, never `fetch` directly, and never hardcode demo data.
-12. Every screen and the PDF carry the line "HostReady prepares documents. You review them and lodge them with the council. This is not legal advice." (already in the root layout and PDF).
+12. Every screen and the PDF carry the line "EvntX prepares documents. You review them and lodge them with the council. This is not legal advice." (already in the root layout and PDF).
 
 ## Where things live
 
@@ -57,7 +57,7 @@ npm run ingest:crawl -- ccc    # lane B pipeline: crawl → extract → load →
 | `fixtures/demo-event.json` | Mocked run of the demo event; MOCK and DEMO_MODE source | A |
 | `lib/ai/*` | OpenAI client, prompts, profile + questions, classify, draft, check/fix, retrieval, demo fallback | A |
 | `scripts/ingest/*` | Crawl, extract, load, normalise, publish | B |
-| `lib/rules/ccc.ts`, `lib/rules/waimakariri.ts` | Hand-verified static rules (fallback + tests) | B |
+| `lib/rules/ccc.ts` | Hand-verified static rules (fallback + tests) | B |
 | `lib/rules/engine.ts`, `lib/deadlines/*` | Deterministic engines | C |
 | `app/api/*`, `lib/api/*`, `lib/supabase/*`, `proxy.ts`, `app/auth/*` | Routes, auth, DB access | C |
 | `lib/integrations/*`, `lib/pdf/*`, `vercel.json`, `supabase/migrations/*` | Eventbrite, Resend, PDF, cron, schema | C |
