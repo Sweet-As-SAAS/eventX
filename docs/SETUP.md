@@ -31,7 +31,7 @@ Then start your coding agent in the repo root and paste the "First prompt" from 
 ## 3. Supabase (lane C, 15 minutes)
 
 1. New project, **region Sydney (ap-southeast-2)** so it sits next to the Vercel functions in `syd1`. Save the database password somewhere safe.
-2. SQL editor > paste `supabase/migrations/0001_init.sql` > Run. This creates every table, the vector search function, RLS, the two council rows and the private `kb` storage bucket.
+2. SQL editor > paste and run, in order, `supabase/migrations/0001_init.sql`, `0002_membership_user_unique.sql` and `0003_ccc_only.sql`. Together they create every table, the vector search function, RLS, the CCC council row (the only council) and the private `kb` storage bucket.
 3. Project settings > API keys: copy the URL, the anon (or publishable) key and the service_role (or secret) key into `.env.local`:
    ```
    NEXT_PUBLIC_SUPABASE_URL=...
@@ -54,7 +54,7 @@ Then start your coding agent in the repo root and paste the "First prompt" from 
 
 | Service | Where | Env vars | Who |
 | --- | --- | --- | --- |
-| OpenAI | Event credits, platform.openai.com > API keys | `OPENAI_API_KEY`, `OPENAI_MODEL_FAST`, `OPENAI_MODEL_STRONG` | A. Check which models the credits cover and their rate limits |
+| OpenAI | Event credits, platform.openai.com > API keys | `OPENAI_API_KEY`, `OPENAI_MODEL_FAST`, `OPENAI_MODEL_STRONG`, `OPENAI_MODEL_EMBED` (1536-dim, e.g. the model the knowledge base was embedded with) | A. Check which models the credits cover and their rate limits |
 | Eventbrite | eventbrite.com > Account settings > Developer links > API keys, private token. Org id from `GET https://www.eventbriteapi.com/v3/users/me/organizations/` | `EVENTBRITE_TOKEN`, `EVENTBRITE_ORG_ID`, `EVENTBRITE_DEMO_DRAFT_URL` | C |
 | Resend | resend.com > API keys | `RESEND_API_KEY`, `REMINDER_FROM`, `REMINDER_TO` | C. Without a verified domain, send from `onboarding@resend.dev` to your Resend account email |
 | Cron | Any long random string | `CRON_SECRET` | C |

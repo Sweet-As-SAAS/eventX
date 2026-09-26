@@ -124,7 +124,7 @@ describe("MOCK routes return the contract", () => {
     expect((await r.POST(post({}), ctx(hs))).status).toBe(400);
   });
 
-  it("GET /api/events/:id/deadlines → Deadline[] with the engine's special licence dates", async () => {
+  it("GET /api/events/:id/deadlines → Deadline[] with the fixture's special licence dates", async () => {
     const r = await import("../app/api/events/[id]/deadlines/route");
     const deadlines = await json(await r.GET(get(), ctx("demo")), z.array(Deadline));
     const licence = deadlines.find((d) => d.documentType === "special_licence_application")!;
@@ -156,6 +156,16 @@ describe("MOCK routes return the contract", () => {
     expect((await r.GET(get(), undefined as never)).status).toBe(401);
     const wrong = new Request("http://localhost/", { headers: { authorization: "Bearer wrong" } });
     expect((await r.GET(wrong, undefined as never)).status).toBe(401);
+  });
+
+  it("GET /api/cron/reminders under MOCK sends nothing, even with the secret and REMINDER_TO set", async () => {
+    const r = await import("../app/api/cron/reminders/route");
+    vi.stubEnv("CRON_SECRET", "test-secret");
+    vi.stubEnv("REMINDER_TO", "test@example.com");
+    vi.stubEnv("APP_URL", "http://localhost:3000");
+    const res = await r.GET(new Request("http://localhost/", { headers: { authorization: "Bearer test-secret" } }), undefined as never);
+    expect(res.status).toBe(200);
+    expect(await res.json()).toMatchObject({ sent: 0 });
   });
 });
 

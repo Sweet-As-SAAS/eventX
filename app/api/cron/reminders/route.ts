@@ -1,7 +1,7 @@
 import { db } from "@/lib/supabase/admin";
 import { sendReminder } from "@/lib/integrations/email";
 import { addDays, nzToday } from "@/lib/deadlines";
-import { ok, handler, must, HttpError } from "@/lib/api/server";
+import { ok, handler, must, HttpError, MOCK } from "@/lib/api/server";
 
 /** Vercel Cron, daily (vercel.json). Sends the 14-day and 3-day reminder once each, catching up if a day was missed. */
 export const GET = handler(async (req) => {
@@ -10,6 +10,7 @@ export const GET = handler(async (req) => {
     throw new HttpError(401, "unauthorised");
   }
   const today = nzToday();
+  if (MOCK()) return ok({ sent: 0, today }); // MOCK never touches Supabase or Resend
   // Safety rule: reminders only ever go to REMINDER_TO, never to organisers' own addresses.
   // Unset: send nothing and stamp nothing, so the reminders still go out once it is configured.
   const to = process.env.REMINDER_TO;

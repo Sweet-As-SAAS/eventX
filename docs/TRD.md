@@ -41,7 +41,7 @@ flowchart LR
 | Database, auth, storage | Supabase: Postgres, pgvector, Auth (`@supabase/ssr`), Storage | Relational rules plus vector search in one place |
 | Scraper | Node scripts via `tsx`: fetch + Cheerio | Runs locally, never on Vercel. Add Playwright only if a seed page needs JS |
 | Document parsing | pdf-parse v2, mammoth | Council forms are mostly PDF and Word |
-| AI | openai v7 structured outputs with Zod 4 schemas, text-embedding-3-small | Event credits; the app always receives valid JSON |
+| AI | openai v7 structured outputs with Zod 4 schemas, embeddings from `OPENAI_MODEL_EMBED` (1536 dimensions) | Event credits; the app always receives valid JSON |
 | PDF export | @react-pdf/renderer (pdf-lib for official forms is P2) | Server-side |
 | Email | Resend + Vercel Cron | Reminders |
 
@@ -138,7 +138,7 @@ Every AI call gets its context from our database, never the web, and uses struct
 | 6 Checking | `checkDocument` / `applyFix` | Draft + checklist | CheckResult / DraftDocument | fast | Fix re-checks in the same request |
 | 7 Deadlines | `computeDeadlines` | Event date, requirements | Deadline[] | none | Working days, Canterbury holidays, liquor period |
 
-Retrieval: embed a query from the document type, take the top 5 `kb_chunks` for that council, pass them fenced with their ids and URLs. The model must cite chunk ids for council-specific claims. Prompt rules: never invent names, dates, fees or phone numbers; only facts from the profile or sources; plain NZ English; unknowns as `[PLACEHOLDER]`. Model names come from `OPENAI_MODEL_FAST` / `OPENAI_MODEL_STRONG`. Reasoning models (o-series, gpt-5) automatically skip `temperature: 0`, which they reject.
+Retrieval: embed a query from the document type, take the top 5 `kb_chunks` for that council, pass them fenced with their ids and URLs. The model must cite chunk ids for council-specific claims. Prompt rules: never invent names, dates, fees or phone numbers; only facts from the profile or sources; plain NZ English; unknowns as `[PLACEHOLDER]`. Model names come from `OPENAI_MODEL_FAST` / `OPENAI_MODEL_STRONG`, embeddings from `OPENAI_MODEL_EMBED` (must output 1536 dimensions to match `kb_chunks`). Reasoning models (o-series, gpt-5) automatically skip `temperature: 0`, which they reject.
 
 ## API contract
 

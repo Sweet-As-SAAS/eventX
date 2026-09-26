@@ -68,7 +68,7 @@ Drafted types that need a template and a checklist: `health_safety_plan`, `hazar
 - [ ] No unverified item in `rules`, `checklists`, `templates`
 - [ ] Every rule has `source_url` and an exact `source_quote`; every checklist has `source_url` and `last_checked`
 - [ ] Crawl stayed at 1 req/s, seed list + depth 2, one run per council
-- [ ] Templates and checklists for every drafted type, both councils
+- [ ] Templates and checklists for every drafted type
 
 ## First prompt to paste into your agent
 

@@ -96,7 +96,7 @@ export default function DeadlinesPage({ params }: PageProps<"/events/[id]/deadli
                       <p className="text-base text-neutral-700">
                         {d.legalMinimum ? <>Legal minimum: <span className="font-semibold text-foreground">{fmtDate(d.legalMinimum)}</span></> : "No legal minimum published. Our recommended date is the one to aim for."}
                       </p>
-                      {d.sourceUrl && <SourceLine url={d.sourceUrl} checked={ev?.requirements.find((r) => r.documentType === d.documentType)?.lastChecked ?? null} />}
+                      {d.sourceUrl && <SourceLine url={d.sourceUrl} checked={ev?.requirements.find((r) => r.documentType === d.documentType && r.sourceUrl === d.sourceUrl)?.lastChecked ?? null} />}
                     </div>
                   </li>
                 );

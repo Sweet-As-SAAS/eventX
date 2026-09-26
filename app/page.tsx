@@ -25,7 +25,7 @@ const STEPS = [
 const WHY = [
   { title: "Rules with receipts", body: "Every requirement links to the council page it came from and the day we last checked it." },
   { title: "Deadlines you can trust", body: "Working days worked out by rules, not guesswork, including the 20 December to 15 January liquor gap." },
-  { title: "Tickets wait for paperwork", body: "Your Eventbrite draft only unlocks once every document is ready." },
+  { title: "Tickets wait for paperwork", body: "Your Eventbrite draft only unlocks once every document is ready or marked as yours to lodge." },
 ];
 
 export default function Landing() {
