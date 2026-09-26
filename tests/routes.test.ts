@@ -42,6 +42,13 @@ const get = (path = "/") => new Request(`http://localhost${path}`);
 const post = (body: unknown, path = "/") => new Request(`http://localhost${path}`, {
   method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body),
 });
+const acceptCookie = (response: Response) => {
+  const pair = response.headers.get("set-cookie")?.split(";", 1)[0];
+  expect(pair).toBeTruthy();
+  const [name, value] = pair!.split("=");
+  if (value) jar.set(name, value);
+  else jar.delete(name);
+};
 async function json<T extends z.ZodType>(res: Response, schema: T, status = 200): Promise<z.infer<T>> {
   expect(res.status).toBe(status);
   return schema.parse(await res.json());
@@ -183,8 +190,16 @@ describe("Eventbrite draft under MOCK", () => {
 
     const review = await import("../app/api/documents/[id]/review/route");
     for (const d of fixture.documents.filter((x) => x.status !== "manual")) {
-      expect((await review.POST(post({ reviewed: true }), ctx(d.id))).status).toBe(200);
+      const response = await review.POST(post({ reviewed: true }), ctx(d.id));
+      expect(response.status).toBe(200);
+      acceptCookie(response);
     }
+    // Vercel functions do not share memory. The browser's cookies must carry the reviewed state.
+    const { resetMock } = await import("../lib/api/server");
+    resetMock();
+    const documents = await import("../app/api/events/[id]/documents/route");
+    const listed = await json(await documents.GET(get(), ctx("demo")), z.array(EventDocument));
+    expect(listed.filter((d) => d.status !== "manual").every((d) => d.reviewed)).toBe(true);
     const draft = await json(await r.POST(post({}), ctx("demo")), EventbriteDraft);
     expect(draft.url).toMatch(/^https:\/\/www\.eventbrite\.com\//);
     expect(draft.url).not.toMatch(/publish/);

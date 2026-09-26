@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { cookies } from "next/headers";
 import { db } from "@/lib/supabase/admin";
-import { MOCK, MOCK_FIXED_COOKIE, ok, fixture, handler, parseBody, requireOrg, loadDocument, loadChecklist, must, toEventDocument, mockDocument, withMockChanges, setMockChanges, HttpError } from "@/lib/api/server";
+import { MOCK, MOCK_FIXED_COOKIE, mockReviewCookie, ok, fixture, handler, parseBody, requireOrg, loadDocument, loadChecklist, must, toEventDocument, mockDocument, withMockChanges, setMockChanges, HttpError } from "@/lib/api/server";
 
 const Body = z.object({ reviewed: z.boolean() });
 const RED = "Fix the red checklist items before you tick this one";
@@ -16,7 +16,10 @@ export const POST = handler(async (req, ctx: RouteContext<"/api/documents/[id]/r
     const doc = withMockChanges(fixed && id === fixture.fixedDocument.id ? fixture.fixedDocument : mockDocument(id));
     if (reviewed && doc.status !== "ready") throw new HttpError(409, RED);
     setMockChanges(id, { reviewed });
-    return ok(withMockChanges(doc));
+    const response = ok({ ...withMockChanges(doc), reviewed });
+    if (reviewed) response.cookies.set(mockReviewCookie(id), "1", { httpOnly: true, sameSite: "lax", path: "/", maxAge: 3600 });
+    else response.cookies.delete(mockReviewCookie(id));
+    return response;
   }
   const { row, event } = await loadDocument(id, orgId);
   if (reviewed && row.status !== "ready") throw new HttpError(409, RED);
