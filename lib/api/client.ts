@@ -42,6 +42,10 @@ export const api = {
   check: (documentId: string) => call(EventDocument, `/api/documents/${documentId}/check`, {}),
   /** Applies the suggested fix for one checklist item and re-checks. `text` is the organiser's own answer for facts we can't invent. */
   fix: (documentId: string, itemId: string, text?: string) => call(EventDocument, `/api/documents/${documentId}/fix`, { itemId, text }),
+  /** Save the organiser's own edits to a draft (clears the tick; run check afterwards). */
+  editDocument: (documentId: string, sections: { heading: string; body: string }[]) => call(EventDocument, `/api/documents/${documentId}/edit`, { sections }),
+  /** "I've read this draft and checked it." */
+  review: (documentId: string, reviewed: boolean) => call(EventDocument, `/api/documents/${documentId}/review`, { reviewed }),
 
   /** Site plan layout: the saved plan merged with what the profile implies, plus the venue's map picture (or null). Check it with siteChecks from lib/siteplan. */
   sitePlan: (id: string) => call(SiteLayout, `/api/events/${id}/site-plan`),

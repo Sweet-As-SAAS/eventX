@@ -5,7 +5,7 @@ import { applyFix, checkDocument } from "@/lib/ai/check";
 import { withDemoFallback, isSeeded } from "@/lib/ai/demo";
 import { CheckResult, DraftDocument } from "@/lib/schemas";
 import { fillPeople } from "@/lib/people";
-import { MOCK, MOCK_FIXED_COOKIE, ok, fixture, handler, parseBody, requireOrg, loadDocument, loadChecklist, must, toEventDocument, mockDocument, checkedStatus, HttpError, demoPause } from "@/lib/api/server";
+import { MOCK, MOCK_FIXED_COOKIE, ok, fixture, handler, parseBody, requireOrg, loadDocument, loadChecklist, must, toEventDocument, mockDocument, checkedStatus, HttpError, demoPause, setMockChanges } from "@/lib/api/server";
 
 export const maxDuration = 60;
 
@@ -22,6 +22,7 @@ export const POST = handler(async (req, ctx: RouteContext<"/api/documents/[id]/f
     const failed = doc.checkResults?.items.find((item) => item.itemId === itemId && !item.pass);
     if (!failed || id !== fixture.fixedDocument.id) throw new HttpError(409, `No suggested fix for item ${itemId}`);
     await demoPause();
+    setMockChanges(id, null); // the fix rewrote the draft: earlier edits and the tick no longer apply
     const response = NextResponse.json(fixture.fixedDocument);
     response.cookies.set(MOCK_FIXED_COOKIE, "1", { httpOnly: true, sameSite: "lax", path: "/", maxAge: 3600 });
     return response;
@@ -39,8 +40,8 @@ export const POST = handler(async (req, ctx: RouteContext<"/api/documents/[id]/f
     : item.suggestedFix ??
       `Add ready-to-lodge text so the document clearly satisfies this council checklist item: ${item.text}\n` +
       "Use only facts already in the document. Where a fact is unknown, keep a descriptive [PLACEHOLDER].";
-  // The cached demo fix ignores the organiser's words, so it only stands in for the one-click fix.
-  const fixed = !text && isSeeded(event) && row.document_type === fixture.fixedDocument.documentType ? fixture.fixedDocument : null;
+  // The cached demo fix was recorded with one answer, so it only stands in when the organiser typed that answer (or none).
+  const fixed = (!text || JSON.stringify(fixture.fixedDocument.content).includes(text)) && isSeeded(event) && row.document_type === fixture.fixedDocument.documentType ? fixture.fixedDocument : null;
   // DEMO_MODE: the seeded event's fix is already known, so serve it after a short pause instead of calling the model.
   const known = process.env.DEMO_MODE === "1" && fixed ? (await demoPause(), { content: DraftDocument.parse(fixed.content), result: CheckResult.parse(fixed.checkResults) }) : null;
   const { content, result } = known ?? await withDemoFallback(async () => {
@@ -52,7 +53,7 @@ export const POST = handler(async (req, ctx: RouteContext<"/api/documents/[id]/f
     return { content, result: await checkDocument(content, checklist.items) };
   }, fixed && { content: DraftDocument.parse(fixed.content), result: CheckResult.parse(fixed.checkResults) });
 
-  const updated = must(await db().from("documents").update({ content, check_results: result, status: checkedStatus(result, checklist.items),
+  const updated = must(await db().from("documents").update({ content, check_results: result, status: checkedStatus(result, checklist.items), reviewed_at: null,
     updated_at: new Date().toISOString() }).eq("id", id).select("*").single());
   return ok(toEventDocument(updated, checklist?.source ?? null));
 });

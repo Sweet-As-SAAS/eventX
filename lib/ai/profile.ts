@@ -1,4 +1,4 @@
-import { EventProfile, type FollowUpQuestion, type CouncilSlug } from "../schemas";
+import { EventProfile, People, type FollowUpQuestion, type CouncilSlug } from "../schemas";
 import { structured } from "./client";
 import { PROFILE_SYSTEM } from "./prompts";
 import { conditionPaths, type Rule } from "../rules/engine";
@@ -6,7 +6,7 @@ import { conditionPaths, type Rule } from "../rules/engine";
 /** Step 1. `today` is the NZ date (nzToday) so "this Sunday" resolves correctly. */
 export async function buildProfile(description: string, council: CouncilSlug, today: string) {
   const profile = await structured({
-    schema: EventProfile.omit({ people: true }), name: "event_profile", model: "fast", system: PROFILE_SYSTEM,
+    schema: EventProfile.omit({ people: true }).extend({ people: People }), name: "event_profile", model: "strong", system: PROFILE_SYSTEM,
     user: `Reference date: ${today}\nCouncil: ${council}\nDescription:\n${description}`,
   });
   const date = resolveStatedDate(description, today, profile.date);

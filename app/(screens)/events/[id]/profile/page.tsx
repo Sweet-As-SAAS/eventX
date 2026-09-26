@@ -106,10 +106,10 @@ export default function ProfilePage({ params, searchParams }: PageProps<"/events
   const land = p.venue.councilLand.value;
   const venue = p.venue.name.value;
   const n = questions?.length ?? 0;
-  const rows: { label: string; icon: typeof Calendar; value?: string; sub?: string; guess?: boolean }[] = [
+  const rows: { label: string; icon: typeof Calendar; value?: string; sub?: string }[] = [
     { label: "When", icon: Calendar, ...fact("When") },
     { label: "People", icon: People, ...fact("People") },
-    { label: "Where", icon: Pin, value: venue ?? undefined, guess: fact("Where")?.guess,
+    { label: "Where", icon: Pin, value: venue ?? undefined,
       sub: `${COUNCIL_LABEL[ev.council]}${land === true ? " land" : land === false ? ", not council land" : ""}` },
     { label: "Alcohol", icon: Glass, ...fact("Alcohol") },
     { label: "Food", icon: Food, ...fact("Food") },
@@ -129,14 +129,13 @@ export default function ProfilePage({ params, searchParams }: PageProps<"/events
         <>
           <div className="mt-9 grid gap-10 lg:grid-cols-[1fr_360px] lg:gap-14">
             <dl className="grid content-start gap-x-10 gap-y-8 sm:grid-cols-2">
-              {rows.map(({ label, icon: Icon, value, sub, guess }) => (
+              {rows.map(({ label, icon: Icon, value, sub }) => (
                 <div key={label} className="flex gap-4">
                   <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-neutral-50 text-primary"><Icon width={20} height={20} /></span>
                   <div className="min-w-0">
                     <dt className="text-[15px] text-neutral-600">{label}</dt>
                     <dd className="mt-0.5 text-lg font-semibold leading-snug text-foreground">
                       {value ?? <span className="font-normal text-neutral-500">Not set yet</span>}
-                      {guess && <span className="ml-2 align-middle text-sm font-medium text-warning">our guess</span>}
                     </dd>
                     {sub && <dd className="mt-1 text-[15px] text-neutral-600">{sub}</dd>}
                   </div>

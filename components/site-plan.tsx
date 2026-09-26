@@ -18,6 +18,8 @@ const LOOK: Record<SiteItemKind, { fill: string; stroke: string; round?: boolean
   stage: { fill: "var(--neutral-200)", stroke: "var(--neutral-600)" },
   generator: { fill: "var(--neutral-300)", stroke: "var(--neutral-700)" },
   firstaid: { fill: "var(--destructive-soft)", stroke: "var(--destructive)" },
+  toilet: { fill: "var(--brand-50)", stroke: "var(--brand-500)" },
+  bin: { fill: "var(--neutral-100)", stroke: "var(--neutral-600)" },
   exit: { fill: "var(--success)", stroke: "var(--success)" },
   assembly: { fill: "var(--success-soft)", stroke: "var(--success)", round: true },
 };

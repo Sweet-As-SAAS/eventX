@@ -118,6 +118,8 @@ export const CheckResult = z.object({
       pass: z.boolean(),
       evidence: z.string().describe("Quote from the draft, or empty if missing"),
       suggestedFix: z.string().nullable(),
+      /** Other ready-to-insert options for a failing item, so the organiser picks or writes their own. */
+      alternatives: z.array(z.string()).default([]),
     }),
   ),
 });
@@ -162,6 +164,8 @@ export const EventDocument = z.object({
   status: DocumentStatus,
   content: DraftDocument.nullable(),
   checkResults: CheckResult.nullable(),
+  /** The organiser ticked "I've read this draft and checked it". Cleared whenever the draft's text changes. */
+  reviewed: z.boolean().default(false),
   checklistSource: z.object({
     url: z.string(),
     lastChecked: z.string().nullable(),
@@ -211,7 +215,7 @@ export type EventbriteDraft = z.infer<typeof EventbriteDraft>;
 
 // ---------- Site plan (drawn by the organiser on an 800×500 canvas; laid out and checked by lib/siteplan) ----------
 
-export const SiteItemKind = z.enum(["licensed", "marquee", "food", "inflatable", "ride", "stage", "generator", "firstaid", "exit", "assembly"]);
+export const SiteItemKind = z.enum(["licensed", "marquee", "food", "inflatable", "ride", "stage", "generator", "firstaid", "toilet", "bin", "exit", "assembly"]);
 export type SiteItemKind = z.infer<typeof SiteItemKind>;
 
 export const SiteItem = z.object({

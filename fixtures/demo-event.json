@@ -301,7 +301,11 @@
             "text": "Emergency assembly point named",
             "pass": false,
             "evidence": "",
-            "suggestedFix": "Name the assembly point, for example the open lawn north of the main gate, away from the stage, and mark it on the site plan."
+            "suggestedFix": "In an emergency, everyone gathers at the assembly point on the open lawn north of the main gate, away from the stage. It is marked on the site plan.",
+            "alternatives": [
+              "In an emergency, everyone gathers at the assembly point by the Riccarton Avenue entrance, clear of the bar and marquees. It is marked on the site plan.",
+              "In an emergency, everyone gathers at the assembly point on the sports field west of the food trucks, where stewards will direct people. It is marked on the site plan."
+            ]
           }
         ]
       },

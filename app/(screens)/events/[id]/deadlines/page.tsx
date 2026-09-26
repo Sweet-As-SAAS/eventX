@@ -83,7 +83,7 @@ export default function DeadlinesPage({ params }: PageProps<"/events/[id]/deadli
   }
 
   const eventDate = ev?.profile?.date.value ?? null;
-  const done = docs?.filter((d) => d.status === "ready" || d.status === "manual").length ?? 0;
+  const done = docs?.filter((d) => d.status === "manual" || (d.status === "ready" && d.reviewed)).length ?? 0;
   const fixes = docs?.filter((d) => d.status === "needs_fix").length ?? 0;
   const unlocked = !!docs?.length && done === docs.length;
   const fees = ev?.profile ? feesFor(ev.profile, [...new Set(ev.requirements.map((r) => r.documentType))], ev.classification?.category ?? "unclear")
@@ -128,7 +128,7 @@ export default function DeadlinesPage({ params }: PageProps<"/events/[id]/deadli
                 : ebError ? <span className="text-destructive">{ebError}</span>
                 : !docs ? "Checking your documents…"
                 : unlocked ? "Every document is ready, so tickets can go on sale. This creates a draft. Nothing is published."
-                : <>Unlocks when every document is ready, {done} of {docs.length} done. <Link href={`/events/${id}/documents`} className="font-semibold text-primary hover:underline">Go to documents</Link></>}
+                : <>Unlocks when you&apos;ve checked every document, {done} of {docs.length} done. <Link href={`/events/${id}/documents`} className="font-semibold text-primary hover:underline">Go to documents</Link></>}
             </span>}>
             {draft ? (
               <ButtonA href={draft.url} target="_blank" rel="noreferrer" variant="secondary" className="mt-4 w-full"><External /> Open your Eventbrite draft</ButtonA>

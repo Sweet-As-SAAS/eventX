@@ -177,6 +177,14 @@ describe("Eventbrite draft under MOCK", () => {
     expect((await locked.json()).error).toMatch(/green/i);
 
     jar.set("hostready_demo_fixed", "1");
+    const unread = await r.POST(post({}), ctx("demo"));
+    expect(unread.status).toBe(409);
+    expect((await unread.json()).error).toMatch(/tick/i);
+
+    const review = await import("../app/api/documents/[id]/review/route");
+    for (const d of fixture.documents.filter((x) => x.status !== "manual")) {
+      expect((await review.POST(post({ reviewed: true }), ctx(d.id))).status).toBe(200);
+    }
     const draft = await json(await r.POST(post({}), ctx("demo")), EventbriteDraft);
     expect(draft.url).toMatch(/^https:\/\/www\.eventbrite\.com\//);
     expect(draft.url).not.toMatch(/publish/);

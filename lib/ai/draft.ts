@@ -12,7 +12,8 @@ export interface TemplateAndChecklist {
 /** Names the organiser gave us: the event, the venue and their people. Anything else becomes a [PLACEHOLDER]. */
 export const allowedNames = (p: EventProfile) =>
   [p.name.value, p.venue.name.value, p.people.organiser.value, p.people.dutyManager.value, p.people.security.value,
-    p.people.foodProvider.value, p.people.wasteCollector.value].filter((v): v is string => !!v);
+    p.people.foodProvider.value, p.people.wasteCollector.value,
+    p.people.contact.value?.split(/[,;]/)[0].trim()].filter((v): v is string => !!v && !/[@\d]/.test(v)); // the contact's name, not their number
 
 /** "The menus are attached." -> "The menus will be attached to the application." HostReady holds no files. */
 export const honestAttachments = (text: string) =>
@@ -39,7 +40,8 @@ export function unsupportedDraftFacts(draft: DraftDocument, profile: EventProfil
     const allowed = allowedNames(profile);
     for (const match of body.matchAll(properName)) {
       const phrase = match[0];
-      if (!allowed.some((name) => phrase === name || name?.startsWith(`${phrase} `)) && !sourceText.includes(phrase)) {
+      // "Hagley Park" is fine when the venue is "Hagley Park, Christchurch": a prefix that ends at a word boundary.
+      if (!allowed.some((name) => name.startsWith(phrase) && !/[\p{L}\p{N}]/u.test(name[phrase.length] ?? "")) && !sourceText.includes(phrase)) {
         issues.push(`Unsupported event-specific name: "${phrase}". Use the exact profile name or a placeholder.`);
       }
     }
@@ -80,7 +82,8 @@ export async function draftDocument(profile: EventProfile, type: DocumentType, t
   }
   // Nothing is attached yet: turn "menus are attached" into a true statement rather than failing the whole draft.
   reviewed = { ...reviewed, sections: reviewed.sections.map((s) => ({ ...s, body: honestAttachments(s.body) })) };
-  if (unsupportedDraftFacts(reviewed, profile, sourceText).length) throw new Error("Draft still contains unsupported event facts");
+  const left = unsupportedDraftFacts(reviewed, profile, sourceText);
+  if (left.length) throw new Error(`Draft still contains unsupported event facts: ${left.join(" ")}`);
   const allowedIds = new Set(chunks.map((c) => c.id));
   if (reviewed.citedChunkIds.some((id) => !allowedIds.has(id))) throw new Error("Draft cited a chunk outside its council references");
   const sections = reviewed.sections.map((s) => ({ ...s, body: fillPeople(s.body, profile.people) }));

@@ -18,6 +18,13 @@ describe("draft source guard", () => {
       "Council source: Harbour Events Limited issued the guidance.")).toEqual([]);
   });
 
+  it("allows a profile name cut at a word boundary", () => {
+    const venue = structuredClone(profile);
+    venue.venue.name = { value: "Harbour Green, Lyttelton", source: "stated" };
+    expect(unsupportedDraftFacts(draftWith("Held at Harbour Green."), venue)).toEqual([]);
+    expect(unsupportedDraftFacts(draftWith("Held at Harbour Gree."), venue)).toHaveLength(1);
+  });
+
   it("allows the people the organiser named, and nobody else", () => {
     const named = structuredClone(profile);
     named.people.dutyManager = { value: "Harbour Rivers", source: "answered" };

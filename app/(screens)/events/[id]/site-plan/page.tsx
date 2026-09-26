@@ -3,6 +3,7 @@ import { use, useEffect, useState } from "react";
 import { api } from "@/lib/api/client";
 import type { EventDetail, SiteLayout } from "@/lib/schemas";
 import { SitePlan } from "@/components/site-plan";
+import { crowdKit } from "@/lib/siteplan";
 import { useFail } from "@/components/toast";
 import { ButtonLink, Skeleton, Title } from "@/components/ui";
 
@@ -31,6 +32,10 @@ export default function SitePlanPage({ params }: PageProps<"/events/[id]/site-pl
           <ButtonLink href={`/events/${id}/profile`} variant="secondary">Go to your event</ButtonLink>
         </div>
       )}
+      {data?.ev.profile?.peakAttendance.value && (() => {
+        const k = crowdKit(data.ev.profile);
+        return <p className="-mt-4 text-base text-neutral-700">Sized for about {k.people.toLocaleString("en-NZ")} people: {k.toilets} toilets, {k.bins} bins and {k.firstAid === 1 ? "a first aid post" : `${k.firstAid} first aid posts`}. Toilets and bins are our rule of thumb, not a council rule.</p>;
+      })()}
       {data && <SitePlan eventId={id} layout={data.layout} council={data.ev.council} requirements={data.ev.requirements} />}
       <div className="border-t border-border pt-6">
         <ButtonLink href={`/events/${id}/deadlines`}>Continue to deadlines</ButtonLink>

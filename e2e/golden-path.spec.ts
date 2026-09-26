@@ -77,17 +77,24 @@ test("golden path", async ({ page }, info) => {
     await expect(page.getByText(/to fix|needs? (a )?fix/i).first()).toBeVisible({ timeout: STEP_TIMEOUT });
   });
   await shot("documents-red");
-  await step("documents: click Fix, item turns green", async () => {
+  await step("documents: pick a suggestion, add it, item turns green", async () => {
     await fixButton.click({ timeout: STEP_TIMEOUT });
-    // "Fix it" either fixes in one click or opens the item, where "Apply fix" / "Add to draft" finishes it.
-    const apply = page.getByRole("button", { name: /apply fix|add to draft|fix it for me/i }).first();
-    if (await apply.waitFor({ timeout: 2_000 }).then(() => true, () => false)) {
-      const answerBox = page.getByRole("textbox").filter({ visible: true }).first(); // facts EvntX must not invent
-      if (await answerBox.isVisible()) await answerBox.fill("The open lawn north of the main gate");
-      await apply.click({ timeout: STEP_TIMEOUT });
+    await page.getByRole("radio").first().check({ timeout: STEP_TIMEOUT }); // a suggestion fills the box; the organiser can still change it
+    await page.getByRole("button", { name: /add to the draft/i }).click({ timeout: STEP_TIMEOUT });
+    await expect(page.getByRole("button", { name: /^fix it$/i })).toHaveCount(0, { timeout: STEP_TIMEOUT });
+  });
+  await step("documents: read and tick every draft", async () => {
+    for (let i = 0; i < 12; i++) {
+      const tick = page.getByRole("checkbox", { name: /read this draft/i });
+      if (!(await tick.isVisible().catch(() => false))) {
+        const read = page.getByRole("button", { name: /^read it$/i }).first();
+        if (!(await read.isVisible().catch(() => false))) break;
+        await read.click({ timeout: STEP_TIMEOUT });
+      }
+      await tick.click({ timeout: STEP_TIMEOUT }); // saves, then opens the next draft
+      await expect(tick).toBeHidden({ timeout: STEP_TIMEOUT }).catch(() => {}); // it moves on to the next draft
     }
-    await expect(page.getByRole("button", { name: /^fix/i })).toHaveCount(0, { timeout: STEP_TIMEOUT });
-    await expect(page.getByText(/to fix/i)).toHaveCount(0, { timeout: STEP_TIMEOUT });
+    await expect(page.getByText(/every draft is read and checked/i).first()).toBeVisible({ timeout: STEP_TIMEOUT });
   });
   await shot("documents-green");
   await step("documents: continue to site plan", async () => {

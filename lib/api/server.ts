@@ -8,7 +8,7 @@ import { supabaseServer } from "../supabase/server";
 import { staticRules, type Rule } from "../rules";
 import {
   EventProfile, CheckResult, DraftDocument,
-  type CouncilSlug, type EventDocument, type Requirement,
+  type CouncilSlug, type EventDocument, type Requirement, type SitePlan,
 } from "../schemas";
 
 export { fixture };
@@ -192,8 +192,20 @@ export const toEventDocument = (d: any, checklistSource: EventDocument["checklis
   status: d.status,
   content: d.content ? DraftDocument.parse(d.content) : null,
   checkResults: d.check_results ? CheckResult.parse(d.check_results) : null,
+  reviewed: !!d.reviewed_at,
   checklistSource,
 });
+
+// ponytail: MOCK keeps draft edits and review ticks in server memory, so they reset on restart. Fine for the demo.
+const mockChanges = new Map<string, Partial<EventDocument>>();
+/** A fixture document with whatever the organiser changed in this MOCK session. */
+export const withMockChanges = <T extends { id: string }>(d: T): T & Partial<EventDocument> => ({ ...d, ...mockChanges.get(d.id) });
+export const setMockChanges = (id: string, change: Partial<EventDocument> | null) =>
+  change ? mockChanges.set(id, { ...mockChanges.get(id), ...change }) : mockChanges.delete(id);
+/** The saved MOCK site plan (null: the default layout). */
+export const mockSitePlan: { plan: SitePlan | null } = { plan: null };
+/** A new MOCK event starts clean: no edits, ticks or saved plan from the last run. */
+export const resetMock = () => { mockChanges.clear(); mockSitePlan.plan = null; };
 
 /** MOCK lookup for the document routes. */
 export function mockDocument(id: string) {
