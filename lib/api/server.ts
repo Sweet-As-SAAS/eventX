@@ -25,6 +25,7 @@ export const mockPast = (id: string) => MOCK_PAST.find((e) => e.id === id);
 /** MOCK=1: every route returns fixture data in the exact shape of the real response. No keys needed. */
 export const MOCK = () => process.env.MOCK === "1";
 export const MOCK_FIXED_COOKIE = "hostready_demo_fixed";
+export const mockReviewCookie = (id: string) => `hostready_demo_review_${id}`;
 export const ok = (data: unknown) => NextResponse.json(data);
 /** The demo's instant answers wait this long (DEMO_PAUSE_MS, default 1 s) so the audience sees the AI step happen. */
 export const demoPause = () => {

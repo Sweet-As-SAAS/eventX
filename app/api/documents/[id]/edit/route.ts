@@ -2,7 +2,7 @@ import { z } from "zod";
 import { cookies } from "next/headers";
 import { db } from "@/lib/supabase/admin";
 import { DraftDocument } from "@/lib/schemas";
-import { MOCK, MOCK_FIXED_COOKIE, ok, fixture, handler, parseBody, requireOrg, loadDocument, loadChecklist, must, toEventDocument, mockDocument, withMockChanges, setMockChanges, HttpError } from "@/lib/api/server";
+import { MOCK, MOCK_FIXED_COOKIE, mockReviewCookie, ok, fixture, handler, parseBody, requireOrg, loadDocument, loadChecklist, must, toEventDocument, mockDocument, withMockChanges, setMockChanges, HttpError } from "@/lib/api/server";
 
 const Body = z.object({ sections: z.array(z.object({ heading: z.string().trim().min(1).max(200), body: z.string().max(8000) })).min(1).max(40) });
 const placeholders = (sections: { body: string }[]) => [...new Set(sections.flatMap((s) => s.body.match(/\[[^\[\]\n]+\]/g) ?? []))];
@@ -18,7 +18,9 @@ export const POST = handler(async (req, ctx: RouteContext<"/api/documents/[id]/e
     if (!doc.content) throw new HttpError(409, "Draft the document first");
     // MOCK has no checker, so the checklist result stays as it was.
     setMockChanges(id, { content: DraftDocument.parse({ ...doc.content, sections, placeholders: placeholders(sections) }), reviewed: false });
-    return ok(withMockChanges(doc));
+    const response = ok(withMockChanges(doc));
+    response.cookies.delete(mockReviewCookie(id));
+    return response;
   }
   const { row, event } = await loadDocument(id, orgId);
   if (!row.content) throw new HttpError(409, "Draft the document first");

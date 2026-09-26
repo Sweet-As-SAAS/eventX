@@ -4,7 +4,7 @@ import { db } from "@/lib/supabase/admin";
 import { createEventbriteDraft, eventbriteDraftUrl } from "@/lib/integrations/eventbrite";
 import { withDemoFallback, isSeeded } from "@/lib/ai/demo";
 import { Ticket, type EventbriteDraft } from "@/lib/schemas";
-import { MOCK, MOCK_FIXED_COOKIE, fixture, withMockChanges, ok, handler, parseBody, requireOrg, loadEvent, requireProfile, must, HttpError, documentsReadyForTicketing } from "@/lib/api/server";
+import { MOCK, MOCK_FIXED_COOKIE, mockReviewCookie, fixture, ok, handler, parseBody, requireOrg, loadEvent, requireProfile, must, HttpError, documentsReadyForTicketing } from "@/lib/api/server";
 
 export const maxDuration = 60;
 
@@ -23,10 +23,11 @@ export const POST = handler(async (req, ctx: RouteContext<"/api/events/[id]/even
   const { id } = await ctx.params;
   const { tickets } = await parseBody(req, Body);
   if (MOCK()) {
-    if (id !== "demo" || (await cookies()).get(MOCK_FIXED_COOKIE)?.value !== "1") {
+    const cookieStore = await cookies();
+    if (id !== "demo" || cookieStore.get(MOCK_FIXED_COOKIE)?.value !== "1") {
       throw new HttpError(409, "Every checklist must be green before tickets go on sale");
     }
-    if (fixture.documents.some((d) => d.status !== "manual" && !withMockChanges(d).reviewed)) throw new HttpError(409, UNREAD);
+    if (fixture.documents.some((d) => d.status !== "manual" && cookieStore.get(mockReviewCookie(d.id))?.value !== "1")) throw new HttpError(409, UNREAD);
     return ok(demoDraft() ?? { id: "mock", url: "https://www.eventbrite.com/organizations/events" });
   }
   const ev = await loadEvent(id, orgId);
