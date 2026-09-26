@@ -22,7 +22,7 @@ export function LandingExample({ text, rows, source, compact = false }: { text: 
         </blockquote>
       </figure>
       <div className={compact ? "" : "lg:col-span-5"}>
-        <h2 className="mb-4 text-base font-semibold text-neutral-700">HostReady works out what the council needs</h2>
+        <h2 className="mb-4 text-base font-semibold text-neutral-700">EvntX works out what the council needs</h2>
         <ul className="border-t border-border">
           {rows.map((r, i) => (
             <li key={r.phrase} onMouseEnter={() => setActive(r.phrase)} onMouseLeave={() => setActive(null)}

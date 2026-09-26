@@ -62,7 +62,7 @@ export default function Landing() {
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <section className="py-16 text-center sm:py-20" aria-labelledby="meet">
-          <h2 id="meet" className="display text-4xl text-foreground sm:text-5xl">Meet HostReady</h2>
+          <h2 id="meet" className="display text-4xl text-foreground sm:text-5xl">Meet EvntX</h2>
           <p className="mx-auto mt-4 max-w-xl text-lg text-muted-foreground">
             Every event, document, licence and deadline in one place, checked against Christchurch City Council&apos;s own rules.
           </p>
@@ -182,7 +182,7 @@ function AppWindow() {
       </div>
       <div className="grid md:grid-cols-[15rem_1fr]">
         <div className="hidden border-r border-border p-4 md:block">
-          <div className="flex items-center gap-2 px-2"><Mark size={24} /><span className="display text-lg font-medium">HostReady</span></div>
+          <div className="flex items-center gap-2 px-2"><Mark size={24} /><span className="display text-lg font-medium">EvntX</span></div>
           <ul className="mt-5 space-y-0.5">
             {nav.map(([Icon, label, on]) => (
               <li key={label} className={`flex items-center gap-3 rounded-xl px-3 py-2 text-sm ${on ? "bg-neutral-100 font-semibold" : "text-neutral-700"}`}><Icon width={16} height={16} className="text-neutral-500" />{label}</li>

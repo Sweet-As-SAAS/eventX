@@ -10,7 +10,7 @@ const s = StyleSheet.create({
   footer: { position: "absolute", bottom: 24, left: 48, right: 48, fontSize: 8, color: "#555" },
 });
 
-const DISCLAIMER = "HostReady prepares documents. You review them and lodge them with the council. This is not legal advice.";
+const DISCLAIMER = "EvntX prepares documents. You review them and lodge them with the council. This is not legal advice.";
 
 export type PackSource = { url: string; lastChecked: string | null };
 

@@ -51,5 +51,5 @@ export const GET = handler(async (_req, ctx: RouteContext<"/api/events/[id]/expo
   }
   const pdf = await renderPack({ eventName, docs, sources });
   return new Response(new Uint8Array(pdf), { headers: { "Content-Type": "application/pdf",
-    "Content-Disposition": `attachment; filename="hostready-pack.pdf"` } });
+    "Content-Disposition": `attachment; filename="evntx-pack.pdf"` } });
 });

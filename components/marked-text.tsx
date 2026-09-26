@@ -2,7 +2,7 @@
 import type { ReactNode } from "react";
 import type { Phrase } from "./profile-fields";
 
-/** The brand's signature: the organiser's own words, marked where HostReady understood them. */
+/** The brand's signature: the organiser's own words, marked where EvntX understood them. */
 export function MarkedText({ text, phrases, active, onActive, sweep = false }: {
   text: string;
   phrases: Pick<Phrase, "start" | "end" | "path" | "label">[];

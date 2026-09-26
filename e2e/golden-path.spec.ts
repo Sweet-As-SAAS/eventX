@@ -76,7 +76,7 @@ test("golden path", async ({ page }, info) => {
     // "Fix it" either fixes in one click or opens the item, where "Apply fix" / "Add to draft" finishes it.
     const apply = page.getByRole("button", { name: /apply fix|add to draft/i }).first();
     if (await apply.waitFor({ timeout: 2_000 }).then(() => true, () => false)) {
-      const answerBox = page.getByRole("textbox").filter({ visible: true }).first(); // facts HostReady must not invent
+      const answerBox = page.getByRole("textbox").filter({ visible: true }).first(); // facts EvntX must not invent
       if (await answerBox.isVisible()) await answerBox.fill("The open lawn north of the main gate");
       await apply.click({ timeout: STEP_TIMEOUT });
     }

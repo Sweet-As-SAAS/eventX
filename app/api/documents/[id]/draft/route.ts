@@ -13,7 +13,7 @@ export const POST = handler(async (_req, ctx: RouteContext<"/api/documents/[id]/
   if (MOCK()) {
     const doc = mockDocument(id);
     if (!DRAFTED_TYPES.has(DocumentType.parse(doc.documentType))) {
-      throw new HttpError(409, `HostReady does not draft ${doc.documentType}`);
+      throw new HttpError(409, `EvntX does not draft ${doc.documentType}`);
     }
     const response = ok({ ...doc, status: "drafted", checkResults: null });
     if (id === fixture.fixedDocument.id) response.cookies.delete(MOCK_FIXED_COOKIE);
@@ -21,7 +21,7 @@ export const POST = handler(async (_req, ctx: RouteContext<"/api/documents/[id]/
   }
   const { row, event } = await loadDocument(id, orgId);
   const type = DocumentType.parse(row.document_type);
-  if (!DRAFTED_TYPES.has(type)) throw new HttpError(409, `HostReady does not draft ${type}`);
+  if (!DRAFTED_TYPES.has(type)) throw new HttpError(409, `EvntX does not draft ${type}`);
   const profile = requireProfile(event);
 
   const [template, checklist] = await Promise.all([

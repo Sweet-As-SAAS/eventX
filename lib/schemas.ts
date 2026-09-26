@@ -1,4 +1,4 @@
-// HostReady shared contract. Every AI output, API response and fixture parses against these.
+// EvntX shared contract. Every AI output, API response and fixture parses against these.
 // Owner: lane A. FROZEN after the kickoff review: change only after a message in the team channel,
 // and update fixtures/demo-event.json in the same commit (tests/contract.test.ts enforces it).
 // OpenAI structured outputs need every key present, so optional values are .nullable(), never .optional().
@@ -77,7 +77,7 @@ export const DocumentType = z.enum([
 ]);
 export type DocumentType = z.infer<typeof DocumentType>;
 
-/** Types HostReady drafts with AI (PRD F6). Every other required document is "manual". */
+/** Types EvntX drafts with AI (PRD F6). Every other required document is "manual". */
 export const DRAFTED_TYPES: ReadonlySet<DocumentType> = new Set<DocumentType>([
   "health_safety_plan",
   "hazard_register",
@@ -137,7 +137,7 @@ export type ProfileResponse = z.infer<typeof ProfileResponse>;
 
 /**
  * pending: waiting to be drafted · drafted: drafted, not checked · needs_fix: a checklist item failed
- * ready: every checklist item passes · manual: HostReady does not draft it (official form, site plan screen, food licence)
+ * ready: every checklist item passes · manual: EvntX does not draft it (official form, site plan screen, food licence)
  */
 export const DocumentStatus = z.enum(["pending", "drafted", "needs_fix", "ready", "manual"]);
 export type DocumentStatus = z.infer<typeof DocumentStatus>;
