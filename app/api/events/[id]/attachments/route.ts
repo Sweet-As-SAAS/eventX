@@ -1,6 +1,6 @@
 import { db } from "@/lib/supabase/admin";
 import type { Attachment, SiteReview } from "@/lib/schemas";
-import { MOCK, ok, handler, requireOrg, loadEvent, mockUploads, HttpError } from "@/lib/api/server";
+import { MOCK, ok, handler, requireOrg, loadEvent, HttpError } from "@/lib/api/server";
 
 // Photos and PDFs the organiser adds with their description (a site plan, a menu, a map). Private: stored under
 // uploads/<event id>/ in the knowledge-base bucket, served back only through this route.
@@ -26,17 +26,8 @@ export const GET = handler(async (req, ctx: RouteContext<"/api/events/[id]/attac
   const { id } = await ctx.params;
   const file = new URL(req.url).searchParams.get("file");
   const url = (name: string) => `/api/events/${id}/attachments?file=${encodeURIComponent(name)}`;
-  if (MOCK()) {
-    const list = mockUploads.get(id) ?? [];
-    if (file) {
-      const f = list.find((x) => x.name === file);
-      if (!f) throw new HttpError(404, "No such file");
-      return new Response(new Uint8Array(f.data), { headers: { "Content-Type": f.type } });
-    }
-    // The first picture gets the demo review, so attaching the demo site plan in the first prompt shows it too.
-    const first = list.find((f) => f.type.startsWith("image/"));
-    return ok(list.length ? list.map((f): Attachment => ({ name: f.name, type: f.type, url: url(f.name), review: f === first ? DEMO_REVIEW : null })) : [DEMO_PHOTO]);
-  }
+  // MOCK stores nothing, so a demo never leaves files behind: the demo site plan and its review always show.
+  if (MOCK()) return ok([DEMO_PHOTO]);
   await loadEvent(id, orgId);
   const store = db().storage.from(BUCKET);
   if (file) {
@@ -59,11 +50,7 @@ export const POST = handler(async (req, ctx: RouteContext<"/api/events/[id]/atta
   if (file.size > MAX_BYTES) throw new HttpError(400, "Files can be up to 10 MB");
   const name = safeName(file.name);
   const data = Buffer.from(await file.arrayBuffer());
-  if (MOCK()) {
-    // ponytail: MOCK keeps uploads in server memory; they reset on restart or a new MOCK event.
-    mockUploads.set(id, [...(mockUploads.get(id) ?? []).filter((f) => f.name !== name), { name, type: file.type, data }]);
-    return ok({ name, type: file.type, url: `/api/events/${id}/attachments?file=${encodeURIComponent(name)}`, review: null } satisfies Attachment);
-  }
+  if (MOCK()) return ok(DEMO_PHOTO); // accepted, not kept
   await loadEvent(id, orgId);
   const { error } = await db().storage.from(BUCKET).upload(`uploads/${id}/${name}`, data, { contentType: file.type, upsert: true });
   if (error) throw new HttpError(500, error.message);

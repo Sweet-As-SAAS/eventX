@@ -4,7 +4,7 @@ import { renderPack, pdfName, type PackDoc, type PackEvent, type PackSource } fr
 import { appendPdf, OFFICIAL_FORM, officialForm } from "@/lib/pdf/official";
 import { nzToday } from "@/lib/deadlines";
 import { DraftDocument, EventProfile, type Licence } from "@/lib/schemas";
-import { MOCK, MOCK_FIXED_COOKIE, fixture, handler, requireOrg, loadEvent, loadPackInfo, must, withMockChanges } from "@/lib/api/server";
+import { MOCK, MOCK_FIXED_COOKIE, fixture, handler, requireOrg, loadEvent, loadPackInfo, must, mockEdits, withMockEdit } from "@/lib/api/server";
 
 export const maxDuration = 60;
 
@@ -24,8 +24,9 @@ export const GET = handler(async (_req, ctx: RouteContext<"/api/events/[id]/expo
   const { id } = await ctx.params;
   const fixed = MOCK() && (await cookies()).get(MOCK_FIXED_COOKIE)?.value === "1";
   let event: PackEvent = { name: fixture.profile.name.value, profile: EventProfile.parse(fixture.profile) };
+  const edits = MOCK() ? await mockEdits() : {};
   let docs: PackDoc[] = fixture.documents.flatMap((d) => {
-    const content = withMockChanges(fixed && d.id === fixture.fixedDocument.id ? fixture.fixedDocument : d).content;
+    const content = withMockEdit(fixed && d.id === fixture.fixedDocument.id ? fixture.fixedDocument : d, edits).content;
     return content ? [{ doc: DraftDocument.parse(content), checklist: d.checklistSource }] : [];
   });
   let licences: Licence[] = fixture.licences;

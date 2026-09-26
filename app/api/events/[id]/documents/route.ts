@@ -1,6 +1,6 @@
 import { db } from "@/lib/supabase/admin";
 import { cookies } from "next/headers";
-import { MOCK, MOCK_FIXED_COOKIE, mockReviewCookie, mockPast, withMockChanges, ok, fixture, handler, requireOrg, loadEvent, must, toEventDocument, checklistSource } from "@/lib/api/server";
+import { MOCK, MOCK_FIXED_COOKIE, mockReviewCookie, mockPast, mockEdits, withMockEdit, ok, fixture, handler, requireOrg, loadEvent, must, toEventDocument, checklistSource } from "@/lib/api/server";
 
 /** Every document the event needs, with status, draft and check results. Drafting is per document: POST /api/documents/:id/draft. */
 export const GET = handler(async (_req, ctx: RouteContext<"/api/events/[id]/documents">) => {
@@ -10,8 +10,9 @@ export const GET = handler(async (_req, ctx: RouteContext<"/api/events/[id]/docu
     if (mockPast(id)) return ok(fixture.documents.map((d) => ({ ...(d.status === "needs_fix" ? fixture.fixedDocument : d), reviewed: d.status !== "manual" })));
     const cookieStore = await cookies();
     const fixed = cookieStore.get(MOCK_FIXED_COOKIE)?.value === "1";
+    const edits = await mockEdits();
     return ok(fixture.documents.map((d) => ({
-      ...withMockChanges(fixed && d.id === fixture.fixedDocument.id ? fixture.fixedDocument : d),
+      ...withMockEdit(fixed && d.id === fixture.fixedDocument.id ? fixture.fixedDocument : d, edits),
       reviewed: cookieStore.get(mockReviewCookie(d.id))?.value === "1",
     })));
   }

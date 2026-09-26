@@ -2,7 +2,7 @@ import { db } from "@/lib/supabase/admin";
 import { draftDocument } from "@/lib/ai/draft";
 import { withDemoFallback, isSeeded } from "@/lib/ai/demo";
 import { DRAFTED_TYPES, DraftDocument, DocumentType } from "@/lib/schemas";
-import { MOCK, MOCK_FIXED_COOKIE, mockReviewCookie, ok, fixture, handler, requireOrg, loadDocument, loadChecklist, requireProfile, must, toEventDocument, mockDocument, setMockChanges, HttpError } from "@/lib/api/server";
+import { MOCK, MOCK_FIXED_COOKIE, mockReviewCookie, ok, fixture, handler, requireOrg, loadDocument, loadChecklist, requireProfile, must, toEventDocument, mockDocument, mockEditCookie, HttpError } from "@/lib/api/server";
 
 export const maxDuration = 60;
 
@@ -15,10 +15,10 @@ export const POST = handler(async (_req, ctx: RouteContext<"/api/documents/[id]/
     if (!DRAFTED_TYPES.has(DocumentType.parse(doc.documentType))) {
       throw new HttpError(409, `EvntX does not draft ${doc.documentType}`);
     }
-    setMockChanges(id, null);
     const response = ok({ ...doc, status: "drafted", checkResults: null });
     if (id === fixture.fixedDocument.id) response.cookies.delete(MOCK_FIXED_COOKIE);
     response.cookies.delete(mockReviewCookie(id));
+    response.cookies.delete(mockEditCookie(id));
     return response;
   }
   const { row, event } = await loadDocument(id, orgId);

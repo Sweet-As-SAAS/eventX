@@ -1,7 +1,8 @@
 import { z } from "zod";
+import { cookies } from "next/headers";
 import { db } from "@/lib/supabase/admin";
 import { CouncilSlug, type EventSummary } from "@/lib/schemas";
-import { MOCK, MOCK_FIXED_COOKIE, mockReviewCookie, MOCK_PAST, resetMock, ok, fixture, handler, parseBody, requireOrg, must, HttpError } from "@/lib/api/server";
+import { MOCK, MOCK_FIXED_COOKIE, MOCK_STARTED_COOKIE, mockReviewCookie, mockEditCookie, MOCK_PAST, resetMock, ok, fixture, handler, parseBody, requireOrg, must, HttpError } from "@/lib/api/server";
 
 /** Dashboard list, newest first. */
 export const GET = handler(async () => {
@@ -10,7 +11,9 @@ export const GET = handler(async () => {
     const demo: EventSummary = { id: "demo", name: fixture.profile.name.value, council: CouncilSlug.parse(fixture.profile.councilSlug),
       date: fixture.profile.date.value, status: "draft", eventbriteEventId: null, createdAt: "2026-09-26T09:00:00Z" };
     const past = [...MOCK_PAST].reverse().map((e): EventSummary => ({ ...e, council: demo.council, status: "published", eventbriteEventId: null, createdAt: `${e.date}T09:00:00Z` }));
-    return ok([demo, ...past]);
+    // The demo event only shows once this browser has submitted the prompt, so every demo starts from a clean Home.
+    const started = (await cookies()).get(MOCK_STARTED_COOKIE)?.value === "1";
+    return ok(started ? [demo, ...past] : past);
   }
   const rows = must(await db().from("events").select("id, profile, status, eventbrite_event_id, created_at, councils(slug)")
     .eq("org_id", orgId).order("created_at", { ascending: false }));
@@ -28,8 +31,9 @@ export const POST = handler(async (req) => {
   if (MOCK()) {
     resetMock();
     const response = ok({ id: "demo" });
+    response.cookies.set(MOCK_STARTED_COOKIE, "1", { httpOnly: true, sameSite: "lax", path: "/", maxAge: 3600 });
     response.cookies.delete(MOCK_FIXED_COOKIE);
-    for (const document of fixture.documents) response.cookies.delete(mockReviewCookie(document.id));
+    for (const document of fixture.documents) { response.cookies.delete(mockReviewCookie(document.id)); response.cookies.delete(mockEditCookie(document.id)); }
     return response;
   }
   const council = must(await db().from("councils").select("id").eq("slug", body.council).maybeSingle());

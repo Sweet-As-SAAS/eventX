@@ -60,6 +60,8 @@ const failedItem = fixture.documents.find((d) => d.id === hs)!.checkResults!.ite
 describe("MOCK routes return the contract", () => {
   it("GET /api/events → EventSummary[]; POST → {id}; bad body → 400", async () => {
     const r = await import("../app/api/events/route");
+    expect(await json(await r.GET(get(), undefined as never), z.array(EventSummary))).toHaveLength(5); // past events only, until the prompt
+    jar.set("hostready_demo_started", "1");
     expect(await json(await r.GET(get(), undefined as never), z.array(EventSummary))).toHaveLength(6);
     expect(await json(await r.POST(post({ council: "ccc", description: fixture.description }), undefined as never), Id))
       .toEqual({ id: "demo" });
