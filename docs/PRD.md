@@ -4,7 +4,7 @@
 
 ## Summary and problem
 
-HostReady turns a plain-English event description into a council-ready permit and liquor licence pack, checked against council rules, with every deadline tracked. The weekend MVP covers Christchurch City Council (CCC) and one complete flow, from blank page to exported pack and an Eventbrite draft, with Waimakariri as the second council to show that councils are data, not code.
+HostReady turns a plain-English event description into a council-ready permit and liquor licence pack, checked against council rules, with every deadline tracked. The weekend MVP covers Christchurch City Council (CCC) and one complete flow, from blank page to exported pack and an Eventbrite draft. CCC is the only council; council rules are stored as data, so more can be added later.
 
 **One-line pitch.** Describe your event once, and HostReady produces your council permit paperwork, safety plan, site plan and liquor licence application, ready to lodge.
 
@@ -40,7 +40,7 @@ Product goals:
 4. Make sure no deadline is missed, including licence renewals months or years later.
 5. Hand the approved event on to ticketing (Eventbrite) without retyping.
 
-**Non-goals for the weekend.** Councils beyond CCC and Waimakariri, real lodgement, payments, team roles, a mobile app, full traffic management plans (flagged only), our own ticketing, promo content, sales analytics.
+**Non-goals for the weekend.** Councils other than CCC, real lodgement, payments, team roles, a mobile app, full traffic management plans (flagged only), our own ticketing, promo content, sales analytics.
 
 | Metric | Target | Why |
 | --- | --- | --- |
@@ -63,7 +63,7 @@ We design for the volunteer and sell to the organisation.
 | One-off organiser | Anyone running a single public event | Get it right once | $29 per event |
 | Committee approver | Club president or licensee | Sign off documents before lodging | Included |
 
-**Demo scenario: to be decided.** The demo event will be a volunteer's public event in Christchurch that triggers several council requirements at once (for example alcohol, food, structures), so the pack is rich and the Waimakariri switch visibly changes it. The current placeholder lives only in `fixtures/demo-event.json`; nothing else depends on it (see AGENTS.md "Demo scenario").
+**Demo scenario: to be decided.** The demo event will be a volunteer's public event in Christchurch that triggers several council requirements at once (for example alcohol, food, structures), so the pack is rich. The current placeholder lives only in `fixtures/demo-event.json`; nothing else depends on it (see AGENTS.md "Demo scenario").
 
 ## User journey
 
@@ -186,7 +186,7 @@ Retention: every event creates new paperwork, recurring events copy in one click
 | 0:00 to 0:45 | Problem. Meet the organiser (scenario to be decided). They face council forms, a safety plan, a liquor licence, a site plan and deadlines they don't know about |
 | 0:45 to 1:15 | The stack of real council PDFs she would have to fill in |
 | 1:15 to 3:30 | Live: type the event, AI asks one or two questions, required documents appear with reasons and sources, drafts fill in, the red checklist item turns green, the site plan appears, the timeline shows the special licence date |
-| 3:30 to 4:15 | Export the PDF pack, trigger the reminder email live, Eventbrite draft unlocks. Switch the event to Waimakariri: different requirements, same code |
+| 3:30 to 4:15 | Export the PDF pack, trigger the reminder email live, Eventbrite draft unlocks. |
 | 4:15 to 5:00 | Market, pricing, two customer quotes from Saturday, roadmap (more councils, traffic plans, official form filling) |
 
 Q&A prep: "Every council is different, how do you scale?" Rules are data, adding a council means loading its checklist and templates. "What if the AI gets it wrong?" Every draft is checked against the council's own checklist and the organiser reviews before submitting: we prepare, they sign. "Is this legal advice?" No, it fills in the council's own process. "Who pays?" Clubs and venues already pay consultants or burn volunteer hours; $29 is less than an hour of anyone's time. "Why won't councils build this?" Councils build the submission portal; we get the application right before it reaches the portal. "Privacy?" Only event and business details, demo uses fake events.
@@ -195,7 +195,7 @@ Q&A prep: "Every council is different, how do you scale?" Rules are data, adding
 
 | Phase | Scope |
 | --- | --- |
-| Weekend MVP | CCC (+ Waimakariri switch), P0 and P1, Eventbrite draft |
+| Weekend MVP | CCC only, P0 and P1, Eventbrite draft |
 | Next 3 months | Official form filling, committee sign-off, council email response, stallholder applications, 3 to 5 more councils |
 | 6 to 12 months | Traffic management briefs and supplier quotes, Humanitix, venue licence renewals end to end, events company tier |
 | Platform | Supplier bookings (marquees, security, toilets), volunteer rostering, marketplace for event services |

@@ -1,5 +1,5 @@
 import { CheckResult, DraftDocument } from "../schemas";
-import { structured, MODEL_FAST, MODEL_STRONG } from "./client";
+import { structured } from "./client";
 import { CHECK_SYSTEM, FIX_SYSTEM } from "./prompts";
 
 /** Keep model-generated fixes from assigning a real-sounding person or organisation nobody supplied. */
@@ -19,7 +19,7 @@ export function safeSuggestedFix(candidate: string | null | undefined, knownText
 /** Step 6. Every checklist item gets pass or fail with an evidence quote. */
 export async function checkDocument(doc: DraftDocument, checklist: { id: string; text: string }[]) {
   const result = await structured({
-    schema: CheckResult, name: "check_result", model: MODEL_STRONG, system: CHECK_SYSTEM,
+    schema: CheckResult, name: "check_result", model: "fast", system: CHECK_SYSTEM,
     user: `Checklist:\n${checklist.map((c) => `- (${c.id}) ${c.text}`).join("\n")}\n\nDraft:\n${JSON.stringify(doc)}`,
   });
   const body = doc.sections.map((section) => section.body).join("\n");
@@ -35,7 +35,7 @@ export async function checkDocument(doc: DraftDocument, checklist: { id: string;
 /** `supplied` is text the organiser typed themselves, so names in it are theirs, not invented. */
 export async function applyFix(doc: DraftDocument, fix: string, supplied = "") {
   const result = await structured({
-    schema: DraftDocument, name: "draft_document", model: MODEL_FAST, system: FIX_SYSTEM,
+    schema: DraftDocument, name: "draft_document", model: "fast", system: FIX_SYSTEM,
     user: `Fix to apply:\n${fix}\n\nDocument:\n${JSON.stringify(doc)}`,
   });
   const placeholders = [...new Set(result.sections.flatMap((section) =>

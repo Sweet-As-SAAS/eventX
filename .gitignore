@@ -25,3 +25,8 @@ data/
 *.pem
 npm-debug.log*
 /coverage
+
+# agent worktrees
+.claude/worktrees/
+/playwright-report/
+/test-results/

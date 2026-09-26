@@ -6,11 +6,11 @@ Working draft for the five-minute Saasthon presentation. Replace the bracketed s
 
 **Title:** HostReady — event permits without the paperwork maze
 
-**Description:** HostReady turns an organiser's event description into a council-specific checklist, document drafts, a working-day timeline and a reviewable PDF pack. It cites verified council sources, checks drafts against the council's own list, and keeps Eventbrite drafting locked until the required checks pass. Organisers review and lodge the documents themselves. The weekend build starts with Christchurch City Council and a Waimakariri comparison.
+**Description:** HostReady turns an organiser's event description into a council-specific checklist, document drafts, a working-day timeline and a reviewable PDF pack. It cites verified council sources, checks drafts against the council's own list, and keeps Eventbrite drafting locked until the required checks pass. Organisers review and lodge the documents themselves. The weekend build covers Christchurch City Council.
 
 **Repository:** https://github.com/Sweet-As-SAAS/hostready
 
-Before submission, confirm the repo is public or the required judge account has access. Do not say the Waimakariri comparison works until Lane B has published its verified rules and the switch has been checked.
+Before submission, confirm the repo is public or the required judge account has access.
 
 ## Five-minute run of show
 
@@ -20,7 +20,7 @@ Before submission, confirm the repo is public or the required judge account has 
 | 0:35–0:55 | Demo scenario card | “Here is [the confirmed demo organiser] planning [the confirmed event]. They need to know what to prepare, why it is required, and when it is due.” Do not present fixture details as a real customer. |
 | 0:55–2:35 | Type description; profile; requirements; drafts; red item → Fix | “They describe the event once. HostReady extracts the facts, asks only for missing details the verified rules need, and shows the council source behind each requirement. Its first draft has a gap; the checklist catches it. We fill the missing fact, run Fix, and the item turns green.” If the checklist cannot be fixed live, show the genuine red state and explain the missing organiser input. |
 | 2:35–3:25 | Timeline, PDF, reminder, Eventbrite | “The same event gets a working-day timeline and a pack for the organiser to review and lodge. A reminder email lands, and the Eventbrite draft unlocks when all required checks are green.” Show each outcome only after it has worked in the real Preview. |
-| 3:25–3:50 | Council switch | “Switching to Waimakariri changes the requirement list because council rules and templates are data.” Show only after the second council's verified data is live. |
+| 3:25–3:50 | Rules as data | “Council rules and templates are data with sources and dates, so adding a council means publishing its reviewed rules.” Do not demo a second council. |
 | 3:50–4:25 | Why HostReady | “A general chatbot can draft prose. HostReady keeps the cited council rule, deterministic requirements and dates, checklist evidence, reminders and the publishing gate together. It marks unknown details for the organiser instead of inventing them.” |
 | 4:25–5:00 | Business and close | “We are testing a $29 per-event price with clubs and venues; willingness to pay has not yet been validated. Next are more councils and official form filling. Our aim is to get organisers from an event idea to a reviewable submission pack before they lose a weekend to paperwork.” |
 
@@ -51,6 +51,6 @@ The stage driver should navigate. The speaker should advance only when the scree
 ## Final rehearsal gate
 
 1. Confirm the final scenario and replace the placeholder fixture only with supplied facts; regenerate requirements and documents, then run `npm test`.
-2. Confirm a Preview with `MOCK=0` completes profile → requirements → draft → check → fix → PDF → reminder → Eventbrite and the council switch. Verify the seeded outage fallback and a non-seeded negative case.
+2. Confirm a Preview with `MOCK=0` completes profile → requirements → draft → check → fix → PDF → reminder → Eventbrite. Verify the seeded outage fallback and a non-seeded negative case.
 3. Verify the stage laptop, login, URL, driver and backup, then rehearse twice at five minutes. Record the actual timings and trim lines that run long.
 4. Freeze deploys at 08:00 NZDT Sunday and submit before 10:00 NZDT. Daylight saving starts at 02:00 Sunday.
