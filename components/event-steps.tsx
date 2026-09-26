@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { api } from "@/lib/api/client";
 import { Check, Share } from "./icons";
 import { useToast } from "./toast";
-import { cx } from "./ui";
 
 // A real sequence, so it is numbered: details, documents, site plan, deadlines.
 // `done` is the reassurance shown on the next step, once this one is behind you.
@@ -21,7 +20,7 @@ export const eventIdFrom = (path: string) => path.match(/^\/events\/([^/]+)/)?.[
 /** Which step a page belongs to. Questions are the second half of Details. */
 export const stepOf = (path: string) => { const last = path.split("/").pop() ?? ""; return last === "questions" ? "profile" : last; };
 
-/** Breadcrumb, Share, and the step bar. Navigation never animates (Emil). */
+/** Breadcrumb down to the step, "Step n of 4", and Share. Navigation never animates (Emil). */
 export function EventTopBar({ id }: { id: string }) {
   const path = usePathname();
   const toast = useToast();
@@ -46,40 +45,23 @@ export function EventTopBar({ id }: { id: string }) {
           <ol className="flex items-center gap-2 text-[15px] text-neutral-600">
             <li className="hidden shrink-0 sm:block"><Link href="/dashboard" className="inline-flex min-h-11 items-center hover:text-foreground">Your events</Link></li>
             <li aria-hidden className="hidden text-neutral-500 sm:block">/</li>
-            <li aria-current="page" className="min-w-0 truncate font-semibold text-foreground">{name ?? "Your event"}</li>
+            {at >= 0 ? (
+              <>
+                <li className="min-w-0 truncate"><Link href={`/events/${id}/profile`} className="inline-flex min-h-11 items-center hover:text-foreground">{name ?? "Your event"}</Link></li>
+                <li aria-hidden className="text-neutral-500">/</li>
+                <li aria-current="page" className="shrink-0 font-semibold text-foreground">{STEPS[at].label}</li>
+              </>
+            ) : <li aria-current="page" className="min-w-0 truncate font-semibold text-foreground">{name ?? "Your event"}</li>}
           </ol>
         </nav>
+        <div className="flex shrink-0 items-center gap-5">
+        {at >= 0 && <span className="hidden text-[15px] text-neutral-600 sm:block">Step {at + 1} of {STEPS.length}</span>}
         <button onClick={share} className="press inline-flex min-h-11 shrink-0 items-center gap-2 rounded-lg border border-neutral-200 bg-background px-4 text-[15px] font-medium text-foreground hover:border-neutral-300 hover:bg-neutral-50">
           <Share width={16} height={16} /> Share
         </button>
+        </div>
       </div>
 
-      {at >= 0 && (
-        <nav aria-label={`Step ${at + 1} of ${STEPS.length}`} className="pb-4">
-          <ol className="grid grid-cols-4 gap-1.5 sm:gap-3">
-            {STEPS.map((s, i) => {
-              const state = i < at ? "done" : i === at ? "now" : "next";
-              return (
-                <li key={s.slug}>
-                  <Link href={`/events/${id}/${s.slug}`} aria-current={state === "now" ? "step" : undefined}
-                    className={cx("group flex min-h-11 flex-col gap-1.5 rounded-md pt-2 text-[13px] leading-tight sm:text-[15px]",
-                      state === "now" ? "font-semibold text-foreground" : "text-neutral-600 hover:text-foreground")}>
-                    {/* Progress rail: filled up to and including the current step */}
-                    <span aria-hidden className={cx("h-1 rounded-full", state === "next" ? "bg-neutral-200" : "bg-primary")} />
-                    <span className="flex items-center gap-1.5">
-                      <span aria-hidden className={cx("hidden size-5 shrink-0 place-items-center rounded-full text-[11px] font-semibold sm:grid",
-                        state === "done" ? "bg-primary text-primary-foreground" : state === "now" ? "border-2 border-primary text-primary" : "border border-neutral-300 text-neutral-600")}>
-                        {state === "done" ? <Check width={12} height={12} strokeWidth={3} /> : i + 1}
-                      </span>
-                      <span>{s.label}{state === "done" && <span className="sr-only"> (done)</span>}</span>
-                    </span>
-                  </Link>
-                </li>
-              );
-            })}
-          </ol>
-        </nav>
-      )}
       {reassure && (
         <p className="flex items-center gap-2 pb-4 text-[15px] text-success">
           <Check width={16} height={16} strokeWidth={2.5} className="shrink-0" /> {reassure}

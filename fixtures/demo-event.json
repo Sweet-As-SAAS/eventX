@@ -116,9 +116,9 @@
     }
   ],
   "classification": {
-    "category": "unclear",
-    "reasoning": "The council source lists community and commercial fee bands for Hagley Park but does not define which applies here. A music festival with a bar and food trucks could fall in either band, depending on who runs it and where the takings go.",
-    "howToPresent": "Explain who runs the festival, whether it is free or ticketed, where any profit goes, and how much of the site is commercial trading; ask the council to confirm the category before quoting a fee.",
+    "category": "commercial",
+    "reasoning": "Selling is a big part of the day: a bar selling beer and wine, four food trucks trading, and live bands on a main stage. The council's fees for Hagley Park treat events where trading is a main part of the event as commercial, even when entry is free.",
+    "howToPresent": "If a charity or club runs the festival and the profit goes back to them, say so when you apply and ask the council whether the community rate applies.",
     "citedChunkIds": [
       "2db13665-9560-4a2d-a63c-0594b02cba32"
     ]
@@ -656,5 +656,8 @@
       "expiresOn": "2028-03-01"
     }
   ],
-  "siteBasemap": { "url": "/site-plan/demo-venue.png", "attribution": "© OpenStreetMap contributors" }
+  "siteBasemap": {
+    "url": "/site-plan/demo-venue.png",
+    "attribution": "© OpenStreetMap contributors"
+  }
 }
