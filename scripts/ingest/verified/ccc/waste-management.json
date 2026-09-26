@@ -1,0 +1,39 @@
+{
+  "url": "https://ccc.tfaforms.net/177",
+  "verified": true,
+  "reviewedBy": "lane B, 26 Sep 2026: CCC event permit application form, waste management section",
+  "rules": [],
+  "checklists": [
+    {
+      "documentType": "waste_management_confirmation",
+      "items": [
+        { "id": "removal", "text": "Confirms the organiser will remove and dispose of all waste from the event location", "sourceQuote": "You are responsible for the appropriate removal and disposal of all waste from the event location." },
+        { "id": "detail", "text": "Explains how waste will be managed at the event", "sourceQuote": "Please provide detail on how waste will be managed at the event (or attach document below):" },
+        { "id": "types-amounts", "text": "For events of about 1000 attendees or more: estimates the types and amounts of waste", "sourceQuote": "Provide an estimate of the types and amounts of waste likely to be generated at your event." },
+        { "id": "minimise", "text": "For events of about 1000 attendees or more: lists actions to minimise waste", "sourceQuote": "What actions are you taking to minimise the waste generated at your event?" },
+        { "id": "diversion", "text": "For events of about 1000 attendees or more: gives a landfill diversion estimate or target percentage", "sourceQuote": "Provide an estimate or target percentage of the amount of waste you anticipate diverting from landfill." },
+        { "id": "equipment", "text": "For events of about 1000 attendees or more: lists equipment to collect and transport waste and diverted materials", "sourceQuote": "What equipment is being provided to collect and transport the waste and diverted materials?" },
+        { "id": "responsible", "text": "For events of about 1000 attendees or more: names who collects and disposes of the waste", "sourceQuote": "Who (individual or organisation) is responsible for collection and disposal of the waste?" },
+        { "id": "schedule", "text": "For events of about 1000 attendees or more: says when and how often waste is collected", "sourceQuote": "When and how often during your event will your waste be collected and disposed?" },
+        { "id": "litter", "text": "For events of about 1000 attendees or more: explains how litter and spillages are managed", "sourceQuote": "Outline how you intend to manage litter and spillages during or associated with your event?" }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "documentType": "waste_management_confirmation",
+      "sections": [
+        "How waste will be managed",
+        "Types and amounts of waste",
+        "Waste minimisation",
+        "Landfill diversion target",
+        "Collection equipment",
+        "Who is responsible",
+        "Collection schedule",
+        "Litter and spillages"
+      ]
+    }
+  ],
+  "leadTimes": [],
+  "fees": []
+}

@@ -1,0 +1,48 @@
+{
+  "url": "https://ccc.govt.nz/assets/Documents/Consents-and-Licences/business-licences-and-consents/Alcohol/SpecialLicence.pdf",
+  "verified": true,
+  "reviewedBy": "lane B, 26 Sep 2026: CCC Application for Special Licence (8 pages)",
+  "rules": [],
+  "checklists": [
+    {
+      "documentType": "special_licence_application",
+      "items": [
+        { "id": "lodge-20wd", "text": "Lodged at least 20 working days before the event", "sourceQuote": "Applications must be lodged with the Agency at least 20 working days before the licence is required (event date)." },
+        { "id": "late-letter", "text": "If lodged late, includes a letter explaining the reason for lateness", "sourceQuote": "Short notice applications (less than 20 working days before the event date) must be accompanied by a letter explaining the reason for lateness for DLC consideration." },
+        { "id": "summer", "text": "Allows for the 20 December to 15 January non-working period", "sourceQuote": "There is a statutory non-working day period every year from 20 December to 15 January." },
+        { "id": "fee-class", "text": "States expected attendance per event and number of events so the fee class can be set", "sourceQuote": "How many people do you expect to be attending each event?" },
+        { "id": "manager", "text": "Names a manager for the event, or asks for the section 213(1) exemption", "sourceQuote": "Do you wish to be exempt from the requirement of section 213(1) to appoint at least one manager?" },
+        { "id": "purpose", "text": "Describes a genuine event and its purpose, not extra trading hours", "sourceQuote": "applications will not be accepted for what appears to be a request for additional hours for “Continuation of trade” rather than a genuine “event”" },
+        { "id": "designation", "text": "Lists the areas to be licensed and any restricted or supervised designation", "sourceQuote": "Please list the areas of the premises to be used (including for any outside areas), and any designations sought:" },
+        { "id": "hours", "text": "States the days and hours alcohol will be sold or supplied", "sourceQuote": "On which days and during which hours does the applicant intend to sell or supply alcohol at the event?" },
+        { "id": "food", "text": "Describes the food available and who provides it", "sourceQuote": "being a good host, and normal practice now dictates, that food is continuously available" },
+        { "id": "low-non-alcohol", "text": "Lists low-alcohol and non-alcoholic drinks", "sourceQuote": "Non-alcoholic refreshments:" },
+        { "id": "transport", "text": "Describes help with alternative transport", "sourceQuote": "What steps does the applicant propose to take to provide assistance with or information about alternative forms of transport from the licensed premises?" },
+        { "id": "prohibited-persons", "text": "Explains how minors, intoxicated people and uninvited people will not be served", "sourceQuote": "Prohibited persons are minors, intoxicated persons, persons not attending/invited to the event/ occasion/gathering" },
+        { "id": "water", "text": "Explains how drinking water is freely available", "sourceQuote": "To what extent, where, and how is drinking water intended to be freely available to patrons?" },
+        { "id": "staff-training", "text": "Describes staff, systems and training for compliance", "sourceQuote": "What appropriate staff, systems and training will be in place to ensure compliance with the law?" },
+        { "id": "noise", "text": "Explains how noise will be managed", "sourceQuote": "How will noise be managed and mitigated?" },
+        { "id": "disorder", "text": "Explains how disorderly behaviour, nuisance and vandalism will be prevented", "sourceQuote": "How will you ensure there is no disorderly behaviour/general nuisance or increase in vandalism caused by your event or by persons attracted to your event?" },
+        { "id": "site-plan", "text": "Attaches a site plan of the area to be licensed", "sourceQuote": "A plan of the building/detailed site plan of the area to be licensed" },
+        { "id": "other-consents", "text": "Attaches confirmation of other consents (building, traffic management, lease of public space)", "sourceQuote": "Confirmation of any other required consents/approvals granted or have been applied for: Building, Traffic Management; lease of public space." },
+        { "id": "amp", "text": "Attaches an Alcohol Management Plan if more than 150 guests are expected", "sourceQuote": "Alcohol Management Plan if the number of expected guests exceeds 150" },
+        { "id": "menus", "text": "Attaches food and drinks menus", "sourceQuote": "Drinks / Beverage Menus" }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "documentType": "special_licence_application",
+      "sections": [
+        "Application details",
+        "Details of applicant",
+        "Premises details",
+        "Event details",
+        "Conditions",
+        "Documents attached"
+      ]
+    }
+  ],
+  "leadTimes": [],
+  "fees": []
+}

@@ -33,6 +33,7 @@ describe("rules engine", () => {
     ["traffic_management_plan", { roadOrFootpathImpact: true }, { roadOrFootpathImpact: false }],
     ["food_licence_check", { "food.stalls": 3 }, { "food.stalls": 0 }],
     ["special_licence_application", { "alcohol.supply": "sold" }, { "alcohol.supply": "none" }],
+    ["alcohol_management_plan", { "alcohol.supply": "sold", peakAttendance: 151 }, { "alcohol.supply": "sold", peakAttendance: 150 }],
   ])("CCC: %s fires only when its trigger holds", (doc, on, off) => {
     expect(types(withFields(on))).toContain(doc);
     expect(types(withFields(off))).not.toContain(doc);

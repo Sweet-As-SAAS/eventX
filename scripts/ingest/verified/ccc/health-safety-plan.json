@@ -1,0 +1,38 @@
+{
+  "url": "https://ccc.govt.nz/news-and-events/events/running-an-event/event-resources",
+  "verified": true,
+  "reviewedBy": "lane B, 26 Sep 2026: every quote read against the saved page",
+  "rules": [],
+  "checklists": [
+    {
+      "documentType": "health_safety_plan",
+      "items": [
+        { "id": "hazard-system", "text": "Describes a system to identify, assess, control and review hazards before and during the event", "sourceQuote": "A system is in place for the identification, assessment, control and review of hazards before and during the event." },
+        { "id": "responsibilities", "text": "Assigns health and safety responsibilities to named staff, including volunteers", "sourceQuote": "Health and Safety responsibilities are assigned to designated staff including volunteers." },
+        { "id": "competency", "text": "Confirms staff have the knowledge and skills for their jobs, or will be supervised", "sourceQuote": "All staff working at the event location have the necessary knowledge and skills to perform their job adequately, or will be adequately supervised." },
+        { "id": "site-inspection", "text": "Includes a plan to inspect the venue for safety before the event", "sourceQuote": "A plan is in place to inspect the event location to ensure that the venue is safe prior to the event." },
+        { "id": "accident-register", "text": "States that an accident register is kept on site", "sourceQuote": "An Accident Register is kept on site." },
+        { "id": "emergency-plan", "text": "Includes an emergency plan designed for this event", "sourceQuote": "An Emergency Plan designed for the event is in place for dealing with a variety of emergencies." },
+        { "id": "briefings", "text": "Describes a documented health and safety briefing for staff and volunteers before each session", "sourceQuote": "A Health and Safety briefing is carried out with staff (including volunteers) prior to each session of the event and is documented." },
+        { "id": "partners-suppliers", "text": "Describes how partners and suppliers work together so the public is not endangered", "sourceQuote": "A system is in place with the collaboration of all partners and suppliers to ensure the public is not endangered by activities carried out at the event venue." }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "documentType": "health_safety_plan",
+      "sections": [
+        "Hazard identification, assessment, control and review",
+        "Health and safety responsibilities",
+        "Staff competency and supervision",
+        "Pre-event site inspection",
+        "Accident register",
+        "Emergency plan",
+        "Health and safety briefings",
+        "Working with partners and suppliers"
+      ]
+    }
+  ],
+  "leadTimes": [],
+  "fees": []
+}
