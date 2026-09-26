@@ -44,4 +44,20 @@ describe("fixture matches lib/schemas.ts", () => {
     expect(fixed.status).toBe("ready");
     expect(fixed.checkResults!.items.every((i) => i.pass)).toBe(true);
   });
+
+  it("fixture checklist evidence is in the draft and ready drafts have no missing placeholders", () => {
+    const docs = z.array(EventDocument).parse([...fixture.documents, fixture.fixedDocument]);
+    for (const doc of docs) {
+      if (!doc.content) continue;
+      const body = doc.content.sections.map((section) => section.body).join("\n");
+      const placeholders = [...new Set(body.match(/\[[^\]]+\]/g) ?? [])];
+      expect(doc.content.placeholders).toEqual(placeholders);
+      if (doc.status === "ready") expect(placeholders).toEqual([]);
+      for (const item of doc.checkResults?.items ?? []) {
+        if (!item.pass) continue;
+        expect(item.evidence).not.toContain("[");
+        expect(body).toContain(item.evidence);
+      }
+    }
+  });
 });
