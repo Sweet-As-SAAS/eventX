@@ -4,14 +4,13 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { api } from "@/lib/api/client";
 import type { Classification, EventDetail, EventProfile, FollowUpQuestion } from "@/lib/schemas";
-import { COUNCIL_LABEL, fmtTime, questionsLabel } from "@/components/format";
-import { field, findPhrases, keyFacts } from "@/components/profile-fields";
-import { MarkedText } from "@/components/marked-text";
+import { COUNCIL_LABEL, questionsLabel } from "@/components/format";
+import { field, keyFacts } from "@/components/profile-fields";
+import { peopleToAsk } from "@/components/people";
 import { useFail } from "@/components/toast";
-import { Button, Skeleton, Spinner, cx } from "@/components/ui";
-import { Pencil, Pin } from "@/components/icons";
+import { Button, Skeleton, Spinner } from "@/components/ui";
 
-// Step 1, Details: your event as we understood it, every part editable, then the quick questions (their own page).
+// Step 1, Details: a short summary of the event as we understood it, one edit form, then the quick questions (their own page).
 // ?new=1 means fresh from Describe: read the event (AI) first.
 type Kind = "text" | "number" | "date" | "time" | "bool" | "alcohol";
 type Input = { path: string; label: string; kind: Kind };
@@ -34,7 +33,6 @@ const GROUPS: Record<string, Input[]> = {
     { path: "roadOrFootpathImpact", label: "Roads or footpaths affected", kind: "bool" },
   ],
 };
-const FACTS = ["People", "Alcohol", "Food", "Setup"];
 
 export default function ProfilePage({ params, searchParams }: PageProps<"/events/[id]/profile">) {
   const { id } = use(params);
@@ -47,7 +45,7 @@ export default function ProfilePage({ params, searchParams }: PageProps<"/events
   const [profile, setProfile] = useState<EventProfile | null>(null);
   const [questions, setQuestions] = useState<FollowUpQuestion[] | null>(null);
   const [cls, setCls] = useState<Classification | null>(null);
-  const [editing, setEditing] = useState<string | null>(null);
+  const [editing, setEditing] = useState<string | null>(null); // "all" while the edit form is open
   const [saving, setSaving] = useState(false);
   const [leaving, setLeaving] = useState(false);
   const started = useRef(false); // dev mode runs effects twice; never pay for two AI calls
@@ -81,7 +79,7 @@ export default function ProfilePage({ params, searchParams }: PageProps<"/events
   }
 
   async function confirm() {
-    if (questions?.length) return router.push(`/events/${id}/questions`);
+    if (questions?.length || (profile && peopleToAsk(profile).length)) return router.push(`/events/${id}/questions`);
     setLeaving(true);
     try { await api.requirements(id); router.push(`/events/${id}/documents`); } // keeps existing drafts
     catch (e) { fail(e); setLeaving(false); }
@@ -98,111 +96,51 @@ export default function ProfilePage({ params, searchParams }: PageProps<"/events
   }
 
   const p = profile;
-  const edit = (key: string) => ({ editing: editing === key, open: () => setEditing(key), form: <EditForm inputs={GROUPS[key]} profile={p} busy={saving} onSave={save} onCancel={() => setEditing(null)} /> });
-  const d = p.date.value && /^\d{4}-\d{2}-\d{2}$/.test(p.date.value) ? new Date(`${p.date.value}T00:00:00Z`) : null;
-  const fmt = (o: Intl.DateTimeFormatOptions) => d?.toLocaleDateString("en-NZ", { timeZone: "UTC", ...o });
-  const when = [fmt({ weekday: "long", day: "numeric", month: "long", year: "numeric" })?.replace(",", ""),
-    p.startTime.value && p.endTime.value && `${fmtTime(p.startTime.value)} to ${fmtTime(p.endTime.value)}`].filter(Boolean).join(", ");
-  const facts = keyFacts(p);
+  const facts = keyFacts(p).filter((f) => f.label !== "Event");
   const land = p.venue.councilLand.value;
+  facts.push({ label: "Council", value: `${COUNCIL_LABEL[ev.council]}${land === true ? " land" : land === false ? ", not council land" : ""}`, guess: p.venue.councilLand.source === "inferred" });
   const n = questions?.length ?? 0;
 
-  const name = edit("name"), whenE = edit("when"), whereE = edit("where"), landE = edit("land");
-
   return (
-    <div className="step-in max-w-[1100px] pb-4">
-      <p className="text-sm font-semibold uppercase tracking-[0.04em] text-primary">Step 1 of 4 · Check it looks right</p>
-      {name.editing ? <div className="mt-3 max-w-md">{name.form}</div> : (
-        <div className="mt-2 flex items-center gap-3">
-          <h1 className="text-5xl font-semibold leading-[1.05] tracking-[-0.025em] text-foreground sm:text-[3.25rem]">{p.name.value ?? "Your event"}</h1>
-          <EditButton label="Edit the event name" onClick={name.open} />
-        </div>
-      )}
+    <div className="step-in max-w-2xl pb-4">
+      <p className="text-[15px] font-medium text-primary">Step 1 of 4</p>
+      <h1 className="mt-1 text-4xl font-semibold tracking-[-0.02em] text-foreground sm:text-5xl">{p.name.value ?? "Your event"}</h1>
+      <p className="mt-3 text-lg text-neutral-600">
+        Here's what we picked up{cls && cls.category !== "unclear" ? `. It looks like a ${cls.category} event` : ""}. Check it, then answer a few questions so we can fill in your forms.
+      </p>
 
-      <div className="mt-7 flex flex-wrap items-start gap-x-16 gap-y-6">
-        {whenE.editing ? <div className="w-full max-w-md">{whenE.form}</div> : (
-          <div className="flex items-center gap-4">
-            <span className="grid w-14 shrink-0 overflow-hidden rounded-lg border border-neutral-200 bg-background text-center shadow-sm">
-              <span className="bg-primary text-sm font-semibold leading-6 text-primary-foreground">{fmt({ month: "short" }) ?? "Date"}</span>
-              <span className="text-2xl font-medium leading-9 text-foreground">{fmt({ day: "numeric" }) ?? "?"}</span>
-            </span>
-            <span>
-              <span className="block text-[15px] text-neutral-600">When</span>
-              <span className="block text-lg font-semibold text-foreground">{when || "Not set yet"}</span>
-            </span>
-            <EditButton label="Edit when" onClick={whenE.open} className="ml-6" />
-          </div>
-        )}
-        {whereE.editing ? <div className="w-full max-w-md">{whereE.form}</div> : (
-          <div className="flex items-center gap-4">
-            <span className="grid size-14 shrink-0 place-items-center rounded-xl bg-brand-50 text-primary"><Pin width={22} height={22} /></span>
-            <span>
-              <span className="block text-[15px] text-neutral-600">Where</span>
-              <span className="block text-lg font-semibold text-foreground">{p.venue.name.value ?? "Not set yet"}</span>
-            </span>
-            <EditButton label="Edit where" onClick={whereE.open} className="ml-6" />
-          </div>
-        )}
-      </div>
-
-      {landE.editing ? <div className="mt-6 max-w-md">{landE.form}</div> : (
-        <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-[15px]">
-          {cls && cls.category !== "unclear" && <span className="rounded-full border border-neutral-300 px-3 py-1 font-medium text-foreground">Likely a {cls.category} event</span>}
-          <span className="text-neutral-600">
-            {COUNCIL_LABEL[ev.council]}{land === true ? " land" : land === false ? ", not council land" : ""}{p.venue.councilLand.source === "inferred" && " (our guess)"}
-          </span>
-          <button onClick={landE.open} className="font-semibold text-primary hover:underline">Change</button>
-        </div>
-      )}
-
-      <dl className="mt-12 grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
-        {FACTS.map((label) => {
-          const f = facts.find((x) => x.label === label);
-          const e = edit(label);
-          return (
-            <div key={label} className="border-t border-neutral-800 pt-5">
-              <div className="flex items-center justify-between gap-2">
-                <dt className={cx("text-[15px]", f?.guess ? "text-warning" : "text-neutral-600")}>{label}{f?.guess && " · our guess"}</dt>
-                {!e.editing && <EditButton label={`Edit ${label.toLowerCase()}`} onClick={e.open} />}
-              </div>
-              <dd className="mt-2">{e.editing ? e.form : <span className="text-[22px] leading-snug text-foreground">{f?.value ?? "Not set yet"}</span>}</dd>
+      {editing ? (
+        <div className="mt-8"><EditForm inputs={Object.values(GROUPS).flat()} profile={p} busy={saving} onSave={save} onCancel={() => setEditing(null)} /></div>
+      ) : (
+        <dl className="mt-8 divide-y divide-border border-y border-border">
+          {facts.map((f) => (
+            <div key={f.label} className="grid gap-1 py-3.5 sm:grid-cols-[140px_1fr] sm:gap-6">
+              <dt className="text-[15px] text-neutral-600">{f.label}</dt>
+              <dd className="text-base text-foreground">
+                {f.value}{f.guess && <span className="ml-2 text-sm text-warning">our guess</span>}
+              </dd>
             </div>
-          );
-        })}
-      </dl>
+          ))}
+        </dl>
+      )}
 
-      <section aria-labelledby="told" className="mt-9 grid gap-4 border-t border-border pt-8 sm:grid-cols-[190px_1fr]">
-        <h2 id="told" className="pt-1 text-sm font-semibold uppercase tracking-[0.04em] text-neutral-600">What you told us</h2>
-        <div>
-          <p className="max-w-[650px] text-lg leading-[1.75] text-foreground"><MarkedText text={ev.description} phrases={findPhrases(ev.description, p)} /></p>
-          <p className="mt-4 flex flex-wrap gap-x-5 text-[15px] text-neutral-600">
-            Highlights show what we used.
-            <Link href={`/new?from=${id}`} className="font-semibold text-primary hover:underline">Change description</Link>
-          </p>
+      {!editing && (
+        <div className="mt-8 flex flex-wrap items-center gap-3">
+          <Button onClick={confirm} busy={leaving} disabled={!questions} className="min-h-12 px-7 text-[17px]">
+            {!questions ? "Looks right" : n ? `Looks right, ${questionsLabel(n)} next` : peopleToAsk(p).length ? "Looks right, who's doing what next" : "Looks right, go to documents"}
+          </Button>
+          <Button variant="ghost" onClick={() => setEditing("all")} className="min-h-12 px-4 text-[17px]">Edit details</Button>
+          <Link href={`/new?from=${id}`} className="ml-auto text-[15px] font-medium text-neutral-600 hover:text-foreground hover:underline">Change description</Link>
         </div>
-      </section>
-
-      <div className="mt-10 flex flex-wrap items-center gap-5">
-        <Button onClick={confirm} busy={leaving} disabled={!questions} className="min-h-12 px-7 text-[17px]">Looks right</Button>
-        <p className="text-base text-neutral-600">{!questions ? "" : n ? `Next, ${questionsLabel(n)}.` : "Next, your documents."}</p>
-      </div>
+      )}
     </div>
-  );
-}
-
-function EditButton({ label, onClick, className }: { label: string; onClick: () => void; className?: string }) {
-  return (
-    <button onClick={onClick} aria-label={label} title={label}
-      className={cx("press grid size-9 shrink-0 place-items-center rounded-lg text-neutral-600 hover:bg-neutral-100 hover:text-foreground", className)}>
-      <Pencil width={17} height={17} />
-    </button>
   );
 }
 
 const ALCOHOL_OPTIONS = [["sold", "Sold"], ["free", "Given away"], ["byo", "BYO"], ["none", "No alcohol"]];
 const box = "block min-h-10 w-full rounded-lg border border-neutral-300 bg-background px-3 text-base text-foreground focus:border-primary focus:outline-none focus:ring-4 focus:ring-brand-100";
 
-/** Small inline form for one part of the event. Empty means "not set". */
+/** One form for every detail. Empty means "not set". */
 function EditForm({ inputs, profile, busy, onSave, onCancel }: {
   inputs: Input[]; profile: EventProfile; busy: boolean;
   onSave: (edits: { path: string; value: string | number | boolean | null }[]) => void; onCancel: () => void;
@@ -217,7 +155,7 @@ function EditForm({ inputs, profile, busy, onSave, onCancel }: {
     }));
   }
   return (
-    <form onSubmit={submit} className="arrive space-y-3 rounded-xl border border-neutral-200 bg-background p-4 shadow-sm">
+    <form onSubmit={submit} className="arrive grid gap-x-5 gap-y-3 rounded-xl border border-neutral-200 bg-background p-5 sm:grid-cols-2">
       {inputs.map(({ path, label, kind }, i) => {
         const v = field(profile, path).value as string | number | boolean | null;
         if (kind === "bool") {
@@ -242,7 +180,7 @@ function EditForm({ inputs, profile, busy, onSave, onCancel }: {
           </label>
         );
       })}
-      <div className="flex items-center gap-2 pt-1">
+      <div className="col-span-full flex items-center gap-2 pt-2">
         <Button type="submit" busy={busy} className="min-h-10 px-4 text-[15px]">Save</Button>
         <Button type="button" variant="ghost" onClick={onCancel} className="min-h-10 px-3 text-[15px] !text-neutral-700 hover:!bg-neutral-50">Cancel</Button>
       </div>
