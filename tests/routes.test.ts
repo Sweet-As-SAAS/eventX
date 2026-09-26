@@ -18,7 +18,7 @@ vi.mock("next/headers", () => ({
 
 // Only network calls are refused. @react-pdf loads its layout engine from an inline data: URL, which is not a network call.
 const realFetch = globalThis.fetch;
-const fetchSpy = vi.fn(async (_url: string | URL | Request) => { throw new Error("no network in MOCK tests"); });
+const fetchSpy = vi.fn(async (url: string | URL | Request) => { throw new Error(`no network in MOCK tests: ${String(url)}`); });
 const guardedFetch = (url: string | URL | Request, init?: RequestInit) =>
   String(url instanceof Request ? url.url : url).startsWith("data:") ? realFetch(url, init) : fetchSpy(url);
 beforeEach(() => {

@@ -18,6 +18,8 @@ vi.mock("../lib/ai/retrieve", async (importOriginal) => ({
 const { structured } = await import("../lib/ai/client");
 const { buildProfile, missingPaths } = await import("../lib/ai/profile");
 const { draftDocument } = await import("../lib/ai/draft");
+const { checkDocument, applyFix } = await import("../lib/ai/check");
+const { classify } = await import("../lib/ai/classify");
 const mocked = vi.mocked(structured);
 
 beforeEach(() => { mocked.mockReset(); }); // braces: a returned function would run as a cleanup hook
@@ -33,7 +35,7 @@ describe("profile parsing (mocked model)", () => {
 
     expect(mocked).toHaveBeenCalledTimes(1);
     expect(mocked.mock.calls[0][0].user).toContain(fixture.description);
-    expect(mocked.mock.calls[0][0].schema).toBe(EventProfile);
+    expect(mocked.mock.calls[0][0]).toMatchObject({ schema: EventProfile, name: "event_profile", model: "fast" });
     expect(profile.councilSlug).toBe("ccc");
     expect(profile.date).toEqual({ value: "2027-03-14", source: "stated" });
     expect(profile.missing).toEqual(missingPaths(profile));
@@ -74,6 +76,22 @@ describe("parallel drafting (mocked model, 200 ms per call)", () => {
     // Each draft is two sequential model calls (draft, then review), so one draft takes about 2 × DELAY.
     expect(mocked).toHaveBeenCalledTimes(types.length * 2);
     expect(drafts.map((d) => d.documentType)).toEqual(types);
+    expect(new Set(mocked.mock.calls.map(([c]) => `${c.name}:${c.model}`)))
+      .toEqual(new Set(["draft_document:strong", "reviewed_draft_document:strong"]));
     expect(elapsed).toBeLessThan(2 * DELAY * 2); // serial would be types.length × 2 × DELAY = 2400 ms
+  });
+});
+
+describe("model routing (mocked model)", () => {
+  it("checks and fixes on the fast model, classifies on the strong one", async () => {
+    const draft = DraftDocument.parse(recorded.drafts[0]);
+    const check = recorded.checks[0];
+    mocked.mockResolvedValueOnce(check).mockResolvedValueOnce(draft).mockResolvedValueOnce(recorded.classifications[0]);
+    await checkDocument(draft, check.items.map((i) => ({ id: i.itemId, text: i.text })));
+    await applyFix(draft, "Add the assembly point.").catch(() => {}); // a guard may reject; only the routing matters here
+    await classify(EventProfile.parse(fixture.profile)).catch(() => {}); // recorded cited ids differ from the mocked chunk
+    expect(mocked.mock.calls.map(([c]) => `${c.name}:${c.model}`)).toEqual([
+      "check_result:fast", "draft_document:fast", "classification:strong",
+    ]);
   });
 });
