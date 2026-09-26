@@ -1,12 +1,12 @@
 "use client";
 import { use, useEffect, useRef, useState } from "react";
 import { api } from "@/lib/api/client";
-import type { EventDocument, EventProfile, Requirement } from "@/lib/schemas";
-import { keyFacts } from "@/components/profile-fields";
+import type { Classification, EventDocument, EventProfile, Requirement } from "@/lib/schemas";
+import { eventPermit } from "@/lib/forms/event-permit";
 import { namedPeople } from "@/components/people";
 import { fillPeople } from "@/lib/people";
 import { DOC_LABEL, STATUS_LABEL } from "@/components/format";
-import { Alert, Check, Doc, Download, Pencil, Refresh } from "@/components/icons";
+import { Alert, Check, Doc, Download, External, Pencil, Refresh } from "@/components/icons";
 import { CHANGED } from "@/components/sidebar";
 import { useFail, useToast } from "@/components/toast";
 import { Button, ButtonA, ButtonLink, Pill, Skeleton, SourceLine, Spinner, Title, cx } from "@/components/ui";
@@ -28,6 +28,8 @@ export default function DocumentsPage({ params }: PageProps<"/events/[id]/docume
   const [docs, setDocs] = useState<EventDocument[] | null>(null);
   const [reqs, setReqs] = useState<Requirement[]>([]);
   const [profile, setProfile] = useState<EventProfile | null>(null);
+  const [cls, setCls] = useState<Classification | null>(null);
+  const [description, setDescription] = useState<string | null>(null);
   const [open, setOpen] = useState<string | null>(null);
   const [failed, setFailed] = useState<Set<string>>(new Set());
   const [busy, setBusy] = useState<Record<string, string>>({}); // document id -> what's in flight (a checklist item, "edit" or "review")
@@ -60,6 +62,8 @@ export default function DocumentsPage({ params }: PageProps<"/events/[id]/docume
         setDocs(list);
         setReqs(ev.requirements);
         setProfile(ev.profile);
+        setCls(ev.classification);
+        setDescription(ev.description);
         list.filter((d) => d.status === "pending" || d.status === "drafted").forEach(work);
       })
       .catch(fail);
@@ -147,6 +151,7 @@ export default function DocumentsPage({ params }: PageProps<"/events/[id]/docume
                 : d.status === "needs_fix" && gap ? `${reds} ${reds === 1 ? "thing" : "things"} to fix: ${gap.text}`
                 : toRead(d) ? "Passes the council checklist. Read it through and tick it off."
                 : d.status === "ready" ? "You've read and checked this one."
+                : d.documentType === "waste_management_confirmation" ? "Goes into the waste section of your event permit form."
                 : req?.reason ?? (d.status === "manual" ? "You lodge this one yourself." : "");
               return (
                 <li key={d.id} className={cx("border-b border-border last:border-b-0", d.status === "needs_fix" && "bg-warning-soft/40", flashDoc === d.id && d.reviewed && "flash-pass")}>
@@ -178,7 +183,8 @@ export default function DocumentsPage({ params }: PageProps<"/events/[id]/docume
                   </div>
                   {isOpen && (
                     <div className="arrive border-t border-border bg-background px-5 py-7 sm:pl-[76px] sm:pr-10">
-                      <DocumentDetail doc={d} profile={profile} req={req} failed={isFailed} retry={() => work(d)} busy={busy[d.id] ?? null} justFixed={justFixed}
+                      <DocumentDetail doc={d} profile={profile} req={req} permit={profile && d.documentType === "event_permit_application"
+                        ? eventPermit(profile, cls, docs.find((x) => x.documentType === "waste_management_confirmation")?.content?.sections.map((s) => s.body).join("\n\n") ?? null, description) : null} failed={isFailed} retry={() => work(d)} busy={busy[d.id] ?? null} justFixed={justFixed}
                         onFix={(itemId, text) => fix(d, itemId, text)} onSave={(sections) => saveEdit(d, sections)} onReview={(r) => review(d, r)} />
                     </div>
                   )}
@@ -210,8 +216,8 @@ export default function DocumentsPage({ params }: PageProps<"/events/[id]/docume
   );
 }
 
-function DocumentDetail({ doc, profile, req, failed, retry, busy, justFixed, onFix, onSave, onReview }: {
-  doc: EventDocument; profile: EventProfile | null; req?: Requirement; failed: boolean; retry: () => void; busy: string | null; justFixed: string | null;
+function DocumentDetail({ doc, profile, req, permit, failed, retry, busy, justFixed, onFix, onSave, onReview }: {
+  doc: EventDocument; profile: EventProfile | null; req?: Requirement; permit: ReturnType<typeof eventPermit> | null; failed: boolean; retry: () => void; busy: string | null; justFixed: string | null;
   onFix: (itemId: string, text: string) => void; onSave: (sections: { heading: string; body: string }[]) => Promise<boolean>; onReview: (reviewed: boolean) => void;
 }) {
   const [editing, setEditing] = useState(false);
@@ -221,12 +227,12 @@ function DocumentDetail({ doc, profile, req, failed, retry, busy, justFixed, onF
       <div className="space-y-4">
         <p className="max-w-prose text-lg text-neutral-700">
           {doc.documentType === "event_permit_application"
-            ? "It's the council's own form, so you lodge it. We've gathered your answers below to copy straight in."
+            ? "The council takes this one as an online form. We open it with your answers already filled in: check them, fill the gaps, add the uploads and submit."
             : <>You handle this one. EvntX doesn&apos;t draft it.</>}
         </p>
         {req && <p className="max-w-prose text-base text-neutral-700"><span className="font-semibold text-foreground">Why the council needs it: </span>{req.reason.replace(/\.?$/, ".")}</p>}
         {req && <SourceLine url={req.sourceUrl} checked={req.lastChecked} />}
-        {doc.documentType === "event_permit_application" && profile && <PermitAnswers profile={profile} />}
+        {permit && <PermitForm permit={permit} />}
       </div>
     );
   }
@@ -292,7 +298,7 @@ function DocumentDetail({ doc, profile, req, failed, retry, busy, justFixed, onF
             <div className="flex flex-wrap items-center gap-2">
               <Button variant="secondary" disabled={!!busy} onClick={() => setEditing(true)}><Pencil width={16} height={16} /> Edit the wording</Button>
               <ButtonA href={`${api.documentPdfUrl(doc.id)}?view=1`} target="_blank" rel="noreferrer" variant="secondary">
-                {doc.documentType === "special_licence_application" ? "View the council form" : "View PDF"}
+                {doc.documentType === "special_licence_application" || doc.documentType === "hazard_register" ? "View the council form" : "View PDF"}
               </ButtonA>
               <ButtonA href={api.documentPdfUrl(doc.id)} download variant="secondary"><Download /> Download</ButtonA>
             </div>
@@ -454,26 +460,43 @@ function Gaps({ text }: { text: string }) {
   );
 }
 
-/** The permit is the council's own form, so we hand over every answer we already know, ready to copy across. */
-function PermitAnswers({ profile }: { profile: EventProfile }) {
+/** The council's online permit form, opened with our answers, plus every answer in its order to check or copy. */
+function PermitForm({ permit }: { permit: ReturnType<typeof eventPermit> }) {
   const toast = useToast();
-  const facts = keyFacts(profile);
-  const copy = () => navigator.clipboard.writeText(facts.map((f) => `${f.label}: ${f.value}`).join("\n"))
-    .then(() => toast("Copied. Paste them into the council form."), () => toast("Couldn't copy. Select the text instead.", "error"));
+  const rows = permit.sections.flatMap((s) => s.rows);
+  const filled = rows.filter((r) => r.value).length;
+  const copy = (v: string) => navigator.clipboard.writeText(v).then(() => toast("Copied."), () => toast("Couldn't copy. Select the text instead.", "error"));
   return (
-    <section aria-labelledby="answers" className="pt-2">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h3 id="answers" className="text-lg font-semibold text-foreground">Your answers for the permit form</h3>
-        <Button variant="secondary" onClick={copy}>Copy all</Button>
+    <section aria-labelledby="permit" className="space-y-6 pt-2">
+      <div className="flex flex-wrap items-center gap-4 rounded-2xl border border-brand-200 bg-brand-50 px-5 py-4">
+        <div className="min-w-0 flex-1">
+          <h3 id="permit" className="text-lg font-semibold text-foreground">CCC&apos;s event permit form, filled in</h3>
+          <p className="text-[15px] text-neutral-700">{filled} of {rows.length} answers ready. Opens the council&apos;s own form in a new tab.</p>
+        </div>
+        <ButtonA href={permit.url} target="_blank" rel="noreferrer"><External /> Open the council form</ButtonA>
       </div>
-      <dl className="mt-4 border-t border-border">
-        {facts.map((f) => (
-          <div key={f.label} className="flex gap-6 border-b border-border py-3">
-            <dt className="w-20 shrink-0 text-base text-muted-foreground">{f.label}</dt>
-            <dd className="flex-1 text-base font-medium text-foreground">{f.value}</dd>
-          </div>
-        ))}
-      </dl>
+      <div>
+        <h4 className="text-base font-semibold text-foreground">Upload these with it</h4>
+        <ul className="mt-1 list-disc pl-5 text-[15px] text-neutral-700">
+          <li>Health and safety management plan (from this list)</li>
+          <li>Detailed site map (your site plan: Download plan)</li>
+          <li>Public liability insurance (yours, if the council asks for it)</li>
+        </ul>
+      </div>
+      {permit.sections.map((s) => (
+        <div key={s.title}>
+          <h4 className="text-base font-semibold text-foreground">{s.title}</h4>
+          <dl className="mt-2 border-t border-border">
+            {s.rows.map((r) => (
+              <div key={r.label} className="grid gap-x-6 gap-y-1 border-b border-border py-2.5 sm:grid-cols-[260px_1fr_auto] sm:items-start">
+                <dt className="text-[15px] text-neutral-600">{r.label}</dt>
+                <dd className={cx("whitespace-pre-line text-[15px]", r.value ? "font-medium text-foreground" : "text-warning")}>{r.value ?? "For you to fill in"}</dd>
+                {r.value && <button onClick={() => copy(r.value!)} className="press justify-self-start text-sm font-semibold text-primary hover:underline">Copy</button>}
+              </div>
+            ))}
+          </dl>
+        </div>
+      ))}
     </section>
   );
 }

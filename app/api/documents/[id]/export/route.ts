@@ -1,9 +1,9 @@
 import { cookies } from "next/headers";
 import { db } from "@/lib/supabase/admin";
 import { renderDoc, pdfName } from "@/lib/pdf/pack";
-import { fillSpecialLicence } from "@/lib/pdf/special-licence";
+import { OFFICIAL_FORM, officialForm } from "@/lib/pdf/official";
 import { nzToday } from "@/lib/deadlines";
-import { DraftDocument, EventProfile, type Licence } from "@/lib/schemas";
+import { DraftDocument, EventProfile, type DocumentType, type Licence } from "@/lib/schemas";
 import { MOCK, MOCK_FIXED_COOKIE, fixture, handler, requireOrg, loadDocument, loadPackInfo, mockDocument, withMockChanges, must, HttpError } from "@/lib/api/server";
 
 export const maxDuration = 60;
@@ -19,19 +19,18 @@ export const GET = handler(async (req, ctx: RouteContext<"/api/documents/[id]/ex
     if (!d.content) throw new HttpError(409, "Draft the document first");
     const doc = DraftDocument.parse(d.content);
     const profile = EventProfile.parse(fixture.profile);
-    if (doc.documentType === "special_licence_application") {
-      return file(await fillSpecialLicence(profile, doc, fixture.licences, nzToday()), `${profile.name.value} special licence application`, view);
-    }
+    const form = await officialForm(doc.documentType, profile, doc, fixture.licences, nzToday());
+    if (form) return file(form, `${profile.name.value} ${OFFICIAL_FORM[doc.documentType]}`, view);
     const pdf = await renderDoc({ event: { name: fixture.profile.name.value, profile }, item: { doc, checklist: d.checklistSource ?? null } });
     return file(pdf, doc.title, view);
   }
   const { row, event } = await loadDocument(id, orgId);
   if (!row.content) throw new HttpError(409, "Draft the document first");
-  if (row.document_type === "special_licence_application" && event.profile) {
+  if (OFFICIAL_FORM[row.document_type as DocumentType] && event.profile) {
     const rows = must(await db().from("licences").select("*").eq("org_id", orgId));
     const licences = rows.map((l: any): Licence => ({ id: l.id, type: l.type, holderName: l.holder_name, expiresOn: l.expires_on }));
-    return file(await fillSpecialLicence(event.profile, DraftDocument.parse(row.content), licences, nzToday()),
-      `${event.profile.name.value ?? "Event"} special licence application`, view);
+    const form = await officialForm(row.document_type, event.profile, DraftDocument.parse(row.content), licences, nzToday());
+    if (form) return file(form, `${event.profile.name.value ?? "Event"} ${OFFICIAL_FORM[row.document_type as DocumentType]}`, view);
   }
   const info = await loadPackInfo(event.councilId, [row]);
   const item = info.docs[0]!;

@@ -367,23 +367,23 @@
         "sections": [
           {
             "heading": "Inflatable bouncy castle",
-            "body": "Risk: falls, collisions and the castle lifting in wind. Proposed controls: anchored to manufacturer specification, supervised by Sam Example (fictional demo volunteer), age and number limits posted, deflated if the wind picks up. Residual risk: to be confirmed on site."
+            "body": "Persons at risk: Children using the castle, parents nearby. Risk: falls, collisions and the castle lifting in wind. Proposed controls: anchored to manufacturer specification, supervised by Sam Example (fictional demo volunteer), age and number limits posted, deflated if the wind picks up. Residual risk: to be confirmed on site. Before controls: severity 4, likelihood 3. After controls: severity 4, likelihood 1. Owner: Sam Example."
           },
           {
             "heading": "Stage, sound and crowd at the front",
-            "body": "Risk: crushing at the front of stage, hearing damage and trips on cables. Controls: barrier along the front of stage, sound levels monitored at the mixing desk, cables covered and taped. Residual risk: low."
+            "body": "Persons at risk: Attendees at the front of stage, crew. Risk: crushing at the front of stage, hearing damage and trips on cables. Controls: barrier along the front of stage, sound levels monitored at the mixing desk, cables covered and taped. Residual risk: low. Before controls: severity 4, likelihood 2. After controls: severity 4, likelihood 1. Owner: Demo Stage Hire."
           },
           {
             "heading": "Generators and food truck cooking",
-            "body": "Risk: burns, fire and fuel spills. Controls: generators fenced off from the public, fire extinguisher at each food truck, gas bottles secured upright. Residual risk: low."
+            "body": "Persons at risk: Food truck staff, attendees nearby. Risk: burns, fire and fuel spills. Controls: generators fenced off from the public, fire extinguisher at each food truck, gas bottles secured upright. Residual risk: low. Before controls: severity 4, likelihood 2. After controls: severity 3, likelihood 1. Owner: Each food truck operator."
           },
           {
             "heading": "Alcohol",
-            "body": "Risk: intoxication and under-18s being served. If a special licence is granted, proposed controls are sales only inside the fenced bar, duty manager Taylor Example (fictional demo assignment) on site, and ID checks at the bar entrance. Residual risk: to be confirmed on site."
+            "body": "Persons at risk: Patrons, under-18s, bar staff. Risk: intoxication and under-18s being served. Controls: if a special licence is granted, sales only inside the fenced bar, duty manager Taylor Example (fictional demo assignment) on site, and ID checks at the bar entrance. Residual risk: to be confirmed on site. Before controls: severity 3, likelihood 3. After controls: severity 3, likelihood 1. Owner: Taylor Example."
           },
           {
             "heading": "Crowd and lost children",
-            "body": "Risk: crowding at the busiest time (about 500 people) and children getting separated. Controls: marshals at both entrances, lost child point at the first aid tent. Residual risk: low."
+            "body": "Persons at risk: All attendees, especially children. Risk: crowding at the busiest time (about 500 people) and children getting separated. Controls: marshals at both entrances, lost child point at the first aid tent. Residual risk: low. Before controls: severity 3, likelihood 3. After controls: severity 3, likelihood 2. Owner: Jordan Example."
           }
         ],
         "placeholders": [],

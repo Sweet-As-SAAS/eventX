@@ -1,7 +1,7 @@
 import { db } from "@/lib/supabase/admin";
 import { cookies } from "next/headers";
 import { renderPack, pdfName, type PackDoc, type PackEvent, type PackSource } from "@/lib/pdf/pack";
-import { appendPdf, fillSpecialLicence } from "@/lib/pdf/special-licence";
+import { appendPdf, OFFICIAL_FORM, officialForm } from "@/lib/pdf/official";
 import { nzToday } from "@/lib/deadlines";
 import { DraftDocument, EventProfile, type Licence } from "@/lib/schemas";
 import { MOCK, MOCK_FIXED_COOKIE, fixture, handler, requireOrg, loadEvent, loadPackInfo, must, withMockChanges } from "@/lib/api/server";
@@ -54,10 +54,13 @@ export const GET = handler(async (_req, ctx: RouteContext<"/api/events/[id]/expo
         .map((c: any) => ({ url: c.source_url, lastChecked: c.last_checked })),
     ]);
   }
-  // The special licence goes in as the council's own form, filled in, after the other documents.
-  const licence = docs.find((d) => d.doc.documentType === "special_licence_application");
-  let pdf: Uint8Array = await renderPack({ event, docs: docs.filter((d) => d !== licence), sources });
-  if (licence && event.profile) pdf = await appendPdf(pdf, await fillSpecialLicence(event.profile, licence.doc, licences, nzToday(), true));
+  // Documents the council has its own form for go in as that form, filled in, after the rest.
+  const official = event.profile ? docs.filter((d) => OFFICIAL_FORM[d.doc.documentType]) : [];
+  let pdf: Uint8Array = await renderPack({ event, docs: docs.filter((d) => !official.includes(d)), sources });
+  for (const d of official) {
+    const form = await officialForm(d.doc.documentType, event.profile!, d.doc, licences, nzToday(), true);
+    if (form) pdf = await appendPdf(pdf, form);
+  }
   return new Response(new Uint8Array(pdf), { headers: { "Content-Type": "application/pdf",
     "Content-Disposition": `attachment; filename="${pdfName(`${event.name} council pack`)}"` } });
 });
