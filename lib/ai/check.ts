@@ -39,8 +39,27 @@ export async function checkDocument(doc: DraftDocument, checklist: { id: string;
   }) });
 }
 
-/** `supplied` is text the organiser typed themselves, so names in it are theirs, not invented. */
-export async function applyFix(doc: DraftDocument, fix: string, supplied = "") {
+/** Put the organiser's own wording in the most relevant existing template section. */
+export function insertOrganiserText(doc: DraftDocument, checklistItem: string, supplied: string): DraftDocument {
+  if (doc.sections.some((section) => section.body.includes(supplied))) return doc;
+  const words = new Set(checklistItem.toLowerCase().match(/[a-z]{4,}/g) ?? []);
+  let sectionIndex = 0;
+  let bestScore = -1;
+  doc.sections.forEach((section, index) => {
+    const score = (section.heading.toLowerCase().match(/[a-z]{4,}/g) ?? [])
+      .filter((word) => words.has(word)).length;
+    if (score > bestScore) { bestScore = score; sectionIndex = index; }
+  });
+  const sections = doc.sections.map((section, index) => index === sectionIndex
+    ? { ...section, body: [section.body.trimEnd(), supplied].filter(Boolean).join("\n\n") }
+    : section);
+  return DraftDocument.parse({ ...doc, sections,
+    placeholders: [...new Set(sections.flatMap((section) => section.body.match(/\[[^\[\]\n]+\]/g) ?? []))] });
+}
+
+/** Use AI for a suggested fix; insert an organiser's own answer exactly as written. */
+export async function applyFix(doc: DraftDocument, fix: string, supplied = "", checklistItem = "") {
+  if (supplied) return insertOrganiserText(doc, checklistItem, supplied);
   const result = await structured({
     schema: DraftDocument, name: "draft_document", model: "fast", system: FIX_SYSTEM,
     user: `Fix to apply:\n${fix}\n\nDocument:\n${JSON.stringify(doc)}`,

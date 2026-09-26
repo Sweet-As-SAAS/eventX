@@ -45,7 +45,7 @@ export const POST = handler(async (req, ctx: RouteContext<"/api/documents/[id]/f
   // DEMO_MODE: the seeded event's fix is already known, so serve it after a short pause instead of calling the model.
   const known = process.env.DEMO_MODE === "1" && fixed ? (await demoPause(), { content: DraftDocument.parse(fixed.content), result: CheckResult.parse(fixed.checkResults) }) : null;
   const { content, result } = known ?? await withDemoFallback(async () => {
-    const applied = await applyFix(DraftDocument.parse(row.content), instruction, text);
+    const applied = await applyFix(DraftDocument.parse(row.content), instruction, text, item.text);
     const people = event.profile?.people;
     const sections = people ? applied.sections.map((s) => ({ ...s, body: fillPeople(s.body, people) })) : applied.sections;
     const content = DraftDocument.parse({ ...applied, sections,
