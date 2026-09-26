@@ -7,7 +7,7 @@ import { daysBetween, fmtDate } from "@/components/format";
 import { useFail } from "@/components/toast";
 import { Skeleton, Title, cx } from "@/components/ui";
 
-// Licences and certificates your club holds, soonest to expire first.
+// Licences and certificates your team holds, soonest to expire first.
 export default function LicencesPage() {
   const fail = useFail();
   const [licences, setLicences] = useState<Licence[] | null>(null);

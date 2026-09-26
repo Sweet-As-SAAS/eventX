@@ -7,11 +7,11 @@ import { useFail, useToast } from "./toast";
 import { Button, Spinner, cx } from "./ui";
 
 const MAX = 2000;
-// Illustrative examples for the typing placeholder. Generic, not the demo event.
+// Examples for the typing placeholder. The first one previews the demo event (team decision, 27 Sep 2026).
 const EXAMPLES = [
-  "School gala in Riccarton, 600 people, beer tent…",
-  "Street market in Sydenham, 20 stalls, live music…",
-  "Club prizegiving in a marquee, drinks at a bar…",
+  "Music festival at Hagley Park, 500 people, a bar and food trucks…",
+  "Night market in Sydenham, 20 stalls, live music…",
+  "Jazz picnic in a marquee, drinks at a bar…",
 ];
 
 /** Typing placeholder (Wyatt). Stops while the field is focused or filled, and under reduced motion. */

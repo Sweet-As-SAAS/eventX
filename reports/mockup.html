@@ -63,7 +63,7 @@ code{font-size:.9em;background:var(--shot);padding:1px 5px;border-radius:4px}
   <header>
     <span class="eyebrow">EvntX · seeded demo event (MOCK=1 and DEMO_MODE=1)</span>
     <h1>A music festival at Hagley Park, from one paragraph to an Eventbrite draft</h1>
-    <p class="lede">Every screen of the demo path, at desktop and phone width, captured by the Playwright run on 27 Sep 2026. The data comes from <code>fixtures/demo-event.json</code>. People and arrangements in it are fictional.</p>
+    <p class="lede">The landing page and every screen of the demo path, at desktop and phone width, captured by the Playwright run on 27 Sep 2026. The data comes from <code>fixtures/demo-event.json</code>. People and arrangements in it are fictional.</p>
     <blockquote><mark>Hagley Summer Sounds</mark> is a music festival at <mark>Hagley Park</mark> on Sunday <mark>14 March</mark>, 12 till 9pm. Around <mark>500 people</mark>, all ages welcome, with a <mark>kids</mark> zone and a <mark>bouncy castle</mark>. <mark>Live music</mark> from local bands on a main stage, a bar selling <mark>beer</mark> and wine to over 18s, <mark>four food trucks</mark>, and a couple of <mark>marquees</mark> for shade.</blockquote>
   </header>
 
@@ -116,6 +116,7 @@ code{font-size:.9em;background:var(--shot);padding:1px 5px;border-radius:4px}
 
 <script>
 const STEPS = [
+  ["00-landing", "Landing page", "The public page opens on the same festival paragraph. Hagley Park, the bar, the bouncy castle and the food trucks each link to the CCC rule they trigger.", ["The app preview's event list starts with Hagley Summer Sounds.", "Get started free, or describe an event straight from the hero."]],
   ["01-describe", "Describe", "The organiser, Jordan, pastes one paragraph and clicks Check my event.", ["No council picker: every event is Christchurch City Council.", "Up to 2,000 characters."]],
   ["02-details", "Details and classification", "HostReady shows what it understood, tagged stated, inferred or answered, and the likely classification with its reasoning.", ["Main action: Looks right.", "Classification comes back unclear, fee reads varies, check with council."]],
   ["03-questions", "Questions", "One tap question, because only the marquee size is missing and a CCC rule reads it.", ["Answers save as you tap.", "Then Continue to documents."]],
@@ -131,7 +132,7 @@ STEPS.forEach(([file, name, what, bullets], i) => {
   const el = document.createElement("article");
   el.className = "step";
   el.innerHTML = `
-    <div class="stephead"><span class="num">${i + 1}</span><h3>${name}</h3></div>
+    <div class="stephead"><span class="num">${i}</span><h3>${name}</h3></div>
     <div class="stepbody"><p>${what}</p><ul>${bullets.map((b) => `<li>${b}</li>`).join("")}</ul></div>
     <div class="shots">
       <figure><div class="frame" tabindex="0" aria-label="${name}, desktop screenshot, scrollable"><img src="shots/${file}-desktop.png" alt="${name} screen at desktop width" loading="lazy"></div><figcaption>Desktop, 1280 px</figcaption></figure>

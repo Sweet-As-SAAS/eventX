@@ -13,6 +13,7 @@ test("golden path", async ({ page }, info) => {
   const shot = async (screen: string) => {
     n += 1;
     await page.waitForLoadState("networkidle").catch(() => {});
+    await page.waitForTimeout(700); // let entrance animations settle, or the shot catches them half faded
     await page.screenshot({ path: `${SHOTS}/${String(n).padStart(2, "0")}-${screen}-${info.project.name}.png`, fullPage: true });
   };
   const step = async (name: string, fn: () => Promise<void>) => {
@@ -25,6 +26,11 @@ test("golden path", async ({ page }, info) => {
     if (!path.test(new URL(page.url()).pathname)) await page.goto(url);
   };
   const id = "demo"; // MOCK createEvent always returns { id: "demo" }
+
+  // 0. Landing: the hero previews the demo event
+  await page.goto("/");
+  await page.waitForTimeout(1500); // the hero's highlight sweep
+  await page.screenshot({ path: `${SHOTS}/00-landing-${info.project.name}.png`, fullPage: true });
 
   // 1. Describe
   await page.goto("/new");

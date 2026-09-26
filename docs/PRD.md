@@ -63,7 +63,7 @@ We design for the volunteer and sell to the organisation.
 | One-off organiser | Anyone running a single public event | Get it right once | $29 per event |
 | Committee approver | Club president or licensee | Sign off documents before lodging | Included |
 
-**Demo scenario: to be decided.** The demo event will be a volunteer's public event in Christchurch that triggers several council requirements at once (for example alcohol, food, structures), so the pack is rich. The current placeholder lives only in `fixtures/demo-event.json`; nothing else depends on it (see AGENTS.md "Demo scenario").
+**Demo scenario: Hagley Summer Sounds.** Jordan, a volunteer organiser, is running an all-ages music festival at Hagley Park on Sun 14 Mar 2027 for about 500 people: a bar selling beer and wine, four food trucks, a kids zone with a bouncy castle, a main stage and marquees. It triggers eight CCC requirements at once, so the pack is rich. The current placeholder lives only in `fixtures/demo-event.json`; nothing else depends on it (see AGENTS.md "Demo scenario").
 
 ## User journey
 
@@ -183,7 +183,7 @@ Retention: every event creates new paperwork, recurring events copy in one click
 
 | Time | What happens |
 | --- | --- |
-| 0:00 to 0:45 | Problem. Meet the organiser (scenario to be decided). They face council forms, a safety plan, a liquor licence, a site plan and deadlines they don't know about |
+| 0:00 to 0:45 | Problem. Meet Jordan, organising Hagley Summer Sounds. They face council forms, a safety plan, a liquor licence, a site plan and deadlines they don't know about |
 | 0:45 to 1:15 | The stack of real council PDFs she would have to fill in |
 | 1:15 to 3:30 | Live: type the event, AI asks one or two questions, required documents appear with reasons and sources, drafts fill in, the red checklist item turns green, the site plan appears, the timeline shows the special licence date |
 | 3:30 to 4:15 | Export the PDF pack, trigger the reminder email live, Eventbrite draft unlocks. |

@@ -10,6 +10,7 @@ const KEY = "hostready-budget";
 const START: Line[] = [
   { id: "permit", label: "Council event permit", amount: "", council: true },
   { id: "licence", label: "Special licence", amount: "", council: true },
+  { id: "stage", label: "Stage and sound hire", amount: "" },
   { id: "marquee", label: "Marquee hire", amount: "" },
   { id: "toilets", label: "Toilets", amount: "" },
   { id: "firstaid", label: "First aid", amount: "" },
