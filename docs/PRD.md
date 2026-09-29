@@ -1,14 +1,14 @@
-# HostReady PRD
+# EvntX PRD
 
-26 Sep 2026 · Ashutosh Gauniyal · Markdown copy of the PRD for the team and coding agents. Where this repo deliberately differs, see docs/TRD.md "Changes from the original TRD".
+26 Sep 2026, updated 29 Sep 2026 to match the app as built · Ashutosh Gauniyal · Markdown copy of the PRD for the team and coding agents. The functional requirements table says what is built, built differently, or not built. Technical detail is in docs/TRD.md.
 
 ## Summary and problem
 
-HostReady turns a plain-English event description into a council-ready permit and liquor licence pack, checked against council rules, with every deadline tracked. The weekend MVP covers Christchurch City Council (CCC) and one complete flow, from blank page to exported pack and an Eventbrite draft. CCC is the only council; council rules are stored as data, so more can be added later.
+EvntX turns a plain-English event description into a council-ready permit and liquor licence pack, checked against council rules, with every deadline tracked. The weekend MVP covers Christchurch City Council (CCC) and one complete flow, from blank page to exported pack and an Eventbrite draft. CCC is the only council; council rules are stored as data, so more can be added later.
 
-**One-line pitch.** Describe your event once, and HostReady produces your council permit paperwork, safety plan, site plan and liquor licence application, ready to lodge.
+**One-line pitch.** Describe your event once, and EvntX produces your council permit paperwork, safety plan, site plan and liquor licence application, ready to lodge.
 
-**Positioning.** TurboTax for event permits today. Every public event has to be approved before it can happen, so owning that step lets HostReady become the platform events are run on, the Shopify for events.
+**Positioning.** TurboTax for event permits today. Every public event has to be approved before it can happen, so owning that step lets EvntX become the platform events are run on, the Shopify for events.
 
 **The problem.** Anyone running a public event in NZ faces council paperwork that is long, inconsistent between councils and deadline driven. Organisers, usually volunteers, find out about requirements and costs too late, cannot tell how the council will classify their event, and retype the same details into several forms. Today they use blank council templates, pay a consultant, or give up on parts of the event.
 
@@ -18,7 +18,7 @@ A CCC event permit is required if the event is on a public park or road, open to
 
 Only verified sources go on pitch slides.
 
-| Case | What happened | What HostReady would have done | Source |
+| Case | What happened | What EvntX would have done | Source |
 | --- | --- | --- | --- |
 | Ashburton Santa parade and market | Council classified the 2025 market as commercial and required a $2050 permit while the parade fee was waived. Road closure is the parade's biggest cost at about $3500 | Flag the likely classification and fee before applying, suggest how to present it as community | 1News, Jul 2026 |
 | Featherston Anzac Day parade | Council would not close SH2 because it could not afford traffic management, so the march became stationary. Prior TMP estimate was $7186 plus GST | Surface road closure costs at intake, flag long-lead items early | Times-Age, SWDC report |
@@ -71,53 +71,113 @@ One description flows through every step. The organiser types once and reviews, 
 
 ```mermaid
 flowchart LR
-  A[Describe event] --> B[AI event profile and follow-ups]
-  B --> C[Classification and fee estimate]
+  A[Describe event, attach photos or PDFs] --> B[AI event profile and classification]
+  B --> C[Up to 3 questions, who's doing what]
   C --> D[Rules pick required documents]
-  D --> E[AI drafts docs and site plan]
-  E --> F[Council checklist check and fix]
-  F --> G[Deadlines, reminders and PDF pack]
-  G --> H[Eventbrite draft]
+  D --> E[AI drafts and checks each document]
+  E --> F[Fix red items, read and tick each draft]
+  F --> G[Site plan picture]
+  G --> H[Lodge dates, costs, reminders, PDF pack]
+  H --> I[Eventbrite draft]
 ```
 
-Eventbrite unlocks only once every checklist item is green, so tickets are never sold for an event without its paperwork in order. After the event, the dashboard keeps licences, certificates and past events ready for next time.
+Eventbrite unlocks only once every checklist item is green and the organiser has read and ticked every draft, so tickets are never sold for an event without its paperwork in order. After the event, Home keeps licences and past events ready for next time.
+
+The app has four steps (Details, Documents, Site plan, Deadlines, shown as "Step n of 4"), with Home, Budget and Licences in the sidebar.
 
 | Screen | What the user sees | Demo moment |
 | --- | --- | --- |
-| 1 Describe | Large text box or voice, plus "start from a past event" | The organiser types one paragraph |
-| 2 Profile | Highlighted phrases, fields tagged stated / inferred / answered, up to 3 tap questions, live list of required documents with reasons | AI understanding becomes requirements |
-| 3 Documents | Pack list with status, draft preview, council checklist with a red item and "Fix with suggestion" | Red turns green |
-| 4 Site plan | Draggable layout with licensed area, exits, first aid, assembly point, live site checks | Visual, tangible |
-| 5 Deadlines and publish | Working-day timeline incl. the liquor holiday period, reminder emails, PDF export, Eventbrite draft | Reminder email lands live |
-| 6 Dashboard | Events, licence renewals, duty manager certificates, "run it again" | Why they come back |
+| Describe (`/new`, also the box on Home and the landing page) | One text box (10 to 2,000 characters), voice input where the browser supports it, attach up to 8 photos or PDFs, "start from a past event" chips | The organiser types one paragraph |
+| 1 Details | Likely community or commercial call with the reasoning, key facts grid, venue map, "Edit details", "See what you typed" with highlighted phrases | AI understanding becomes facts |
+| Questions (part of Details) | Up to 3 tap questions, each with why it matters, then "Who's doing what": organiser, contact, duty manager, security, food and waste, named once and reused in every document | Only questions that change the pack |
+| 2 Documents | Pack list with status and the reason and source for each. Each draft: council checklist, red items with suggested fixes to pick or write your own, edit the wording, view or download the PDF (the council's own form for the special licence and hazard register), and an "I've read this draft" tick. The event permit shows CCC's online form filled in, with copy buttons | Red turns green |
+| 3 Site plan | The organiser's own site plan picture, uploaded or attached at the start, with a suggestion drawn on it ("Suggested spot") | Visual, tangible |
+| 4 When to lodge | Month calendar with recommended and legal minimum lodge dates and the 20 Dec to 15 Jan liquor break, licence costs from the council's fee schedules, PDF pack, reminder switch, Eventbrite draft | Reminder email lands live |
+| Home | Upcoming events with their pack status, licences expiring soon, past events | Why they come back |
+| Licences | Licences and certificates by expiry, "renew soon" under 90 days | Venue retention |
+| Budget | The organiser's own cost lines and total, kept in this browser | |
 
-Mockups: the "HostReady app screens" link in the original PRD (ask Ashu).
+Mockups: the "EvntX app screens" link in the original PRD (ask Ashu).
 
 ## Functional requirements
 
 P0 must work end to end in the live demo. P1 only after P0 is stable on the deployed URL. P2 is a roadmap slide.
 
-| ID | Requirement | Acceptance criteria | Priority |
-| --- | --- | --- | --- |
-| F1 | Login and saved events | Email sign-in via Supabase (plus guest), events persist per organisation | P0 |
-| F2 | Event description intake | Free text up to 2,000 characters, submits in one click | P0 |
-| F3 | AI event profile | All profile fields as structured JSON, each tagged stated, inferred or answered, unknowns in a missing list | P0 |
-| F4 | Follow-up questions | Only for missing fields that change requirements, max 3, tap answers | P0 |
-| F5 | Required documents rules | Deterministic rules map the profile to documents, each with a plain-English reason, from CCC permit triggers | P0 |
-| F6 | Document drafting | Drafts special licence application, host responsibility policy, event safety plan and hazard register, specific to the event, following CCC templates | P0 |
-| F7 | Council checklist check | Each draft checked item by item, green or red, red items show a fix that applies in one click | P0 |
-| F8 | Deadline timeline | Working days, excludes 20 Dec to 15 Jan liquor period, shows legal minimum and recommended date | P0 |
-| F9 | PDF export | One PDF containing every document | P0 |
-| F10 | Site plan | SVG from the profile, draggable elements, live checks for licensed area, exits, first aid and assembly point | P1 |
-| F11 | Reminder emails | Cron sends reminders 14 and 3 days before each deadline, one triggerable live in the demo | P1 |
-| F12 | Eventbrite draft | Locked until all checks green, creates a draft with ticket classes, NZD, Pacific/Auckland, returns the link | P1 |
-| F13 | Rule sources | Each requirement and checklist links to its council source with a last-checked date | P1 |
-| F14 | Classification and fee estimate | AI flags likely community or commercial with reasoning, shows only confirmed fees, others "varies, check with council" | P1 |
-| F15 | Dashboard | Events list, licence renewal and certificate expiry (static data allowed), "run it again" | P1 |
-| F16 | Fill official council PDF forms | Profile mapped to real form fields with pdf-lib | P2 |
-| F17 | Committee sign-off link | Approver reviews and approves each document, logged | P2 |
-| F18 | Council email response | Paste a council request, AI updates documents and drafts the reply | P2 |
-| F19 | Stallholder applications | Vendors upload certificates once, organiser sees compliance | P2 |
+| ID | Requirement | Acceptance criteria | Priority | Status |
+| --- | --- | --- | --- | --- |
+| F1 | Login and saved events | Email magic link via Supabase plus guest sign-in, events persist per organisation (one organisation per user) | P0 | Built |
+| F2 | Event description intake | Free text 10 to 2,000 characters, submits in one click. Voice input and up to 8 photo or PDF attachments | P0 | Built |
+| F3 | AI event profile | All profile fields as structured JSON, each tagged stated, inferred or answered, unknowns in a missing list. Organiser can edit any field | P0 | Built |
+| F4 | Follow-up questions | Only for missing fields that change requirements, max 3, tap answers. Then "who's doing what": each role named once, filled into every document | P0 | Built |
+| F5 | Required documents rules | Deterministic rules map the profile to documents, each with a plain-English reason, from CCC permit triggers | P0 | Built |
+| F6 | Document drafting | Drafts special licence application, host responsibility policy, event safety plan, hazard register and the other drafted types, specific to the event, following CCC templates. Organiser can edit the wording and must read and tick each draft | P0 | Built |
+| F7 | Council checklist check | Each draft checked item by item, green or red. Red items offer suggested fixes the organiser picks, changes or writes, then the draft is re-checked | P0 | Built differently: the organiser chooses the fix, it is never applied blind |
+| F8 | Deadline timeline | Working days, excludes 20 Dec to 15 Jan liquor period, shows legal minimum and recommended date on a month calendar | P0 | Built |
+| F9 | PDF export | One PDF with every document, plus the filled council forms. Each document also downloads on its own | P0 | Built |
+| F10 | Site plan | The organiser's own site plan picture with a suggestion marked on it | P1 | Built differently: picture upload, not a drawn plan. The suggestion is a fixed demo review; live AI review of the picture is not built. A draggable plan with site checks exists in code but is not on screen. Next: N1 and N2 below |
+| F11 | Reminder emails | Cron sends reminders 14 and 3 days before each deadline, one triggerable live in the demo | P1 | Built. Emails go only to the configured address; the on-screen switch is not saved |
+| F12 | Eventbrite draft | Locked until all checks are green and every draft is ticked, creates a draft with ticket classes, NZD, Pacific/Auckland, returns the link. Never publishes | P1 | Built |
+| F13 | Rule sources | Each requirement, checklist and deadline links to its council source with a last-checked date | P1 | Built |
+| F14 | Classification and fee estimate | AI flags likely community or commercial with reasoning. Licence costs come from the council's published fee schedules with sources; unknown fees say "varies, check with council" | P1 | Built |
+| F15 | Home and licences | Upcoming and past events, licence and certificate expiry (seeded data), start a new event from a past one's description | P1 | Built. "Run it again" copies the description only; licences can't be added in the app yet. Next: N3 below |
+| F16 | Fill official council forms | Special licence on CCC form CON4414, hazard register on CCC's Safety Risk Assessment Form, event permit as CCC's online form opened pre-filled | P2 | Built |
+| F17 | Committee sign-off link | Approver reviews and approves each document, logged | P2 | Not built (organiser ticks their own drafts; Share copies the link) |
+| F18 | Council email response | Paste a council request, AI updates documents and drafts the reply | P2 | Not built |
+| F19 | Stallholder applications | Vendors upload certificates once, organiser sees compliance | P2 | Not built |
+| F20 | Budget | Organiser's own cost lines and total | Extra | Built, stored in the browser only. Next: N4 below |
+
+## What's next
+
+These four come straight after the weekend build. Each one finishes something the organiser can already see in the app, so the product feels complete rather than bigger.
+
+### N1 · Site plan review by EvntX
+
+**The problem.** The council wants a site plan with every event permit, and it is where most packs get sent back: an assembly point in the middle of the crowd, one exit, no first aid marked. Organisers draw their own plans and have no one to check them.
+
+**What the organiser gets.** They upload the plan they already have (a photo, a PDF, a sketch on a map) and EvntX reads it the way a council officer would. It marks what is missing or in the wrong place on the picture itself, says why the council cares, and suggests where it could go instead. The call is always theirs: accept the suggestion or keep their plan.
+
+**How it works.** A vision model reads the uploaded picture against the event's profile and CCC's site plan requirements. Each finding names the thing on the plan, the issue, the council's reason with its source, and a suggested spot. Findings are stored with the upload, so they are still there next time.
+
+**Done when**
+- A real uploaded plan gets findings in under 20 seconds, each with a council source.
+- Every finding points at a place on the picture, and "Suggested spot" is drawn where it would go.
+- EvntX never claims something is on the plan that it cannot see. When it is unsure, it asks instead.
+- The organiser can accept or dismiss each finding, and the pack says which were accepted.
+
+### N2 · Draggable site plan
+
+**The problem.** Plenty of organisers don't have a plan at all, and the ones who do can't easily try a change.
+
+**What the organiser gets.** A plan drawn for them from their event: stage, bar and licensed area, food trucks, toilets, first aid, exits and the assembly point, sized to the crowd and laid over the venue map. They drag things into place, and live site checks go green as they go ("Licensed area marked", "At least two exits", "First aid on the plan", "Assembly point placed"). Each check says whether it is a council requirement, with its source, or an EvntX check.
+
+**How it works.** The building blocks exist in code already (layout from the profile, crowd-based toilets and first aid, site checks, saving). This puts them on the Site plan screen next to the uploaded picture, as "draw one for me" or "check my own".
+
+**Done when**
+- Everything drags on desktop and phone, and is keyboard reachable.
+- The plan saves as the organiser goes and comes back the same.
+- The checks update live, and the plan goes into the PDF pack as the site plan document.
+
+### N3 · Licences you can manage
+
+**The problem.** Venues and clubs hold on-licences, duty manager certificates and food registrations that expire on different dates. Missing a renewal means an event can't go ahead. Today EvntX shows licences but they can't be added in the app.
+
+**What the organiser gets.** A Licences page where they add each licence or certificate once (type, holder, number, expiry), edit it and remove it. EvntX reminds them before it expires and uses it wherever it is needed, such as the duty manager's certificate on the special licence form.
+
+**Done when**
+- Add, edit and remove work, and are saved for the whole organisation.
+- Reminders go out 90, 30 and 7 days before expiry.
+- A licence entered once fills in every form that asks for it.
+
+### N4 · A budget that's saved and shared
+
+**The problem.** Council fees are only part of what an event costs, and committees need to see the whole picture before they commit. Today the budget lives in one browser and is lost if the organiser changes device.
+
+**What the organiser gets.** A budget for each event, saved to their account and visible to everyone in the organisation. Council fees and licence costs are filled in from the council's published fee schedules, with sources. The organiser adds their own lines (stage, marquees, toilets, security) and sees the total.
+
+**Done when**
+- The budget is saved per event and the same on every device.
+- Council and licence fees appear automatically, with a source and "checked" date, and update if the event changes.
+- Unknown fees say "varies, check with council" and are never guessed.
 
 ## AI design
 
@@ -129,11 +189,11 @@ AI handles understanding and writing. Deterministic rules handle decisions that 
 | Follow-ups | Rules pick, fixed wording | Only missing fields that change requirements | Max 3 |
 | Classification | AI | Reasons over profile plus council definitions | Shown as "likely", with reasoning |
 | Required documents | Rules | Coded CCC triggers and licence rules | Every document has a reason and source |
-| Drafting | AI | Council template and checklist sent with each request | Placeholders for unknowns, never invented |
-| Checklist check | AI plus rules | Each item evaluated against the draft, pass/fail with evidence | Organiser reviews before lodging |
+| Drafting | AI | Council template and checklist sent with each request, then a second pass that removes facts nobody gave | Placeholders for unknowns, never invented; names come from "who's doing what" |
+| Checklist check | AI plus rules | Each item evaluated against the draft, pass/fail with evidence quoted from the draft | Organiser picks the fix and ticks each draft before lodging |
 | Deadlines | Rules | Working-day calculator with holiday periods | No AI in date maths |
 
-**Why not just ChatGPT or Claude with a skills file?** A chat can write a safety plan if you already know you need one, know the current council rules and remember the deadline. Our users know none of that. HostReady knows which documents this event needs, checks them against rules we keep current with sources and dates, remembers the event and sends reminders months or years later, and lets several people work on the same event. A chat forgets you when the tab closes. TurboTax exists even though anyone can ask a chatbot about their taxes. Make this visible on screen: the source link and "checked 26 Sep 2026" on every requirement, the reminder email landing live, and the Eventbrite lock.
+**Why not just ChatGPT or Claude with a skills file?** A chat can write a safety plan if you already know you need one, know the current council rules and remember the deadline. Our users know none of that. EvntX knows which documents this event needs, checks them against rules we keep current with sources and dates, remembers the event and sends reminders months or years later, and lets several people work on the same event. A chat forgets you when the tab closes. TurboTax exists even though anyone can ask a chatbot about their taxes. Make this visible on screen: the source link and "checked 26 Sep 2026" on every requirement, the reminder email landing live, and the Eventbrite lock.
 
 **Demo data.** One seeded demo event (fixtures/demo-event.json) with a cached successful run as a fallback if the API is slow on stage.
 
@@ -142,7 +202,7 @@ AI handles understanding and writing. Deterministic rules handle decisions that 
 | Area | Requirement |
 | --- | --- |
 | Accuracy | Rules and fees shown only with a source and last-checked date. Unknown fees say "varies, check with council" |
-| Legal position | HostReady prepares, the organiser reviews and lodges. Not legal advice, stated in the footer and export |
+| Legal position | EvntX prepares, the organiser reviews and lodges. Not legal advice, stated in the footer and export |
 | Privacy | Only event and organisation details stored. Demo uses fake people and events. RLS per organisation |
 | Performance | Profile under 10 s, all drafts under 60 s, drafted in parallel with progress shown |
 | Reliability | Deploy freeze Sunday 8am. Cached demo run as fallback. Tested on a phone and a second laptop |
@@ -185,9 +245,9 @@ Retention: every event creates new paperwork, recurring events copy in one click
 | --- | --- |
 | 0:00 to 0:45 | Problem. Meet Jordan, organising Hagley Summer Sounds. They face council forms, a safety plan, a liquor licence, a site plan and deadlines they don't know about |
 | 0:45 to 1:15 | The stack of real council PDFs she would have to fill in |
-| 1:15 to 3:30 | Live: type the event, AI asks one or two questions, required documents appear with reasons and sources, drafts fill in, the red checklist item turns green, the site plan appears, the timeline shows the special licence date |
+| 1:15 to 3:30 | Live: type the event and attach the site plan, Details shows what EvntX understood and the likely classification, a few questions and who's doing what, required documents appear with reasons and sources, drafts fill in, pick a fix and the red item turns green, the special licence opens on the council's own form, the site plan shows a suggestion, the calendar shows the special licence date and the licence costs |
 | 3:30 to 4:15 | Export the PDF pack, trigger the reminder email live, Eventbrite draft unlocks. |
-| 4:15 to 5:00 | Market, pricing, two customer quotes from Saturday, roadmap (more councils, traffic plans, official form filling) |
+| 4:15 to 5:00 | Market, pricing, two customer quotes from Saturday, roadmap (more councils, traffic plans, committee sign-off) |
 
 Q&A prep: "Every council is different, how do you scale?" Rules are data, adding a council means loading its checklist and templates. "What if the AI gets it wrong?" Every draft is checked against the council's own checklist and the organiser reviews before submitting: we prepare, they sign. "Is this legal advice?" No, it fills in the council's own process. "Who pays?" Clubs and venues already pay consultants or burn volunteer hours; $29 is less than an hour of anyone's time. "Why won't councils build this?" Councils build the submission portal; we get the application right before it reaches the portal. "Privacy?" Only event and business details, demo uses fake events.
 
@@ -195,9 +255,10 @@ Q&A prep: "Every council is different, how do you scale?" Rules are data, adding
 
 | Phase | Scope |
 | --- | --- |
-| Weekend MVP | CCC only, P0 and P1, Eventbrite draft |
-| Next 3 months | Official form filling, committee sign-off, council email response, stallholder applications, 3 to 5 more councils |
+| Weekend MVP (done) | CCC only, P0 and P1, official CCC forms filled, Eventbrite draft |
+| Next up | N1 site plan review, N2 draggable site plan, N3 licences you can manage, N4 a saved and shared budget (see "What's next") |
+| Next 3 months | Committee sign-off, council email response, stallholder applications, 3 to 5 more councils |
 | 6 to 12 months | Traffic management briefs and supplier quotes, Humanitix, venue licence renewals end to end, events company tier |
 | Platform | Supplier bookings (marquees, security, toilets), volunteer rostering, marketplace for event services |
 
-Open: confirm CCC special licence fees and whether CCC charges an event permit fee · verify lodgement lead times before they go on screen · check the HostReady name is free · clubs-first or venues-first story for Q&A · two real quotes from Saturday calls.
+Open: confirm CCC special licence fees and whether CCC charges an event permit fee · verify lodgement lead times before they go on screen · check the EvntX name is free (the repo is `Sweet-As-SAAS/eventX`) · clubs-first or venues-first story for Q&A · two real quotes from Saturday calls.

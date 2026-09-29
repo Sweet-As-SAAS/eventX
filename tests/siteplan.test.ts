@@ -239,7 +239,7 @@ describe("siteChecks", () => {
   it("labels the licensed area an EvntX check where the council has no verified fact", () => {
     const requirements = [{ documentType: "special_licence_application" as const }];
     const licensed = siteChecks([], { council: "ccc", requirements }, [])[0]; // CCC is the only council: no facts stands in
-    expect(licensed).toMatchObject({ id: "licensed", pass: false, basis: "hostready", source: null });
+    expect(licensed).toMatchObject({ id: "licensed", pass: false, basis: "evntx", source: null });
   });
 
   const fact = SITE_COUNCIL_FACTS[0];
@@ -249,7 +249,7 @@ describe("siteChecks", () => {
     ["never checked", { ...fact, lastChecked: null }],
   ])("never makes a council check from a fact that is %s", (_, f) => {
     const [licensed] = siteChecks([], { council: "ccc", requirements: [{ documentType: "special_licence_application" }] }, [f]);
-    expect(licensed).toMatchObject({ basis: "hostready", source: null });
+    expect(licensed).toMatchObject({ basis: "evntx", source: null });
   });
 
   it("counts only placed exits, and says how many are on the plan", () => {
@@ -259,12 +259,12 @@ describe("siteChecks", () => {
     expect(check(exits([true, true, true]))).toMatchObject({ pass: true, note: "3 on the plan" });
   });
 
-  it("labels exits, first aid and the assembly point as HostReady checks", () => {
+  it("labels exits, first aid and the assembly point as EvntX checks", () => {
     const checks = siteChecks(defaultLayout(base), { council: "ccc", requirements: [] });
     expect(checks.map((c) => [c.id, c.label, c.basis, c.source])).toEqual([
-      ["exits", "At least two exits", "hostready", null],
-      ["firstaid", "First aid on the plan", "hostready", null],
-      ["assembly", "Assembly point placed", "hostready", null],
+      ["exits", "At least two exits", "evntx", null],
+      ["firstaid", "First aid on the plan", "evntx", null],
+      ["assembly", "Assembly point placed", "evntx", null],
     ]);
   });
 });

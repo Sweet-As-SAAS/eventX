@@ -16,7 +16,7 @@ import subprocess
 from PIL import Image
 
 TILE = 256
-UA = "HostReady-site-plan-basemap/0.1 (+https://github.com/Sweet-As-SAAS/hostready)"
+UA = "EvntX-site-plan-basemap/0.1 (+https://github.com/Sweet-As-SAAS/eventX)"
 OUT_W, OUT_H = 1600, 1000  # 2x the 800x500 canvas, so it stays sharp on high-density screens
 
 

@@ -7,8 +7,8 @@ Everyone does part 1. Lane C does parts 2 to 4 while everyone else starts their 
 Needs Node 22+ and git.
 
 ```bash
-git clone https://github.com/<you>/hostready.git
-cd hostready
+git clone https://github.com/<you>/eventX.git
+cd eventX
 npm install
 cp .env.example .env.local        # Windows PowerShell: copy .env.example .env.local
 npm run dev                       # open http://localhost:3000/new, type anything, press Continue
@@ -17,7 +17,7 @@ npm test && npm run typecheck     # 35 tests pass
 
 Keep `MOCK=1` in `.env.local` until your lane's real calls are ready. MOCK skips login and every route serves the fixture.
 
-> Windows and OneDrive: if the repo lives in a OneDrive folder, OneDrive will try to sync `node_modules` and `.next` (hundreds of MB) and can lock files during builds. Clone into a folder outside OneDrive (for example `C:\dev\hostready`), or right-click the folder and pick "Free up space" / exclude it.
+> Windows and OneDrive: if the repo lives in a OneDrive folder, OneDrive will try to sync `node_modules` and `.next` (hundreds of MB) and can lock files during builds. Clone into a folder outside OneDrive (for example `C:\dev\evntx`), or right-click the folder and pick "Free up space" / exclude it.
 
 Then start your coding agent in the repo root and paste the "First prompt" from your lane brief in `docs/lanes/`.
 

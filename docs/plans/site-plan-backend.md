@@ -9,7 +9,7 @@ Demo focus: **Christchurch City Council, Hagley Park.** This decides the open qu
 1. `cd .claude/worktrees/site-plan-backend && git fetch origin && git status`, then `npm test && npm run typecheck`.
 2. Paste:
 
-> You are the lane C backend engineer on HostReady, working in the worktree `.claude/worktrees/site-plan-backend` on branch `c/site-plan-backend`. Read AGENTS.md, docs/lanes/C-backend.md and docs/plans/site-plan-backend.md (approved). Check section 9 for which step is next, do that one step, stop at its gate and commit. Never edit Ashu's frontend files (`app/(screens)/*`, `components/*`), never merge into main, and do not create the migration until I say so.
+> You are the lane C backend engineer on EvntX, working in the worktree `.claude/worktrees/site-plan-backend` on branch `c/site-plan-backend`. Read AGENTS.md, docs/lanes/C-backend.md and docs/plans/site-plan-backend.md (approved). Check section 9 for which step is next, do that one step, stop at its gate and commit. Never edit Ashu's frontend files (`app/(screens)/*`, `components/*`), never merge into main, and do not create the migration until I say so.
 
 ## 1. What Ashu built (Step 0 findings)
 
@@ -20,7 +20,7 @@ Demo focus: **Christchurch City Council, Hagley Park.** This decides the open qu
 | Item kinds | `licensed`, `marquee`, `food`, `inflatable`, `ride`, `stage`, `generator`, `firstaid`, `exit`, `assembly` |
 | Where items come from | `build(profile)` shelf-packs what the profile implies. Licensed area if `alcohol.supply` is `"sold"`. Marquees up to 6, food up to 8. Inflatable, ride, stage and generator if their flags are true. First aid always. Two exits on the boundary line. An assembly point that starts **unplaced**: that is the one red check |
 | Remove and add | Delete sets `placed: false` and the item moves to a "Not on the plan yet" tray. "Add an exit" appends `exit-<timestamp>` |
-| Checks | Computed in the component: licensed area marked (only if alcohol is sold), at least two exits, first aid on the plan, assembly point placed. No council or HostReady label |
+| Checks | Computed in the component: licensed area marked (only if alcohol is sold), at least two exits, first aid on the plan, assembly point placed. No council or EvntX label |
 | Saving | None. State lives in the component (the sidebar comment says "The site plan isn't saved yet"). Download exports the SVG client-side |
 | Mocked data | None. Everything comes from `api.getEvent(id).profile` |
 | Shared files | `lib/schemas.ts` and the fixture unchanged. `lib/api/client.ts` gained `getProfile`, `editProfile` and a `text` argument on `fix`, nothing for the site plan |
@@ -32,7 +32,7 @@ Demo focus: **Christchurch City Council, Hagley Park.** This decides the open qu
 | 1 | SVG canvas or Google Maps? | **SVG canvas is final for the weekend.** No Google Maps, no lat/lng, no geocoding. A Hagley Park basemap would build the demo venue into the product, so it stays out |
 | 2 | Add site plan types to `lib/schemas.ts`? | **Yes.** Three additive types that mirror Ashu's `El` and kind names exactly (section 3). No existing type changes. The user posts this in the team channel before the PR merges |
 | 3 | When does the licensed-area check apply? | **When the requirements include `special_licence_application`**, so the site plan agrees with the documents list. For CCC this is the same as "alcohol is sold". It carries the verified CCC citation, so in the demo it always shows as a council requirement. The licensed-area *item* still appears when alcohol is sold, as Ashu wrote it |
-| 4 | Keep "At least two exits"? | **Keep**, labelled "HostReady check". It is in PRD F10 but is not a council rule, so it never claims to be one |
+| 4 | Keep "At least two exits"? | **Keep**, labelled "EvntX check". It is in PRD F10 but is not a council rule, so it never claims to be one |
 | 5 | Who switches the page to the backend? | **Ashu**, in his files, from the handoff in section 7. Lane C provides the route, `client.ts` methods and `lib/siteplan` |
 | 6 | Site plan page in the PDF pack? | **Yes** (step 5). CCC's special licence checklist asks for "a detailed site plan of the area to be licensed", and CCC's event permit lists a site plan. His SVG download stays as well |
 
@@ -84,15 +84,15 @@ Pure, synchronous TypeScript. It imports only `../schemas` (browser-safe, relati
 
 | id | Text | Applies when | Passes when | Basis |
 | --- | --- | --- | --- | --- |
-| `licensed` | Licensed area marked | Requirements include `special_licence_application` | At least 1 placed `licensed` | **council** when `SITE_COUNCIL_FACTS` has a verified fact for the event's council (CCC), otherwise hostready |
-| `exits` | At least two exits | always | At least 2 placed `exit` (note: "N on the plan") | hostready |
-| `firstaid` | First aid on the plan | always | At least 1 placed `firstaid` | hostready |
-| `assembly` | Assembly point placed | always | At least 1 placed `assembly` | hostready |
+| `licensed` | Licensed area marked | Requirements include `special_licence_application` | At least 1 placed `licensed` | **council** when `SITE_COUNCIL_FACTS` has a verified fact for the event's council (CCC), otherwise evntx |
+| `exits` | At least two exits | always | At least 2 placed `exit` (note: "N on the plan") | evntx |
+| `firstaid` | First aid on the plan | always | At least 1 placed `firstaid` | evntx |
+| `assembly` | Assembly point placed | always | At least 1 placed `assembly` | evntx |
 
 ```ts
 type SiteCheck = {
   id: string; label: string; pass: boolean; note: string | null;
-  basis: "council" | "hostready";
+  basis: "council" | "evntx";
   source: { url: string; quote: string; lastChecked: string } | null; // set only for basis "council"
 };
 ```
@@ -123,7 +123,7 @@ saveSitePlan: (id: string, plan: SitePlan) => call(SitePlan, `/api/events/${id}/
 His files, his edits. Nothing here changes what the page looks like.
 1. Load: `api.sitePlan(id)` alongside `api.getEvent(id)`, and use `plan.items` as the initial `els`. Delete `build()`, and import `SITE_CANVAS` for `W`, `H` and `EDGE`.
 2. Types: `El` becomes `SiteItem` and `Kind` becomes `SiteItemKind` from `@/lib/schemas`. `LOOK` and all styling stay in the component.
-3. Checks: replace the local `checks` array with `siteChecks(els, { council: ev.council, requirements: ev.requirements })` from `@/lib/siteplan`. Show "Council requirement · checked {date}" with the source link when `basis === "council"`, otherwise "HostReady check".
+3. Checks: replace the local `checks` array with `siteChecks(els, { council: ev.council, requirements: ev.requirements })` from `@/lib/siteplan`. Show "Council requirement · checked {date}" with the source link when `basis === "council"`, otherwise "EvntX check".
 4. Save: call `api.saveSitePlan(id, { items: els })` on pointer-up after a drag, on place, remove and "Add an exit". Debounce by about a second. Each save replaces the whole plan.
 5. Optional: the sidebar flag can use `siteChecks` instead of "the site plan isn't saved yet".
 
@@ -154,7 +154,7 @@ Deadline: Sunday 10:00 NZDT, deploy freeze 08:00.
 2. The frontend's save calls, if Ashu runs out of time (the backend still ships)
 3. Persistence (step 4). The real GET keeps returning the default layout
 
-**Never cut:** the schema, `lib/siteplan` with its tests, correct council and HostReady labels, MOCK GET and POST.
+**Never cut:** the schema, `lib/siteplan` with its tests, correct council and EvntX labels, MOCK GET and POST.
 
 ## 11. Merge-conflict risks
 

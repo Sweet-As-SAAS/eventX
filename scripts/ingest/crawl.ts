@@ -15,7 +15,7 @@ async function disallowed(): Promise<string[]> {
   const out: string[] = [];
   let applies = false;
   for (const l of (await res.text()).split("\n").map((x) => x.trim())) {
-    if (/^user-agent:/i.test(l)) applies = /\*|hostready/i.test(l);
+    if (/^user-agent:/i.test(l)) applies = /\*|evntx/i.test(l);
     else if (applies && /^disallow:/i.test(l)) { const p = l.slice(l.indexOf(":") + 1).trim(); if (p) out.push(p); }
   }
   return out;

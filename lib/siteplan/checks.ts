@@ -1,5 +1,5 @@
 // Site checks, derived from the placed items every time (never stored). A check is a council
-// requirement only when a verified council fact backs it; everything else is labelled a HostReady check.
+// requirement only when a verified council fact backs it; everything else is labelled an EvntX check.
 import type { CouncilSlug, DocumentType, Requirement, SiteItem, SiteItemKind } from "../schemas";
 
 export type SiteCheck = {
@@ -7,7 +7,7 @@ export type SiteCheck = {
   label: string;
   pass: boolean;
   note: string | null;
-  basis: "council" | "hostready";
+  basis: "council" | "evntx";
   source: { url: string; quote: string; lastChecked: string } | null; // set only when basis is "council"
 };
 
@@ -36,22 +36,22 @@ export function siteChecks(
   facts: SiteCouncilFact[] = SITE_COUNCIL_FACTS,
 ): SiteCheck[] {
   const on = (k: SiteItemKind) => items.filter((e) => e.kind === k && e.placed).length;
-  const hostready = (id: string, label: string, pass: boolean, note: string | null = null): SiteCheck =>
-    ({ id, label, pass, note, basis: "hostready", source: null });
+  const evntx = (id: string, label: string, pass: boolean, note: string | null = null): SiteCheck =>
+    ({ id, label, pass, note, basis: "evntx", source: null });
   const checks: SiteCheck[] = [];
 
   if (ctx.requirements.some((r) => r.documentType === "special_licence_application")) {
     const fact = facts.find((f) => f.council === ctx.council && f.documentType === "special_licence_application"
       && f.kind === "licensed" && f.verified && /^https?:\/\//.test(f.sourceUrl) && f.lastChecked);
-    const check = hostready("licensed", "Licensed area marked", on("licensed") > 0);
+    const check = evntx("licensed", "Licensed area marked", on("licensed") > 0);
     checks.push(fact?.lastChecked
       ? { ...check, basis: "council", source: { url: fact.sourceUrl, quote: fact.sourceQuote, lastChecked: fact.lastChecked } }
       : check);
   }
   checks.push(
-    hostready("exits", "At least two exits", on("exit") >= 2, `${on("exit")} on the plan`),
-    hostready("firstaid", "First aid on the plan", on("firstaid") > 0),
-    hostready("assembly", "Assembly point placed", on("assembly") > 0),
+    evntx("exits", "At least two exits", on("exit") >= 2, `${on("exit")} on the plan`),
+    evntx("firstaid", "First aid on the plan", on("firstaid") > 0),
+    evntx("assembly", "Assembly point placed", on("assembly") > 0),
   );
   return checks;
 }

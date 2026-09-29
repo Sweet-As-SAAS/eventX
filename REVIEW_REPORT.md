@@ -1,4 +1,4 @@
-# HostReady audit: review report
+# EvntX audit: review report
 
 Branch `audit/full-check`, based on `origin/main` @ `3f3a1aa`. Unattended run, 26 Sep 2026. Nothing was pushed.
 

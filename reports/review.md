@@ -26,7 +26,7 @@ Keeping the lock as "ready or manual" is acceptable, and I agree with the decisi
 
 - the event's documents are exactly its required set;
 - every drafted type (`DRAFTED_TYPES`, `lib/schemas.ts:81`) is `ready`, has content, and has a check that covers every verified checklist item, all passing;
-- the only other status allowed is `manual`, which applies to the council's own permit form, the site plan and other types HostReady does not draft, so they can never become "ready".
+- the only other status allowed is `manual`, which applies to the council's own permit form, the site plan and other types EvntX does not draft, so they can never become "ready".
 
 Requiring "ready" for those would lock Eventbrite forever. The UI states the rule honestly (deadlines page) and shows the route's 409 reason on screen. One ceiling: the site plan's own live checks do not feed the lock.
 
