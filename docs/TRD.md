@@ -1,6 +1,6 @@
 # EvntX TRD
 
-26 Sep 2026 · Ashutosh Gauniyal · Describes the repo as built. The original TRD PDF is the source; differences are listed under "Changes from the original TRD".
+26 Sep 2026, updated 29 Sep 2026 · Ashutosh Gauniyal · Describes the repo as built. The original TRD PDF is the source; differences are listed under "Changes from the original TRD".
 
 ## Overview and scope
 
@@ -10,7 +10,7 @@ EvntX runs on a pre-built council knowledge base. Council rules, checklists, tem
 | --- | --- | --- | --- |
 | Christchurch City Council | `ccc` | ccc.govt.nz | The only council (audit decision, 26 Sep 2026) |
 
-**In scope:** ingestion pipeline, knowledge base, event profiling, rules engine, drafting, checklist checking, deadline engine, PDF export, reminders, Eventbrite draft, auth.
+**In scope:** ingestion pipeline, knowledge base, event profiling, rules engine, drafting, checklist checking, deadline engine, fee schedules, PDF export with filled council forms, attachments, reminders, Eventbrite draft, auth.
 **Out of scope:** live scraping at runtime, real lodgement, payments, other councils.
 **Runtime dependencies:** Supabase, OpenAI, Resend, Eventbrite. Each has a demo fallback.
 
@@ -42,7 +42,7 @@ flowchart LR
 | Scraper | Node scripts via `tsx`: fetch + Cheerio | Runs locally, never on Vercel. Add Playwright only if a seed page needs JS |
 | Document parsing | pdf-parse v2, mammoth | Council forms are mostly PDF and Word |
 | AI | openai v7 structured outputs with Zod 4 schemas, embeddings from `OPENAI_MODEL_EMBED` (1536 dimensions) | Event credits; the app always receives valid JSON |
-| PDF export | @react-pdf/renderer (pdf-lib for official forms is P2) | Server-side |
+| PDF export | @react-pdf/renderer for our pack, pdf-lib to fill and append the official CCC forms | Server-side |
 | Email | Resend + Vercel Cron | Reminders |
 
 ### Request path (every API route)
@@ -74,6 +74,14 @@ flowchart LR
 | Guest login (Supabase anonymous sign-in) next to email magic link | Judges can try it in one click; Supabase's built-in email is rate limited |
 | CCC is the only council: no council picker, every event is `ccc`, second council removed (migration `0003_ccc_only.sql`) | Audit decision, 26 Sep 2026 |
 | Reminder emails go only to `REMINDER_TO` | Safety: never email an address we have not configured |
+| Fixes take the organiser's choice: `/fix` accepts `text`, inserted as written without AI | The organiser picks a suggestion or writes their own; nothing is applied blind |
+| Organiser edits and ticks each draft (`/documents/:id/edit`, `/review`, `documents.reviewed_at`). Eventbrite also needs every drafted document ticked | "You review them" is enforced, not just stated |
+| Event profile editable field by field (`/events/:id/edit`), saved as `answered` | Organiser corrects the AI without retyping the description |
+| Attachments: up to 8 photos or PDFs per event in the private `kb` bucket under `uploads/<eventId>/` | The site plan screen shows the organiser's own picture |
+| Site plan is the organiser's picture plus a suggestion overlay. The drawn plan (`lib/siteplan`, `components/site-plan.tsx`, `events.site_plan`, migration 0004) is kept but not on screen | A real site plan beats a generated one for judges and councils |
+| Official forms filled (was P2): CON4414 special licence and the Safety Risk Assessment Form via pdf-lib, event permit as a pre-filled CCC tfaforms link | The council gets its own forms |
+| Profile uses the strong model; drafts get a second review pass against facts nobody supplied | Fewer invented names and claims |
+| MOCK demo state is per browser (httpOnly `evntx_demo_*` cookies, 1 hour); `/api/demo/reset` clears it | Several people can try the demo at once without seeing each other's progress |
 
 ## Knowledge ingestion (lane B)
 
@@ -95,7 +103,7 @@ CCC runs a District Licensing Committee: seed its alcohol licensing pages for sp
 
 ## Data model
 
-`supabase/migrations/0001_init.sql` is the source of truth.
+`supabase/migrations/` is the source of truth: `0001_init.sql`, `0002_membership_user_unique.sql` (one organisation per user), `0003_ccc_only.sql` (removes every council but CCC, `slug = 'ccc'` check), `0004_site_plan_and_reviews.sql` (`events.site_plan`, `documents.reviewed_at`). Attachments have no table: files live in the `kb` bucket under `uploads/<eventId>/`.
 
 **Knowledge tables** (written only by ingestion with the service role, RLS on, no policies):
 
@@ -107,22 +115,22 @@ CCC runs a District Licensing Committee: seed its alcohol licensing pages for sp
 | rules | id (text), council_id, condition, outcome, source_url, source_quote, verified, last_checked | Merged with `lib/rules/ccc.ts` by id |
 | checklists | council_id, document_type, items `[{id,text,sourceQuote}]`, source_url, verified, last_checked | Unique per council and type |
 | templates | council_id, document_type, sections `["Event overview", …]`, source_url | Drafting structure |
-| form_fields | council_id, form_name, field_key, label, profile_path | P2 |
+| form_fields | council_id, form_name, field_key, label, profile_path | Unused: the form fillers map fields in code |
 
 **App tables** (RLS per organisation):
 
 | Table | Key columns |
 | --- | --- |
-| organisations, memberships | Created on first sign-in by `requireOrg()` |
-| events | org_id, council_id, description, profile (EventProfile), classification, status, eventbrite_event_id |
+| organisations, memberships | Created on first sign-in by `requireOrg()`. One organisation per user (0002) |
+| events | org_id, council_id, description, profile (EventProfile), classification, status, eventbrite_event_id, site_plan (0004) |
 | requirements | event_id, rule_id, document_type, reason, source_url, last_checked |
-| documents | event_id, document_type (unique per event), content (DraftDocument), check_results (CheckResult), status |
+| documents | event_id, document_type (unique per event), content (DraftDocument), check_results (CheckResult), status, reviewed_at (0004) |
 | deadlines | event_id, document_type (unique per event), label, legal_minimum, recommended, reminded_14_at, reminded_3_at |
 | licences | org_id, type, holder_name, expires_on |
 
 **Rule conditions** are small JSON expressions evaluated in TypeScript (`lib/rules/engine.ts`): `{"path":"alcohol.supply","eq":"sold"}`, `{"path":"structures.largestMarqueeSqm","gt":100}`, `{"path":"structures.inflatables","truthy":true}`, combined with `{"all":[…]}` / `{"any":[…]}`. Paths are EventProfile dot paths; `{value, source}` fields unwrap automatically.
 
-**Document status:** `pending` (row created by /requirements, drafted type) → `drafted` (/draft) → `needs_fix` or `ready` (/check or /fix). `manual` is set at creation for types EvntX doesn't draft (`DRAFTED_TYPES` in `lib/schemas.ts`). Re-running /requirements keeps existing drafts and removes documents no longer required.
+**Document status:** `pending` (row created by /requirements, drafted type) → `drafted` (/draft or /edit) → `needs_fix` or `ready` (/check or /fix). `manual` is set at creation for types EvntX doesn't draft (`DRAFTED_TYPES` in `lib/schemas.ts`). `reviewed_at` is set by /review, only when `ready`, and cleared by /draft and /edit. Re-running /requirements keeps existing drafts and removes documents, requirements and deadlines no longer required.
 
 ## AI pipeline (lane A)
 
@@ -130,12 +138,13 @@ Every AI call gets its context from our database, never the web, and uses struct
 
 | Step | Code | Input | Output | Model | Notes |
 | --- | --- | --- | --- | --- | --- |
-| 1 Profile | `buildProfile` | Description, council, NZ date | EventProfile | fast | Temperature 0. Unknowns to `missing` |
-| 2 Follow-ups | `followUps` | Missing paths that a verified rule reads | Up to 3 FollowUpQuestion | none | Fixed question bank; answers merged by `applyAnswers`, no AI |
-| 3 Classification | `classify` | Profile + top 5 chunks | Classification | strong | Shown as "likely" |
+| 1 Profile | `buildProfile` | Description, council, NZ date | EventProfile | strong | Temperature 0. Unknowns to `missing`, year fixed deterministically |
+| 2 Follow-ups | `followUps` | Missing paths that a verified rule reads | Up to 3 FollowUpQuestion | none | Fixed question bank; answers merged by `applyAnswers`, no AI. People (`lib/people.ts`) fill role gaps in every draft |
+| 3 Classification | `classify` | Profile + top 5 chunks | Classification | strong | Shown as "likely". Rejected if it cites outside the references or names a dollar amount |
 | 4 Requirements | `requiredDocuments` | Profile + verified rules | Requirement[] | none | Pure TS |
-| 5 Drafting | `draftDocument` | Profile, template sections, checklist, top 5 chunks | DraftDocument | strong | One call per document, UI runs them in parallel |
-| 6 Checking | `checkDocument` / `applyFix` | Draft + checklist | CheckResult / DraftDocument | fast | Fix re-checks in the same request |
+| 5 Drafting | `draftDocument` | Profile, template sections, checklist, top 5 chunks | DraftDocument | strong | One call per document, UI runs them in parallel. Review pass (up to 2) removes unsupported names, "attached" claims, licence status |
+| 6 Checking | `checkDocument` / `applyFix` | Draft + checklist | CheckResult / DraftDocument | fast | Evidence must quote the draft. Fix re-checks in the same request; organiser `text` is inserted without AI |
+| 8 Fees | `feesFor` | Profile, document types, classification | FeeLine[] | none | CCC fee schedules with sources, checked 27 Sep 2026 |
 | 7 Deadlines | `computeDeadlines` | Event date, requirements | Deadline[] | none | Working days, Canterbury holidays, liquor period |
 
 Retrieval: embed a query from the document type, take the top 5 `kb_chunks` for that council, pass them fenced with their ids and URLs. The model must cite chunk ids for council-specific claims. Prompt rules: never invent names, dates, fees or phone numbers; only facts from the profile or sources; plain NZ English; unknowns as `[PLACEHOLDER]`. Model names come from `OPENAI_MODEL_FAST` / `OPENAI_MODEL_STRONG`, embeddings from `OPENAI_MODEL_EMBED` (must output 1536 dimensions to match `kb_chunks`). Reasoning models (o-series, gpt-5) automatically skip `temperature: 0`, which they reject.
@@ -150,22 +159,32 @@ All routes are Next.js route handlers, authenticated by session (`requireOrg`), 
 | POST /api/events | `{ description, council? }` (10 to 2000 chars; council defaults to and must be `ccc`) | `{ id }` | 400 | `api.createEvent()` |
 | GET /api/events/:id | | EventDetail | 404 | `api.getEvent()` |
 | POST /api/events/:id/profile | | ProfileResponse `{ profile, questions }` | 404 | `api.buildProfile()` |
+| GET /api/events/:id/profile | | ProfileResponse (saved, no AI) | 409 no profile | `api.getProfile()` |
+| POST /api/events/:id/edit | `{ edits: [{ path, value }] }` (1 to 30) | ProfileResponse | 400 bad path, 409 no profile | `api.editProfile()` |
 | POST /api/events/:id/answers | `{ answers: [{ path, answer }] }` | ProfileResponse | 400 unknown path or option, 409 no profile | `api.answer()` |
 | POST /api/events/:id/classify | | Classification | 409 no profile | `api.classify()` |
 | POST /api/events/:id/requirements | | Requirement[] (also creates document rows) | 409 no profile | `api.requirements()` |
 | GET /api/events/:id/documents | | EventDocument[] | | `api.listDocuments()` |
+| GET /api/events/:id/attachments | `?file=name` for the file itself | Attachment[] or the file | 404 no such file | `api.attachments()` |
+| POST /api/events/:id/attachments | multipart `file` (png, jpeg, webp, heic, pdf, 10 MB) | Attachment | 400 no file, wrong type, too big | `api.attach()` |
+| GET /api/events/:id/site-plan | | SiteLayout (with the Hagley basemap where it applies) | 409 no profile | `api.sitePlan()` |
+| POST /api/events/:id/site-plan | SitePlan | SiteLayout | 400 invalid plan | `api.saveSitePlan()` (not on screen) |
 | POST /api/documents/:id/draft | | EventDocument | 409 not drafted type, no template, no profile | `api.draft()` |
-| POST /api/documents/:id/check | | EventDocument | 409 not drafted, no checklist | `api.check()` |
-| POST /api/documents/:id/fix | `{ itemId }` | EventDocument (re-checked) | 409 no fix for item | `api.fix()` |
+| POST /api/documents/:id/check | | EventDocument | 409 not drafted, no checklist; 502 check missed a checklist item | `api.check()` |
+| POST /api/documents/:id/fix | `{ itemId, text? }` | EventDocument (re-checked) | 409 no fix for item | `api.fix()` |
+| POST /api/documents/:id/edit | `{ sections: [{ heading, body }] }` | EventDocument (drafted, tick cleared) | 409 not drafted; 413 MOCK edit too large | `api.editDocument()` |
+| POST /api/documents/:id/review | `{ reviewed }` | EventDocument | 409 until the document is ready | `api.review()` |
+| GET /api/documents/:id/export | `?view=1` opens inline | application/pdf (the council's form for special licence and hazard register) | 409 not drafted | `api.documentPdfUrl()` |
 | GET /api/events/:id/deadlines | | Deadline[] (stored for the cron) | 409 no date | `api.deadlines()` |
-| GET /api/events/:id/export | | application/pdf | | `api.exportUrl()` |
-| POST /api/events/:id/eventbrite | `{ tickets? }` | EventbriteDraft `{ id, url }` | 409 until every document is ready or manual | `api.eventbrite()` |
+| GET /api/events/:id/export | | application/pdf (pack, then the filled council forms) | | `api.exportUrl()` |
+| POST /api/events/:id/eventbrite | `{ tickets? }` | EventbriteDraft `{ id, url }` | 409 until every document is ready or manual and every drafted one is ticked, or name, date, times or attendance missing | `api.eventbrite()` |
 | GET /api/licences | | Licence[] | | `api.licences()` |
 | POST /api/demo/reminder | | `{ ok: true }` | 404 unless DEMO_MODE=1 | `api.demoReminder()` |
+| GET /api/demo/reset | | redirect to /dashboard, demo cookies cleared | 404 unless MOCK=1 | open in a browser |
 | GET /api/cron/reminders | header `Authorization: Bearer $CRON_SECRET` | `{ sent, today }` | 401 | Vercel Cron only |
 | GET /auth/callback | `?code=` | redirect | | Magic link |
 
-In MOCK mode the event id is `demo` and document ids come from the fixture's `documents` array. Exactly one document is `needs_fix` with a red checklist item; `/fix` on it returns `fixedDocument`, all green, so the mock flow can unlock Eventbrite.
+In MOCK mode the event id is `demo` and document ids come from the fixture's `documents` array. Exactly one document is `needs_fix` with a red checklist item; `/fix` on it returns `fixedDocument`, all green, so the mock flow can unlock Eventbrite once every draft is ticked. Progress is kept per browser in `evntx_demo_*` cookies; five past CCC events come from `MOCK_PAST`; attachments aren't stored and the site plan shows the demo picture with a fixed review.
 
 ## Integrations
 
@@ -174,7 +193,7 @@ In MOCK mode the event id is `demo` and document ids come from the fixture's `do
 | Eventbrite | Private token. POST `/organizations/{id}/events/` as a draft, then ticket classes. Start and end in UTC with timezone Pacific/Auckland, currency NZD, capacity from the profile. Stores the event id. Never publishes | `EVENTBRITE_DEMO_DRAFT_URL`, served if the call fails or takes over 20 s in DEMO_MODE |
 | Resend | Reminder with event name, document, date and a link back. Daily cron (14 and 3 days before `recommended`) or the demo route | Screenshot of a received email |
 | PDF export | Cover page, each drafted document, sources appendix, disclaimer on every page | Pre-generated PDF of the seeded event |
-| Official forms (P2) | pdf-lib fills AcroForm fields via `form_fields` | Not in demo |
+| Official forms | `lib/pdf/special-licence.ts` fills CCC CON4414 AcroForm fields with pdf-lib; `lib/pdf/risk-assessment.ts` writes the hazard register onto CCC's Safety Risk Assessment Form; `lib/forms/event-permit.ts` builds CCC's tfaforms event permit link, pre-filled | Same in demo |
 
 Dates use `Intl` with `Pacific/Auckland`, never hardcoded offsets. Daylight saving starts at 2am Sunday 27 Sep 2026, the morning of the demo.
 
@@ -198,8 +217,10 @@ Dates use `Intl` with `Pacific/Auckland`, never hardcoded offsets. Daylight savi
 | `tests/deadlines.test.ts` | Working days, weekends, Waitangi Day, 20 Dec to 15 Jan liquor period, NZ date | C | Passing |
 | `tests/eventbrite.test.ts` | NZDT, NZST, the DST change day | C | Passing |
 | `tests/contract.test.ts` | Every fixture piece parses against its schema; questions match the follow-up logic; one red item and its fix | A | Passing |
-| Schema tests | Every live AI response parses, 10 runs of the seeded event | A | To do |
-| Golden path end to end | Describe to export to Eventbrite draft on the deployed URL | D | To do |
+| `tests/ai-*.test.ts` | Recorded live AI responses parse, model routing, demo fallback only for the seeded event, draft and fix guards against invented facts | A | Passing |
+| `tests/routes.test.ts` | Every MOCK route returns the contract, 400s, cron 401, Eventbrite lock | C | Passing |
+| `tests/fees`, `people`, `phrases`, `checklist`, `siteplan`, `special-licence` | Fee tiers, role filling, highlighting, ticketing gate, site plan cleaning and checks, CON4414 filling | B / C / D | Passing |
+| `e2e/golden-path.spec.ts` | Landing to Details, Questions, Documents (fix, tick), Site plan, Deadlines (PDF, reminder, Eventbrite), Home, on desktop and mobile under MOCK | D | Passing |
 | Device check | Live URL on a phone and a second laptop, logged out and in | Lead | To do |
 
 Demo safety net: `DEMO_MODE=1` serves cached AI answers for the seeded event if a call takes over 20 s or fails. Deploy freeze 8am Sunday.
