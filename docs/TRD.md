@@ -78,7 +78,7 @@ flowchart LR
 | Organiser edits and ticks each draft (`/documents/:id/edit`, `/review`, `documents.reviewed_at`). Eventbrite also needs every drafted document ticked | "You review them" is enforced, not just stated |
 | Event profile editable field by field (`/events/:id/edit`), saved as `answered` | Organiser corrects the AI without retyping the description |
 | Attachments: up to 8 photos or PDFs per event in the private `kb` bucket under `uploads/<eventId>/` | The site plan screen shows the organiser's own picture |
-| Site plan is the organiser's picture plus a suggestion overlay. The drawn plan (`lib/siteplan`, `components/site-plan.tsx`, `events.site_plan`, migration 0004) is kept but not on screen | A real site plan beats a generated one for judges and councils |
+| Site plan is the organiser's picture plus a suggestion overlay. The drawn plan (`lib/siteplan`, `components/site-plan.tsx`, `events.site_plan`, migration 0004) is kept but not on screen | A real site plan beats a generated one for judges and councils. Planned: an AI review step on the uploaded picture (stored on the attachment's `review`), and the draggable plan back on screen with `siteChecks` |
 | Official forms filled (was P2): CON4414 special licence and the Safety Risk Assessment Form via pdf-lib, event permit as a pre-filled CCC tfaforms link | The council gets its own forms |
 | Profile uses the strong model; drafts get a second review pass against facts nobody supplied | Fewer invented names and claims |
 | MOCK demo state is per browser (httpOnly `evntx_demo_*` cookies, 1 hour); `/api/demo/reset` clears it | Several people can try the demo at once without seeing each other's progress |
@@ -126,7 +126,8 @@ CCC runs a District Licensing Committee: seed its alcohol licensing pages for sp
 | requirements | event_id, rule_id, document_type, reason, source_url, last_checked |
 | documents | event_id, document_type (unique per event), content (DraftDocument), check_results (CheckResult), status, reviewed_at (0004) |
 | deadlines | event_id, document_type (unique per event), label, legal_minimum, recommended, reminded_14_at, reminded_3_at |
-| licences | org_id, type, holder_name, expires_on |
+| licences | org_id, type, holder_name, expires_on. Read-only today; planned: create, edit and delete routes |
+| budgets (planned) | event_id, lines `[{label, amount, council}]`. Today the budget lives in the browser (`evntx-budget`) |
 
 **Rule conditions** are small JSON expressions evaluated in TypeScript (`lib/rules/engine.ts`): `{"path":"alcohol.supply","eq":"sold"}`, `{"path":"structures.largestMarqueeSqm","gt":100}`, `{"path":"structures.inflatables","truthy":true}`, combined with `{"all":[…]}` / `{"any":[…]}`. Paths are EventProfile dot paths; `{value, source}` fields unwrap automatically.
 

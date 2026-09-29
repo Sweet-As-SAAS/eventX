@@ -114,17 +114,17 @@ P0 must work end to end in the live demo. P1 only after P0 is stable on the depl
 | F7 | Council checklist check | Each draft checked item by item, green or red. Red items offer suggested fixes the organiser picks, changes or writes, then the draft is re-checked | P0 | Built differently: the organiser chooses the fix, it is never applied blind |
 | F8 | Deadline timeline | Working days, excludes 20 Dec to 15 Jan liquor period, shows legal minimum and recommended date on a month calendar | P0 | Built |
 | F9 | PDF export | One PDF with every document, plus the filled council forms. Each document also downloads on its own | P0 | Built |
-| F10 | Site plan | The organiser's own site plan picture with a suggestion marked on it | P1 | Built differently: picture upload, not a drawn plan. The suggestion is a fixed demo review; live AI review of the picture is not built. A draggable plan with site checks exists in code but is not on screen |
+| F10 | Site plan | The organiser's own site plan picture with a suggestion marked on it | P1 | Built differently: picture upload, not a drawn plan. The suggestion is a fixed demo review; live AI review of the picture is not built. A draggable plan with site checks exists in code but is not on screen. **Planned:** live AI review of the uploaded picture, and a draggable plan (licensed area, exits, first aid, assembly point) with live site checks, alongside the picture |
 | F11 | Reminder emails | Cron sends reminders 14 and 3 days before each deadline, one triggerable live in the demo | P1 | Built. Emails go only to the configured address; the on-screen switch is not saved |
 | F12 | Eventbrite draft | Locked until all checks are green and every draft is ticked, creates a draft with ticket classes, NZD, Pacific/Auckland, returns the link. Never publishes | P1 | Built |
 | F13 | Rule sources | Each requirement, checklist and deadline links to its council source with a last-checked date | P1 | Built |
 | F14 | Classification and fee estimate | AI flags likely community or commercial with reasoning. Licence costs come from the council's published fee schedules with sources; unknown fees say "varies, check with council" | P1 | Built |
-| F15 | Home and licences | Upcoming and past events, licence and certificate expiry (seeded data), start a new event from a past one's description | P1 | Built. "Run it again" copies the description only; licences can't be added in the app yet |
+| F15 | Home and licences | Upcoming and past events, licence and certificate expiry (seeded data), start a new event from a past one's description | P1 | Built. "Run it again" copies the description only; licences can't be added in the app yet. **Planned:** add, edit and remove licences and certificates in the app |
 | F16 | Fill official council forms | Special licence on CCC form CON4414, hazard register on CCC's Safety Risk Assessment Form, event permit as CCC's online form opened pre-filled | P2 | Built |
 | F17 | Committee sign-off link | Approver reviews and approves each document, logged | P2 | Not built (organiser ticks their own drafts; Share copies the link) |
 | F18 | Council email response | Paste a council request, AI updates documents and drafts the reply | P2 | Not built |
 | F19 | Stallholder applications | Vendors upload certificates once, organiser sees compliance | P2 | Not built |
-| F20 | Budget | Organiser's own cost lines and total | Extra | Built, stored in the browser only |
+| F20 | Budget | Organiser's own cost lines and total | Extra | Built, stored in the browser only. **Planned:** saved per event on the server, shared with the organisation, council fees filled in from the fee schedules |
 
 ## AI design
 
@@ -203,7 +203,8 @@ Q&A prep: "Every council is different, how do you scale?" Rules are data, adding
 | Phase | Scope |
 | --- | --- |
 | Weekend MVP (done) | CCC only, P0 and P1, official CCC forms filled, Eventbrite draft |
-| Next 3 months | Live AI review of the site plan picture, committee sign-off, council email response, stallholder applications, adding licences in the app, shared budgets, 3 to 5 more councils |
+| Next up | Site plan: live AI review of the uploaded picture, plus a draggable plan with live site checks. Licences added and edited in the app. Budget saved per event and shared with the organisation |
+| Next 3 months | Committee sign-off, council email response, stallholder applications, 3 to 5 more councils |
 | 6 to 12 months | Traffic management briefs and supplier quotes, Humanitix, venue licence renewals end to end, events company tier |
 | Platform | Supplier bookings (marquees, security, toilets), volunteer rostering, marketplace for event services |
 
