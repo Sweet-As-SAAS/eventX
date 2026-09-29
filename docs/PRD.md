@@ -1,14 +1,14 @@
-# HostReady PRD
+# EvntX PRD
 
 26 Sep 2026 · Ashutosh Gauniyal · Markdown copy of the PRD for the team and coding agents. Where this repo deliberately differs, see docs/TRD.md "Changes from the original TRD".
 
 ## Summary and problem
 
-HostReady turns a plain-English event description into a council-ready permit and liquor licence pack, checked against council rules, with every deadline tracked. The weekend MVP covers Christchurch City Council (CCC) and one complete flow, from blank page to exported pack and an Eventbrite draft. CCC is the only council; council rules are stored as data, so more can be added later.
+EvntX turns a plain-English event description into a council-ready permit and liquor licence pack, checked against council rules, with every deadline tracked. The weekend MVP covers Christchurch City Council (CCC) and one complete flow, from blank page to exported pack and an Eventbrite draft. CCC is the only council; council rules are stored as data, so more can be added later.
 
-**One-line pitch.** Describe your event once, and HostReady produces your council permit paperwork, safety plan, site plan and liquor licence application, ready to lodge.
+**One-line pitch.** Describe your event once, and EvntX produces your council permit paperwork, safety plan, site plan and liquor licence application, ready to lodge.
 
-**Positioning.** TurboTax for event permits today. Every public event has to be approved before it can happen, so owning that step lets HostReady become the platform events are run on, the Shopify for events.
+**Positioning.** TurboTax for event permits today. Every public event has to be approved before it can happen, so owning that step lets EvntX become the platform events are run on, the Shopify for events.
 
 **The problem.** Anyone running a public event in NZ faces council paperwork that is long, inconsistent between councils and deadline driven. Organisers, usually volunteers, find out about requirements and costs too late, cannot tell how the council will classify their event, and retype the same details into several forms. Today they use blank council templates, pay a consultant, or give up on parts of the event.
 
@@ -18,7 +18,7 @@ A CCC event permit is required if the event is on a public park or road, open to
 
 Only verified sources go on pitch slides.
 
-| Case | What happened | What HostReady would have done | Source |
+| Case | What happened | What EvntX would have done | Source |
 | --- | --- | --- | --- |
 | Ashburton Santa parade and market | Council classified the 2025 market as commercial and required a $2050 permit while the parade fee was waived. Road closure is the parade's biggest cost at about $3500 | Flag the likely classification and fee before applying, suggest how to present it as community | 1News, Jul 2026 |
 | Featherston Anzac Day parade | Council would not close SH2 because it could not afford traffic management, so the march became stationary. Prior TMP estimate was $7186 plus GST | Surface road closure costs at intake, flag long-lead items early | Times-Age, SWDC report |
@@ -91,7 +91,7 @@ Eventbrite unlocks only once every checklist item is green, so tickets are never
 | 5 Deadlines and publish | Working-day timeline incl. the liquor holiday period, reminder emails, PDF export, Eventbrite draft | Reminder email lands live |
 | 6 Dashboard | Events, licence renewals, duty manager certificates, "run it again" | Why they come back |
 
-Mockups: the "HostReady app screens" link in the original PRD (ask Ashu).
+Mockups: the "EvntX app screens" link in the original PRD (ask Ashu).
 
 ## Functional requirements
 
@@ -133,7 +133,7 @@ AI handles understanding and writing. Deterministic rules handle decisions that 
 | Checklist check | AI plus rules | Each item evaluated against the draft, pass/fail with evidence | Organiser reviews before lodging |
 | Deadlines | Rules | Working-day calculator with holiday periods | No AI in date maths |
 
-**Why not just ChatGPT or Claude with a skills file?** A chat can write a safety plan if you already know you need one, know the current council rules and remember the deadline. Our users know none of that. HostReady knows which documents this event needs, checks them against rules we keep current with sources and dates, remembers the event and sends reminders months or years later, and lets several people work on the same event. A chat forgets you when the tab closes. TurboTax exists even though anyone can ask a chatbot about their taxes. Make this visible on screen: the source link and "checked 26 Sep 2026" on every requirement, the reminder email landing live, and the Eventbrite lock.
+**Why not just ChatGPT or Claude with a skills file?** A chat can write a safety plan if you already know you need one, know the current council rules and remember the deadline. Our users know none of that. EvntX knows which documents this event needs, checks them against rules we keep current with sources and dates, remembers the event and sends reminders months or years later, and lets several people work on the same event. A chat forgets you when the tab closes. TurboTax exists even though anyone can ask a chatbot about their taxes. Make this visible on screen: the source link and "checked 26 Sep 2026" on every requirement, the reminder email landing live, and the Eventbrite lock.
 
 **Demo data.** One seeded demo event (fixtures/demo-event.json) with a cached successful run as a fallback if the API is slow on stage.
 
@@ -142,7 +142,7 @@ AI handles understanding and writing. Deterministic rules handle decisions that 
 | Area | Requirement |
 | --- | --- |
 | Accuracy | Rules and fees shown only with a source and last-checked date. Unknown fees say "varies, check with council" |
-| Legal position | HostReady prepares, the organiser reviews and lodges. Not legal advice, stated in the footer and export |
+| Legal position | EvntX prepares, the organiser reviews and lodges. Not legal advice, stated in the footer and export |
 | Privacy | Only event and organisation details stored. Demo uses fake people and events. RLS per organisation |
 | Performance | Profile under 10 s, all drafts under 60 s, drafted in parallel with progress shown |
 | Reliability | Deploy freeze Sunday 8am. Cached demo run as fallback. Tested on a phone and a second laptop |
@@ -200,4 +200,4 @@ Q&A prep: "Every council is different, how do you scale?" Rules are data, adding
 | 6 to 12 months | Traffic management briefs and supplier quotes, Humanitix, venue licence renewals end to end, events company tier |
 | Platform | Supplier bookings (marquees, security, toilets), volunteer rostering, marketplace for event services |
 
-Open: confirm CCC special licence fees and whether CCC charges an event permit fee · verify lodgement lead times before they go on screen · check the HostReady name is free · clubs-first or venues-first story for Q&A · two real quotes from Saturday calls.
+Open: confirm CCC special licence fees and whether CCC charges an event permit fee · verify lodgement lead times before they go on screen · check the EvntX name is free · clubs-first or venues-first story for Q&A · two real quotes from Saturday calls.

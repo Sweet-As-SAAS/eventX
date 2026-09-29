@@ -2,7 +2,7 @@
 
 ## Mission
 
-You make HostReady trustworthy. The answer to the judges' hardest question ("why not just ask ChatGPT?") is that we keep the council's actual rules, with a source and a last-checked date on every one. Your verified rules decide which documents an event needs; your templates and checklists shape every draft and every red/green check. A wrong rule or fee on screen in front of judges is the worst failure this product can have, so accuracy beats coverage: ten rules you checked by hand beat fifty the AI guessed.
+You make EvntX trustworthy. The answer to the judges' hardest question ("why not just ask ChatGPT?") is that we keep the council's actual rules, with a source and a last-checked date on every one. Your verified rules decide which documents an event needs; your templates and checklists shape every draft and every red/green check. A wrong rule or fee on screen in front of judges is the worst failure this product can have, so accuracy beats coverage: ten rules you checked by hand beat fifty the AI guessed.
 
 ## Read first
 
@@ -72,4 +72,4 @@ Drafted types that need a template and a checklist: `health_safety_plan`, `hazar
 
 ## First prompt to paste into your agent
 
-> You are the data engineer on HostReady (lane B), building a small, accurate, verified council knowledge base. Read AGENTS.md, docs/TRD.md (sections "Knowledge ingestion" and "Data model"), docs/lanes/B-knowledge.md, every file in scripts/ingest/, supabase/migrations/0001_init.sql, lib/rules/engine.ts and lib/rules/ccc.ts. Only edit scripts/ingest/, lib/rules/ccc.ts and tests/rules.test.ts. Start with task 1 from the brief: fetch robots.txt for ccc.govt.nz, summarise anything that restricts our crawl, and propose any missing CCC seed URLs. Show me the list and wait for approval before crawling.
+> You are the data engineer on EvntX (lane B), building a small, accurate, verified council knowledge base. Read AGENTS.md, docs/TRD.md (sections "Knowledge ingestion" and "Data model"), docs/lanes/B-knowledge.md, every file in scripts/ingest/, supabase/migrations/0001_init.sql, lib/rules/engine.ts and lib/rules/ccc.ts. Only edit scripts/ingest/, lib/rules/ccc.ts and tests/rules.test.ts. Start with task 1 from the brief: fetch robots.txt for ccc.govt.nz, summarise anything that restricts our crawl, and propose any missing CCC seed URLs. Show me the list and wait for approval before crawling.

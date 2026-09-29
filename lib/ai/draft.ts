@@ -15,7 +15,7 @@ export const allowedNames = (p: EventProfile) =>
     p.people.foodProvider.value, p.people.wasteCollector.value,
     p.people.contact.value?.split(/[,;]/)[0].trim()].filter((v): v is string => !!v && !/[@\d]/.test(v)); // the contact's name, not their number
 
-/** "The menus are attached." -> "The menus will be attached to the application." HostReady holds no files. */
+/** "The menus are attached." -> "The menus will be attached to the application." EvntX holds no files. */
 export const honestAttachments = (text: string) =>
   text.replace(/\b(?:is|are|has been|have been)\s+(?:also\s+)?attached\b/giu, "will be attached to the application");
 
@@ -26,7 +26,7 @@ export function unsupportedDraftFacts(draft: DraftDocument, profile: EventProfil
   if (/\b(?:no existing|no current|not currently|not already)\b[^.\n]{0,90}\blicen[cs](?:e|ed)\b|\blicen[cs]e\s+(?:is|was)\s+not\s+(?:currently\s+)?held/iu.test(body)) {
     issues.push("Existing licence status is unknown; remove any claim that the venue has no licence.");
   }
-  // HostReady holds no files, so a draft can never say something is already attached.
+  // EvntX holds no files, so a draft can never say something is already attached.
   if (/\b(?:is|are|has been|have been)\s+(?:also\s+)?attached\b|\battached\s+(?:is|are)\b/iu.test(body)) {
     issues.push("Nothing is attached yet; replace claims that a file is attached with a descriptive [ATTACH ...] placeholder.");
   }

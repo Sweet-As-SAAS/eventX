@@ -17,7 +17,7 @@ npm test && npm run typecheck     # 35 tests pass
 
 Keep `MOCK=1` in `.env.local` until your lane's real calls are ready. MOCK skips login and every route serves the fixture.
 
-> Windows and OneDrive: if the repo lives in a OneDrive folder, OneDrive will try to sync `node_modules` and `.next` (hundreds of MB) and can lock files during builds. Clone into a folder outside OneDrive (for example `C:\dev\hostready`), or right-click the folder and pick "Free up space" / exclude it.
+> Windows and OneDrive: if the repo lives in a OneDrive folder, OneDrive will try to sync `node_modules` and `.next` (hundreds of MB) and can lock files during builds. Clone into a folder outside OneDrive (for example `C:\dev\evntx`), or right-click the folder and pick "Free up space" / exclude it.
 
 Then start your coding agent in the repo root and paste the "First prompt" from your lane brief in `docs/lanes/`.
 

@@ -6,7 +6,7 @@ You build what the judges actually see, and you drive the live demo. The winning
 
 ## Read first
 
-`AGENTS.md` · `docs/PRD.md` (User journey, screens, demo script) · the six HostReady mockup screens (link from Ashu) · `lib/api/client.ts` (every call you'll make) · `lib/schemas.ts` (every type you'll render) · `fixtures/demo-event.json` (the data you'll see in MOCK) · `app/(screens)/new/page.tsx` (working reference pattern).
+`AGENTS.md` · `docs/PRD.md` (User journey, screens, demo script) · the six EvntX mockup screens (link from Ashu) · `lib/api/client.ts` (every call you'll make) · `lib/schemas.ts` (every type you'll render) · `fixtures/demo-event.json` (the data you'll see in MOCK) · `app/(screens)/new/page.tsx` (working reference pattern).
 
 ## You own / do not touch
 
@@ -80,4 +80,4 @@ Rules for the data: render what the API returns, never hardcode demo text. `stat
 
 ## First prompt to paste into your agent
 
-> You are the frontend engineer on HostReady (lane D), building a polished, reliable demo path. Read AGENTS.md, docs/PRD.md (sections "User journey" and "Functional requirements"), docs/lanes/D-frontend.md, lib/api/client.ts, lib/schemas.ts, fixtures/demo-event.json and every file under app/. Only edit app/(screens)/, app/page.tsx, app/login/, app/layout.tsx, app/globals.css, components/ and public/. The Next.js here is version 16 with React 19, so check node_modules/next/dist/docs/ before using any Next API. The dev server runs with MOCK=1, so every api.* call returns fixture data. First, give me a plan: for each of the six screens, the components, the api.* calls, the loading and error states, and how state flows between steps. Wait for my approval before writing code.
+> You are the frontend engineer on EvntX (lane D), building a polished, reliable demo path. Read AGENTS.md, docs/PRD.md (sections "User journey" and "Functional requirements"), docs/lanes/D-frontend.md, lib/api/client.ts, lib/schemas.ts, fixtures/demo-event.json and every file under app/. Only edit app/(screens)/, app/page.tsx, app/login/, app/layout.tsx, app/globals.css, components/ and public/. The Next.js here is version 16 with React 19, so check node_modules/next/dist/docs/ before using any Next API. The dev server runs with MOCK=1, so every api.* call returns fixture data. First, give me a plan: for each of the six screens, the components, the api.* calls, the loading and error states, and how state flows between steps. Wait for my approval before writing code.

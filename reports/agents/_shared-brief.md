@@ -1,6 +1,6 @@
 # Shared brief for every audit sub-agent
 
-You are one sub-agent in an unattended audit of the HostReady repo. No human is available: never ask questions, decide using `docs/PRD.md` and `docs/TRD.md`, log the decision in your handoff note, and continue. Where this brief and the docs disagree, this brief wins.
+You are one sub-agent in an unattended audit of the EvntX repo. No human is available: never ask questions, decide using `docs/PRD.md` and `docs/TRD.md`, log the decision in your handoff note, and continue. Where this brief and the docs disagree, this brief wins.
 
 Read first: `AGENTS.md` (hard rules, Next 16 gotchas), `docs/PRD.md`, `docs/TRD.md`, `lib/schemas.ts` (the contract), `fixtures/demo-event.json` (the golden demo event, "Sarah's event": Riccarton RFC fundraiser at Hagley Park, Sun 14 Mar 2027), `reports/coverage.md`, and your lane brief in `docs/lanes/`.
 
@@ -15,7 +15,7 @@ Read first: `AGENTS.md` (hard rules, Next 16 gotchas), `docs/PRD.md`, `docs/TRD.
 - Special licence for Sun 14 Mar 2027: recommended Fri 29 Jan 2027 (Mondayised Waitangi Day), legal minimum Mon 15 Feb 2027. The UI shows what the engine returns, never hardcoded dates.
 - `MOCK=1` makes every route return the fixture. `DEMO_MODE=1` falls back to the fixture after 20 s or on error (seeded event only).
 - Out of scope, remove if present: our own ticketing, promo content generation, sales stats, real council lodgement, payments, any council other than CCC.
-- Every screen states: "HostReady prepares documents. You review them and lodge them with the council. This is not legal advice." (root layout and PDF already carry it).
+- Every screen states: "EvntX prepares documents. You review them and lodge them with the council. This is not legal advice." (root layout and PDF already carry it).
 - UX: Stripe Atlas style guided flow (stepper, one main action per screen, calm whitespace, status badges) and TurboTax style intake (plain-language questions, tap answers, inferred values editable, reassurance after each step). Borrow patterns only, never their visuals or copy.
 
 ## Models

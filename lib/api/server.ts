@@ -26,10 +26,10 @@ export const MOCK_PAST = [
 export const mockPast = (id: string) => MOCK_PAST.find((e) => e.id === id);
 /** MOCK=1: every route returns fixture data in the exact shape of the real response. No keys needed. */
 export const MOCK = () => process.env.MOCK === "1";
-export const MOCK_FIXED_COOKIE = "hostready_demo_fixed";
+export const MOCK_FIXED_COOKIE = "evntx_demo_fixed";
 /** MOCK: set when this browser submits the demo prompt, so the demo event only lists after that. */
-export const MOCK_STARTED_COOKIE = "hostready_demo_started";
-export const mockReviewCookie = (id: string) => `hostready_demo_review_${id}`;
+export const MOCK_STARTED_COOKIE = "evntx_demo_started";
+export const mockReviewCookie = (id: string) => `evntx_demo_review_${id}`;
 export const ok = (data: unknown) => NextResponse.json(data);
 /** The demo's instant answers wait this long (DEMO_PAUSE_MS, default 1 s) so the audience sees the AI step happen. */
 export const demoPause = () => {
@@ -203,7 +203,7 @@ export const toEventDocument = (d: any, checklistSource: EventDocument["checklis
 
 // MOCK draft edits live in the visitor's own browser (a compressed cookie per document), like the review ticks:
 // any Vercel function can read them, and one visitor's demo never shows up for another.
-export const mockEditCookie = (id: string) => `hostready_demo_edit_${id}`;
+export const mockEditCookie = (id: string) => `evntx_demo_edit_${id}`;
 const EDIT_LIMIT = 3800; // bytes; browsers keep about 4 KB per cookie
 /** Cookie value for an edited draft, or null when it's too long to keep. */
 export const packEdit = (content: DraftDocument) => {

@@ -1,10 +1,10 @@
-# HostReady TRD
+# EvntX TRD
 
 26 Sep 2026 · Ashutosh Gauniyal · Describes the repo as built. The original TRD PDF is the source; differences are listed under "Changes from the original TRD".
 
 ## Overview and scope
 
-HostReady runs on a pre-built council knowledge base. Council rules, checklists, templates, forms and fees are scraped ahead of time from the CCC site, reviewed by a human and stored in Supabase. At runtime the AI never browses the web, it reads only from our store, which makes the demo fast, repeatable and explainable.
+EvntX runs on a pre-built council knowledge base. Council rules, checklists, templates, forms and fees are scraped ahead of time from the CCC site, reviewed by a human and stored in Supabase. At runtime the AI never browses the web, it reads only from our store, which makes the demo fast, repeatable and explainable.
 
 | Council | Slug | Site | Demo role |
 | --- | --- | --- | --- |
@@ -80,7 +80,7 @@ flowchart LR
 Run once tonight, re-run only if a source changes.
 
 1. **Seed.** Hand-picked URLs per council in `scripts/ingest/seeds.ts`. Not the whole site.
-2. **Crawl** (`npm run ingest:crawl -- ccc`). Links up to depth 2, same domain, paths matching events, alcohol, licences, road closures, parks, fees, noise, food, forms. Obeys robots.txt, 1 request per second, user agent names HostReady and a contact email (the script refuses to run until the email is set). Raw files go to `data/raw/<council>/` (gitignored, never republished).
+2. **Crawl** (`npm run ingest:crawl -- ccc`). Links up to depth 2, same domain, paths matching events, alcohol, licences, road closures, parks, fees, noise, food, forms. Obeys robots.txt, 1 request per second, user agent names EvntX and a contact email (the script refuses to run until the email is set). Raw files go to `data/raw/<council>/` (gitignored, never republished).
 3. **Extract** (`ingest:extract`). HTML to markdown with headings (nav and footer stripped), PDF via pdf-parse, DOCX via mammoth.
 4. **Load** (`ingest:load`). Raw files to Storage `kb/raw/<council>/<sha256>.<ext>`, chunks of about 800 tokens split by heading, embedded, into `kb_chunks` with the source URL.
 5. **Normalise** (`ingest:normalise`). AI reads each source and writes candidate rules, checklists, templates, lead times and fees to `data/normalised/<council>/*.json`, every item quoting its source sentence. All start unverified.
@@ -122,7 +122,7 @@ CCC runs a District Licensing Committee: seed its alcohol licensing pages for sp
 
 **Rule conditions** are small JSON expressions evaluated in TypeScript (`lib/rules/engine.ts`): `{"path":"alcohol.supply","eq":"sold"}`, `{"path":"structures.largestMarqueeSqm","gt":100}`, `{"path":"structures.inflatables","truthy":true}`, combined with `{"all":[…]}` / `{"any":[…]}`. Paths are EventProfile dot paths; `{value, source}` fields unwrap automatically.
 
-**Document status:** `pending` (row created by /requirements, drafted type) → `drafted` (/draft) → `needs_fix` or `ready` (/check or /fix). `manual` is set at creation for types HostReady doesn't draft (`DRAFTED_TYPES` in `lib/schemas.ts`). Re-running /requirements keeps existing drafts and removes documents no longer required.
+**Document status:** `pending` (row created by /requirements, drafted type) → `drafted` (/draft) → `needs_fix` or `ready` (/check or /fix). `manual` is set at creation for types EvntX doesn't draft (`DRAFTED_TYPES` in `lib/schemas.ts`). Re-running /requirements keeps existing drafts and removes documents no longer required.
 
 ## AI pipeline (lane A)
 
@@ -188,7 +188,7 @@ Dates use `Intl` with `Pacific/Auckland`, never hardcoded offsets. Daylight savi
 | Data access | Every query filtered by the caller's org; RLS on every table; knowledge tables closed to the public API | `lib/api/server.ts`, migration |
 | Personal data | Only event and organisation details. Demo uses fake people | |
 | Prompt injection | Scraped text passed as fenced reference data | `fence()` in `lib/ai/client.ts` |
-| Liability | Every screen and export: HostReady prepares, the organiser reviews and lodges, not legal advice | Root layout, PDF |
+| Liability | Every screen and export: EvntX prepares, the organiser reviews and lodges, not legal advice | Root layout, PDF |
 
 ## Testing and demo reliability
 

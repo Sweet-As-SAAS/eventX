@@ -61,7 +61,7 @@ describe("MOCK routes return the contract", () => {
   it("GET /api/events → EventSummary[]; POST → {id}; bad body → 400", async () => {
     const r = await import("../app/api/events/route");
     expect(await json(await r.GET(get(), undefined as never), z.array(EventSummary))).toHaveLength(5); // past events only, until the prompt
-    jar.set("hostready_demo_started", "1");
+    jar.set("evntx_demo_started", "1");
     expect(await json(await r.GET(get(), undefined as never), z.array(EventSummary))).toHaveLength(6);
     expect(await json(await r.POST(post({ council: "ccc", description: fixture.description }), undefined as never), Id))
       .toEqual({ id: "demo" });
@@ -113,7 +113,7 @@ describe("MOCK routes return the contract", () => {
     const r = await import("../app/api/events/[id]/documents/route");
     const before = await json(await r.GET(get(), ctx("demo")), z.array(EventDocument));
     expect(before.find((d) => d.id === hs)?.status).toBe("needs_fix");
-    jar.set("hostready_demo_fixed", "1");
+    jar.set("evntx_demo_fixed", "1");
     const after = await json(await r.GET(get(), ctx("demo")), z.array(EventDocument));
     expect(after.find((d) => d.id === hs)?.status).toBe("ready");
   });
@@ -129,7 +129,7 @@ describe("MOCK routes return the contract", () => {
     const r = await import("../app/api/documents/[id]/fix/route");
     const res = await r.POST(post({ itemId: failedItem.itemId }), ctx(hs));
     expect((await json(res, EventDocument)).status).toBe("ready");
-    expect(res.headers.get("set-cookie")).toContain("hostready_demo_fixed=1");
+    expect(res.headers.get("set-cookie")).toContain("evntx_demo_fixed=1");
     expect((await r.POST(post({}), ctx(hs))).status).toBe(400);
   });
 
@@ -185,7 +185,7 @@ describe("Eventbrite draft under MOCK", () => {
     expect(locked.status).toBe(409);
     expect((await locked.json()).error).toMatch(/green/i);
 
-    jar.set("hostready_demo_fixed", "1");
+    jar.set("evntx_demo_fixed", "1");
     const unread = await r.POST(post({}), ctx("demo"));
     expect(unread.status).toBe(409);
     expect((await unread.json()).error).toMatch(/tick/i);
@@ -209,7 +209,7 @@ describe("Eventbrite draft under MOCK", () => {
 
   it("stays locked for any event other than the demo one", async () => {
     const r = await import("../app/api/events/[id]/eventbrite/route");
-    jar.set("hostready_demo_fixed", "1");
+    jar.set("evntx_demo_fixed", "1");
     expect((await r.POST(post({}), ctx("someone-else"))).status).toBe(409);
   });
 

@@ -6,7 +6,7 @@ import { Button, Title } from "@/components/ui";
 // Budget: the organiser's own numbers. No API behind it yet, so it lives in this browser only.
 // ponytail: localStorage per viewer; move to a budgets table when committees need to share it.
 type Line = { id: string; label: string; amount: string; council?: boolean };
-const KEY = "hostready-budget";
+const KEY = "evntx-budget";
 const START: Line[] = [
   { id: "permit", label: "Council event permit", amount: "", council: true },
   { id: "licence", label: "Special licence", amount: "", council: true },

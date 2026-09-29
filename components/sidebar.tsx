@@ -19,9 +19,9 @@ const NAV = [
   { href: "/budget", label: "Budget", icon: Card },
   { href: "/licences", label: "Licences", icon: IdCard },
 ];
-const KEY = "hostready:sidebar";
+const KEY = "evntx:sidebar";
 /** Fire on window after changing a document so the sidebar status catches up. */
-export const CHANGED = "hostready:changed";
+export const CHANGED = "evntx:changed";
 
 type Current = { ev: EventDetail; docs: EventDocument[]; deadlines: Deadline[] };
 
