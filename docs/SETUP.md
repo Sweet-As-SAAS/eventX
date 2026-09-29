@@ -7,8 +7,8 @@ Everyone does part 1. Lane C does parts 2 to 4 while everyone else starts their 
 Needs Node 22+ and git.
 
 ```bash
-git clone https://github.com/<you>/hostready.git
-cd hostready
+git clone https://github.com/<you>/eventX.git
+cd eventX
 npm install
 cp .env.example .env.local        # Windows PowerShell: copy .env.example .env.local
 npm run dev                       # open http://localhost:3000/new, type anything, press Continue

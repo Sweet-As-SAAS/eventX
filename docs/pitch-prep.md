@@ -8,7 +8,7 @@ Working draft for the five-minute Saasthon presentation. Replace the bracketed s
 
 **Description:** EvntX turns an organiser's event description into a council-specific checklist, document drafts, a working-day timeline and a reviewable PDF pack. It cites verified council sources, checks drafts against the council's own list, and keeps Eventbrite drafting locked until the required checks pass. Organisers review and lodge the documents themselves. The weekend build covers Christchurch City Council.
 
-**Repository:** https://github.com/Sweet-As-SAAS/hostready
+**Repository:** https://github.com/Sweet-As-SAAS/eventX
 
 Before submission, confirm the repo is public or the required judge account has access.
 
