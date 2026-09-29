@@ -1,5 +1,5 @@
 // Site checks, derived from the placed items every time (never stored). A check is a council
-// requirement only when a verified council fact backs it; everything else is labelled a EvntX check.
+// requirement only when a verified council fact backs it; everything else is labelled an EvntX check.
 import type { CouncilSlug, DocumentType, Requirement, SiteItem, SiteItemKind } from "../schemas";
 
 export type SiteCheck = {
