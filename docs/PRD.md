@@ -114,17 +114,70 @@ P0 must work end to end in the live demo. P1 only after P0 is stable on the depl
 | F7 | Council checklist check | Each draft checked item by item, green or red. Red items offer suggested fixes the organiser picks, changes or writes, then the draft is re-checked | P0 | Built differently: the organiser chooses the fix, it is never applied blind |
 | F8 | Deadline timeline | Working days, excludes 20 Dec to 15 Jan liquor period, shows legal minimum and recommended date on a month calendar | P0 | Built |
 | F9 | PDF export | One PDF with every document, plus the filled council forms. Each document also downloads on its own | P0 | Built |
-| F10 | Site plan | The organiser's own site plan picture with a suggestion marked on it | P1 | Built differently: picture upload, not a drawn plan. The suggestion is a fixed demo review; live AI review of the picture is not built. A draggable plan with site checks exists in code but is not on screen. **Planned:** live AI review of the uploaded picture, and a draggable plan (licensed area, exits, first aid, assembly point) with live site checks, alongside the picture |
+| F10 | Site plan | The organiser's own site plan picture with a suggestion marked on it | P1 | Built differently: picture upload, not a drawn plan. The suggestion is a fixed demo review; live AI review of the picture is not built. A draggable plan with site checks exists in code but is not on screen. Next: N1 and N2 below |
 | F11 | Reminder emails | Cron sends reminders 14 and 3 days before each deadline, one triggerable live in the demo | P1 | Built. Emails go only to the configured address; the on-screen switch is not saved |
 | F12 | Eventbrite draft | Locked until all checks are green and every draft is ticked, creates a draft with ticket classes, NZD, Pacific/Auckland, returns the link. Never publishes | P1 | Built |
 | F13 | Rule sources | Each requirement, checklist and deadline links to its council source with a last-checked date | P1 | Built |
 | F14 | Classification and fee estimate | AI flags likely community or commercial with reasoning. Licence costs come from the council's published fee schedules with sources; unknown fees say "varies, check with council" | P1 | Built |
-| F15 | Home and licences | Upcoming and past events, licence and certificate expiry (seeded data), start a new event from a past one's description | P1 | Built. "Run it again" copies the description only; licences can't be added in the app yet. **Planned:** add, edit and remove licences and certificates in the app |
+| F15 | Home and licences | Upcoming and past events, licence and certificate expiry (seeded data), start a new event from a past one's description | P1 | Built. "Run it again" copies the description only; licences can't be added in the app yet. Next: N3 below |
 | F16 | Fill official council forms | Special licence on CCC form CON4414, hazard register on CCC's Safety Risk Assessment Form, event permit as CCC's online form opened pre-filled | P2 | Built |
 | F17 | Committee sign-off link | Approver reviews and approves each document, logged | P2 | Not built (organiser ticks their own drafts; Share copies the link) |
 | F18 | Council email response | Paste a council request, AI updates documents and drafts the reply | P2 | Not built |
 | F19 | Stallholder applications | Vendors upload certificates once, organiser sees compliance | P2 | Not built |
-| F20 | Budget | Organiser's own cost lines and total | Extra | Built, stored in the browser only. **Planned:** saved per event on the server, shared with the organisation, council fees filled in from the fee schedules |
+| F20 | Budget | Organiser's own cost lines and total | Extra | Built, stored in the browser only. Next: N4 below |
+
+## What's next
+
+These four come straight after the weekend build. Each one finishes something the organiser can already see in the app, so the product feels complete rather than bigger.
+
+### N1 · Site plan review by EvntX
+
+**The problem.** The council wants a site plan with every event permit, and it is where most packs get sent back: an assembly point in the middle of the crowd, one exit, no first aid marked. Organisers draw their own plans and have no one to check them.
+
+**What the organiser gets.** They upload the plan they already have (a photo, a PDF, a sketch on a map) and EvntX reads it the way a council officer would. It marks what is missing or in the wrong place on the picture itself, says why the council cares, and suggests where it could go instead. The call is always theirs: accept the suggestion or keep their plan.
+
+**How it works.** A vision model reads the uploaded picture against the event's profile and CCC's site plan requirements. Each finding names the thing on the plan, the issue, the council's reason with its source, and a suggested spot. Findings are stored with the upload, so they are still there next time.
+
+**Done when**
+- A real uploaded plan gets findings in under 20 seconds, each with a council source.
+- Every finding points at a place on the picture, and "Suggested spot" is drawn where it would go.
+- EvntX never claims something is on the plan that it cannot see. When it is unsure, it asks instead.
+- The organiser can accept or dismiss each finding, and the pack says which were accepted.
+
+### N2 · Draggable site plan
+
+**The problem.** Plenty of organisers don't have a plan at all, and the ones who do can't easily try a change.
+
+**What the organiser gets.** A plan drawn for them from their event: stage, bar and licensed area, food trucks, toilets, first aid, exits and the assembly point, sized to the crowd and laid over the venue map. They drag things into place, and live site checks go green as they go ("Licensed area marked", "At least two exits", "First aid on the plan", "Assembly point placed"). Each check says whether it is a council requirement, with its source, or an EvntX check.
+
+**How it works.** The building blocks exist in code already (layout from the profile, crowd-based toilets and first aid, site checks, saving). This puts them on the Site plan screen next to the uploaded picture, as "draw one for me" or "check my own".
+
+**Done when**
+- Everything drags on desktop and phone, and is keyboard reachable.
+- The plan saves as the organiser goes and comes back the same.
+- The checks update live, and the plan goes into the PDF pack as the site plan document.
+
+### N3 · Licences you can manage
+
+**The problem.** Venues and clubs hold on-licences, duty manager certificates and food registrations that expire on different dates. Missing a renewal means an event can't go ahead. Today EvntX shows licences but they can't be added in the app.
+
+**What the organiser gets.** A Licences page where they add each licence or certificate once (type, holder, number, expiry), edit it and remove it. EvntX reminds them before it expires and uses it wherever it is needed, such as the duty manager's certificate on the special licence form.
+
+**Done when**
+- Add, edit and remove work, and are saved for the whole organisation.
+- Reminders go out 90, 30 and 7 days before expiry.
+- A licence entered once fills in every form that asks for it.
+
+### N4 · A budget that's saved and shared
+
+**The problem.** Council fees are only part of what an event costs, and committees need to see the whole picture before they commit. Today the budget lives in one browser and is lost if the organiser changes device.
+
+**What the organiser gets.** A budget for each event, saved to their account and visible to everyone in the organisation. Council fees and licence costs are filled in from the council's published fee schedules, with sources. The organiser adds their own lines (stage, marquees, toilets, security) and sees the total.
+
+**Done when**
+- The budget is saved per event and the same on every device.
+- Council and licence fees appear automatically, with a source and "checked" date, and update if the event changes.
+- Unknown fees say "varies, check with council" and are never guessed.
 
 ## AI design
 
@@ -203,7 +256,7 @@ Q&A prep: "Every council is different, how do you scale?" Rules are data, adding
 | Phase | Scope |
 | --- | --- |
 | Weekend MVP (done) | CCC only, P0 and P1, official CCC forms filled, Eventbrite draft |
-| Next up | Site plan: live AI review of the uploaded picture, plus a draggable plan with live site checks. Licences added and edited in the app. Budget saved per event and shared with the organisation |
+| Next up | N1 site plan review, N2 draggable site plan, N3 licences you can manage, N4 a saved and shared budget (see "What's next") |
 | Next 3 months | Committee sign-off, council email response, stallholder applications, 3 to 5 more councils |
 | 6 to 12 months | Traffic management briefs and supplier quotes, Humanitix, venue licence renewals end to end, events company tier |
 | Platform | Supplier bookings (marquees, security, toilets), volunteer rostering, marketplace for event services |
