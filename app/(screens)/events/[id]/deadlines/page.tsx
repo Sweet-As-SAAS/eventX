@@ -92,7 +92,7 @@ export default function DeadlinesPage({ params }: PageProps<"/events/[id]/deadli
   return (
     <div className="step-in pb-4">
       <p className="text-[13px] font-semibold uppercase tracking-[0.04em] text-primary">Step 4 of 4</p>
-      <h1 className="mt-2 text-4xl font-semibold tracking-[-0.025em] text-foreground">When to lodge</h1>
+      <h1 className="mt-2 text-2xl leading-tight text-foreground sm:text-[28px]">When to lodge</h1>
 
       <div className="mt-8 grid gap-12 lg:grid-cols-[1fr_320px]">
         <div className="min-w-0">

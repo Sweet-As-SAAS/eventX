@@ -66,7 +66,7 @@ export default function BudgetPage() {
         <Button variant="secondary" onClick={() => setLines((ls) => [...ls, { id: String(Date.now()), label: "New item", amount: "" }])}><Plus /> Add a cost</Button>
         <p className="text-right">
           <span className="block text-sm text-muted-foreground">Total so far</span>
-          <span className="display text-3xl font-medium tabular-nums text-foreground">{nzd(total)}</span>
+          <span className="display text-2xl font-medium tabular-nums text-foreground">{nzd(total)}</span>
         </p>
       </div>
     </div>
