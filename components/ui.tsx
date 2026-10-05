@@ -97,7 +97,7 @@ export function Title({ children, sub, aside }: { children: ReactNode; sub?: Rea
   return (
     <header className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
       <div className="max-w-4xl space-y-2">
-        <h1 className="text-4xl font-semibold leading-[1.05] tracking-[-0.03em] text-foreground sm:text-[2.75rem]">{children}</h1>
+        <h1 className="text-2xl font-semibold leading-tight tracking-[-0.025em] text-foreground sm:text-[28px]">{children}</h1>
         {sub && <p className="text-[17px] text-neutral-600">{sub}</p>}
       </div>
       {aside && <div className="flex shrink-0 items-center gap-2">{aside}</div>}

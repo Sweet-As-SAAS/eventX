@@ -120,7 +120,7 @@ export default function ProfilePage({ params, searchParams }: PageProps<"/events
   return (
     <div className="step-in max-w-[1120px] pb-4">
       <p className="text-[13px] font-semibold uppercase tracking-[0.04em] text-primary">Step 1 of 4 · Check it looks right</p>
-      <h1 className="mt-2 text-4xl font-semibold tracking-[-0.025em] text-foreground sm:text-5xl">{p.name.value ?? "Your event"}</h1>
+      <h1 className="mt-2 text-2xl font-semibold leading-tight tracking-[-0.025em] text-foreground sm:text-[28px]">{p.name.value ?? "Your event"}</h1>
       <ClassChip cls={cls} failed={clsFailed} />
 
       {editing ? (
