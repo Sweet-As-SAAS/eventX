@@ -129,7 +129,7 @@ export function DescribeForm({ initial = "", autoFocus = false, pill = false }: 
           {/* Grows with the text like a chat box; Enter sends, Shift+Enter adds a line. */}
           <textarea id={`${uid}-text`} required minLength={10} maxLength={MAX} value={text} rows={1} autoComplete="off" aria-describedby={`${uid}-count`}
             ref={(el) => { if (el) { el.style.height = "auto"; el.style.height = `${Math.min(el.scrollHeight, 240)}px`; } }}
-            onChange={(e) => setText(e.target.value)} placeholder="Paste your plan or describe it: when, where, how many people, alcohol, food…"
+            onChange={(e) => setText(e.target.value)} placeholder="Tell us about your event…"
             onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); if (!tooShort && !busy) e.currentTarget.form?.requestSubmit(); } }}
             className="max-h-60 min-h-12 min-w-0 flex-1 resize-none overflow-y-auto bg-transparent py-2.5 text-lg leading-7 text-foreground placeholder:text-neutral-500 focus:outline-none" />
           <button type="submit" disabled={busy || tooShort} aria-busy={busy || undefined} aria-label="Check my event" title={tooShort ? "Write at least 10 characters first" : "Check my event"}
