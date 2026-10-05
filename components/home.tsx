@@ -26,7 +26,7 @@ export function Home({ name }: { name: string | null }) {
   return (
     <div className="flex min-h-[calc(100dvh-3.75rem)] flex-col items-center justify-center px-4 py-16 text-center sm:px-8 lg:min-h-dvh">
       <h1 className="step-in text-[28px] font-semibold leading-tight tracking-[-0.025em] text-foreground sm:text-[32px]">
-        {first ? `Hey ${first}, attach your event plan or tell us all about it!` : "Attach your event plan or tell us all about it!"}
+        {first ? `Hi ${first}, attach your event plan or tell us all about it!` : "Attach your event plan or tell us all about it!"}
       </h1>
       <div className="mt-8 w-full max-w-[704px] text-left"><DescribeForm pill /></div>
       <ul className="mt-8 flex max-w-5xl flex-wrap justify-center gap-2.5" aria-label="Where things stand">
