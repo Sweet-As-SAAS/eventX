@@ -123,7 +123,7 @@ export function DescribeForm({ initial = "", autoFocus = false, pill = false }: 
   if (pill) {
     return (
       <form onSubmit={submit}>
-        <div className="rounded-2xl border border-neutral-200 bg-background px-2 pb-2 pt-1 shadow-[0_6px_20px_-12px_rgb(20_23_36/0.18)] transition-colors duration-150 focus-within:border-neutral-400">
+        <div className="rounded-2xl border border-neutral-200 bg-background px-2 pb-2 pt-1 shadow-[0_6px_20px_-12px_rgb(20_23_36/0.18)] transition-colors duration-150 focus-within:border-neutral-500">
           <label htmlFor={`${uid}-text`} className="sr-only">Describe your event</label>
           {/* Grows with the text like a chat box; Enter sends, Shift+Enter adds a line. */}
           <textarea id={`${uid}-text`} required minLength={10} maxLength={MAX} value={text} rows={1} autoComplete="off" aria-describedby={`${uid}-count`}
