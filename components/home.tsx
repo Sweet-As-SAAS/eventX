@@ -25,9 +25,10 @@ export function Home({ name }: { name: string | null }) {
 
   return (
     <div className="flex min-h-[calc(100dvh-3.75rem)] flex-col items-center justify-center px-4 py-16 text-center sm:px-8 lg:min-h-dvh">
-      <h1 className="step-in text-[28px] leading-tight text-foreground sm:text-[32px]">
-        {first ? `Hey ${first}, attach your event plan or tell us about it` : "Attach your event plan or tell us about it"}
+      <h1 className="step-in text-[28px] font-semibold leading-tight tracking-[-0.025em] text-foreground sm:text-[32px]">
+        {first ? `Hey ${first}, what's the big event?` : "What's the big event?"}
       </h1>
+      <p className="step-in mt-3 max-w-xl text-[17px] text-neutral-600">Drop in your event plan or just tell us about it, and we&apos;ll work out what the council needs.</p>
       <div className="mt-8 w-full max-w-[704px] text-left"><DescribeForm pill /></div>
       <ul className="mt-8 flex max-w-5xl flex-wrap justify-center gap-2.5" aria-label="Where things stand">
         {upcoming.map((e) => (

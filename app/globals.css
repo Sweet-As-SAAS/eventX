@@ -49,7 +49,7 @@ body {
 h1, .display {
   font-family: var(--ds-font-display);
   font-weight: 500;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.028em;
   text-wrap: balance;
 }
 

@@ -23,7 +23,7 @@ export default function DescribePage({ searchParams }: PageProps<"/new">) {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-14 sm:px-6 sm:py-24">
-      <h1 className="step-in text-[28px] leading-tight text-foreground sm:text-[32px]">What&apos;s your event?</h1>
+      <h1 className="step-in text-[28px] font-medium leading-tight text-foreground sm:text-[32px]">What&apos;s your event?</h1>
       <p className="mt-3 text-lg text-muted-foreground">
         Tell us like you&apos;d tell a friend: what, where in Christchurch, when, how many people, and anything like alcohol, food, marquees or rides.
       </p>

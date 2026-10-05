@@ -123,21 +123,19 @@ export function DescribeForm({ initial = "", autoFocus = false, pill = false }: 
   if (pill) {
     return (
       <form onSubmit={submit}>
-        <div className="rounded-2xl border border-neutral-200 bg-background px-2 pb-2 pt-1 shadow-[0_6px_20px_-12px_rgb(20_23_36/0.18)] transition-colors duration-150 focus-within:border-neutral-500">
+        <div className="flex items-end gap-2 rounded-[28px] border border-neutral-200 bg-background py-2 pl-3 pr-2 shadow-[0_10px_30px_-14px_rgb(20_23_36/0.22)] transition-[border-color,box-shadow] duration-150 focus-within:border-primary focus-within:ring-4 focus-within:ring-brand-100">
           <label htmlFor={`${uid}-text`} className="sr-only">Describe your event</label>
+          {attach}
           {/* Grows with the text like a chat box; Enter sends, Shift+Enter adds a line. */}
           <textarea id={`${uid}-text`} required minLength={10} maxLength={MAX} value={text} rows={1} autoComplete="off" aria-describedby={`${uid}-count`}
-            ref={(el) => { if (el) { el.style.height = "auto"; el.style.height = `${Math.min(el.scrollHeight, 280)}px`; } }}
+            ref={(el) => { if (el) { el.style.height = "auto"; el.style.height = `${Math.min(el.scrollHeight, 240)}px`; } }}
             onChange={(e) => setText(e.target.value)} placeholder="Paste your plan or describe it: when, where, how many people, alcohol, food…"
             onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); if (!tooShort && !busy) e.currentTarget.form?.requestSubmit(); } }}
-            className="block max-h-[280px] min-h-12 w-full resize-none overflow-y-auto bg-transparent px-2 py-2.5 text-base leading-6 text-foreground placeholder:text-neutral-500 focus:outline-none" />
-          <div className="flex items-center justify-between">
-            {attach}
-            <button type="submit" disabled={busy || tooShort} aria-busy={busy || undefined} aria-label="Check my event" title={tooShort ? "Write at least 10 characters first" : "Check my event"}
-              className="press grid size-10 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground hover:bg-brand-600 disabled:cursor-not-allowed disabled:bg-neutral-300">
-              {busy ? <Spinner /> : <ArrowUp width={18} height={18} strokeWidth={2.25} />}
-            </button>
-          </div>
+            className="max-h-60 min-h-12 min-w-0 flex-1 resize-none overflow-y-auto bg-transparent py-2.5 text-lg leading-7 text-foreground placeholder:text-neutral-500 focus:outline-none" />
+          <button type="submit" disabled={busy || tooShort} aria-busy={busy || undefined} aria-label="Check my event" title={tooShort ? "Write at least 10 characters first" : "Check my event"}
+            className="press grid size-12 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground hover:bg-brand-600 disabled:cursor-not-allowed disabled:bg-neutral-300">
+            {busy ? <Spinner /> : <ArrowUp width={20} height={20} strokeWidth={2.25} />}
+          </button>
         </div>
         {chips && <div className="mt-3 px-3">{chips}</div>}
         <p id={`${uid}-count`} className={cx("mt-2 px-7 text-sm text-muted-foreground", text.length < MAX * 0.8 && "sr-only")}>{count}</p>

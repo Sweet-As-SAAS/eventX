@@ -82,7 +82,7 @@ export default function QuestionsPage({ params }: PageProps<"/events/[id]/questi
   return (
     <div className="step-in max-w-[1056px] pb-4">
       <p className="text-[15px] font-semibold text-primary">Almost done</p>
-      <h1 className="mt-2 text-2xl leading-tight text-foreground sm:text-[28px]">{questions ? title.charAt(0).toUpperCase() + title.slice(1) : "A few quick questions"}</h1>
+      <h1 className="mt-2 text-2xl font-semibold leading-tight tracking-[-0.025em] text-foreground sm:text-[28px]">{questions ? title.charAt(0).toUpperCase() + title.slice(1) : "A few quick questions"}</h1>
       <p className="mt-3 text-lg text-neutral-600">Your answers decide which documents you need and fill in the names on them. It takes about a minute.</p>
 
       {(!questions || n > 0) && (
